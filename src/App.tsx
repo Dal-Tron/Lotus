@@ -1,9 +1,12 @@
 import supabase from "./services/db";
+import AdminLayout from "./layouts/AdminLayout";
 
 function App() {
   return (
     <h1 className="text-3xl font-bold text-red-600">
-      CRA + Tailwind CSS + TypeScript + Supabase Starter
+      <AdminLayout>
+        CRA + Tailwind CSS + TypeScript + Supabase Starter
+      </AdminLayout>
     </h1>
   );
 }
