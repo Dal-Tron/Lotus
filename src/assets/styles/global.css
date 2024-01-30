@@ -8,4 +8,14 @@
   --header-height: 80px;
   --footer-height: 64px;
   --sidebar-width: 220px;
+  --cus-gray-light: #ededed;
+  --cus-gray-medium: #9b8e95;
+  --cus-gray-dark: #5c5459;
+  --cus-black: #131112;
+  --cus-brown: #322d30;
+  --cus-blackest: #000;
+  --cus-green: #4ced00;
+  --cus-orange: #cb9a2b;
+  --cus-pink: #df4395;
+  --screen-max-width: 2200px;
 }

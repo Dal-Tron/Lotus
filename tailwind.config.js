@@ -12,6 +12,17 @@ module.exports = {
       width: {
         "sidebar-width": "var(--sidebar-width)",
       },
+      colors: {
+        "cus-gray-light": "var(--cus-gray-light)",
+        "cus-gray-medium": "var(--cus-gray-medium)",
+        "cus-gray-dark": "var(--cus-gray-dark)",
+        "cus-black": "var(--cus-black)",
+        "cus-brown": "var(--cus-brown)",
+        "cus-blackest": "var(--cus-blackest)",
+        "cus-green": "var(--cus-green)",
+        "cus-orange": "var(--cus-orange)",
+        "cus-pink": "var(--cus-pink)",
+      },
     },
   },
   plugins: [],
