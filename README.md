@@ -67,3 +67,21 @@ You will also see any lint errors in the console.
   3. Functions reused in the component, e.g. event handlers
   4. useEffect
   5. Render
+
+### Tailwind CSS classes
+
+Order: Out-to-in
+
+- position
+- display
+- width, height
+- border
+- margin
+- padding
+- text
+  - font-size
+  - color
+- background-color
+- cursor
+- opacity
+- duration

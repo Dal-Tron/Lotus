@@ -4,7 +4,7 @@ import Sidebar from "../../components/common/Sidebar";
 
 const AdminLayout = ({ children }: { children: any }) => {
   return (
-    <div>
+    <div className="bg-cus-black text-cus-gray-light">
       <Header />
       <main className="h-main-height flex gap-4">
         <div className="w-sidebar-width h-full">
