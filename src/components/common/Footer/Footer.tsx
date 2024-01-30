@@ -1,7 +1,7 @@
-import React, { ComponentPropsWithoutRef, FC } from "react";
+import { PropsWithChildren, ComponentPropsWithoutRef, FC } from "react";
 
 const Footer: FC<
-  React.PropsWithChildren<ComponentPropsWithoutRef<"footer">>
+  PropsWithChildren<ComponentPropsWithoutRef<"footer">>
 > = () => {
   return <div className="h-footer-height border-t border-black">Footer</div>;
 };
