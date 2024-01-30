@@ -9,6 +9,9 @@ module.exports = {
         "main-height":
           "calc(100vh - var(--header-height) - var(--footer-height))",
       },
+      width: {
+        "sidebar-width": "var(--sidebar-width)",
+      },
     },
   },
   plugins: [],
