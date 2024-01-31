@@ -1,18 +1,14 @@
 import { PropsWithChildren } from "react";
 import Footer from "../../components/common/Footer";
 import Header from "../../components/common/Header";
-import Sidebar from "../../components/common/Sidebar";
 
 // =======================================================================================================
 
-const AdminLayout = ({ children }: PropsWithChildren) => {
+const UserLayout = ({ children }: PropsWithChildren) => {
   return (
     <div className="bg-cus-black">
       <Header />
-      <main className="h-main-height flex gap-4">
-        <div className="w-sidebar-width h-full">
-          <Sidebar />
-        </div>
+      <main className="h-main-height">
         <div className="">{children}</div>
       </main>
       <Footer />
@@ -20,4 +16,4 @@ const AdminLayout = ({ children }: PropsWithChildren) => {
   );
 };
 
-export default AdminLayout;
+export default UserLayout;
