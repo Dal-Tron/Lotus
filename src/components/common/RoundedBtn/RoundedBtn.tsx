@@ -1,11 +1,15 @@
 import { MouseEvent, PropsWithChildren } from "react";
 import cx from "classnames";
 
+// =======================================================================================================
+
 interface RoundedBtnProps {
   variant: "fill" | "transparent";
   className?: string;
   onClick: VoidFunction;
 }
+
+// =======================================================================================================
 
 const RoundedBtn = ({
   variant,
@@ -13,7 +17,7 @@ const RoundedBtn = ({
   className,
   onClick,
 }: PropsWithChildren<RoundedBtnProps>) => {
-  const handleClick = (e: MouseEvent<HTMLElement>) => {
+  const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     onClick();
   };
@@ -22,15 +26,11 @@ const RoundedBtn = ({
     <button
       onClick={handleClick}
       className={cx(
-        "rounded-full",
-        "px-4",
-        "duration-300",
-        `${className}`,
-        `${
-          variant == "fill"
-            ? "border border-cus-pink bg-cus-pink hover:opacity-75"
-            : "border border-cus-gray-light bg-transparent hover:opacity-75"
-        }`
+        "rounded-full px-4 duration-300",
+        variant == "fill"
+          ? "border border-cus-pink bg-cus-pink hover:opacity-75"
+          : "border border-cus-gray-light bg-transparent hover:opacity-75",
+        className
       )}
     >
       {children}

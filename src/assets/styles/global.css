@@ -18,5 +18,9 @@
   --cus-orange: #cb9a2b;
   --cus-pink: #df4395;
   --screen-max-width: 2200px;
+}
+
+body * {
   font-family: "Maven Pro";
+  color: var(--cus-gray-light);
 }

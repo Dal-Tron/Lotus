@@ -4,29 +4,32 @@ import {
   FC,
   useState,
 } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import RoundedBtn from "../RoundedBtn";
+
+// =======================================================================================================
 
 const Header: FC<
   PropsWithChildren<ComponentPropsWithoutRef<"header">>
 > = () => {
   const [nav, setNav] = useState(false);
+  const navigate = useNavigate();
 
   const handleNav = () => {
     setNav(!nav);
   };
 
   const navItems = [
-    { id: 1, text: "Home" },
-    { id: 2, text: "Company" },
-    { id: 3, text: "Resources" },
-    { id: 4, text: "About" },
-    { id: 5, text: "Contact" },
+    { id: 1, text: "Company", to: "company" },
+    { id: 2, text: "Resources", to: "resources" },
+    { id: 3, text: "About", to: "about" },
+    { id: 4, text: "Contact", to: "contact" },
   ];
 
   return (
     <header>
-      <nav className="flex justify-between items-center h-header-height border-b border-cus-gray-dark px-4 text-white">
+      <nav className="flex justify-between items-center h-header-height border-b border-cus-gray-dark px-4">
         {/* Logo */}
         <h1 className="text-2xl font-bold text-cus-pink">Logo</h1>
 
@@ -37,7 +40,7 @@ const Header: FC<
               key={item.id}
               className="px-3 hover:opacity-75 cursor-pointer duration-300"
             >
-              {item.text}
+              <Link to="#">{item.text}</Link>
             </li>
           ))}
         </ul>
@@ -46,7 +49,7 @@ const Header: FC<
           <RoundedBtn
             className="self-center py-1"
             variant="fill"
-            onClick={() => alert("log in")}
+            onClick={() => navigate("/login")}
           >
             Log in
           </RoundedBtn>
@@ -106,5 +109,3 @@ const Header: FC<
 };
 
 export default Header;
-
-// https://flowbite.com/blocks/marketing/header/
