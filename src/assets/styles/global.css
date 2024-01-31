@@ -8,15 +8,15 @@
   --header-height: 80px;
   --footer-height: 64px;
   --sidebar-width: 220px;
-  --cus-gray-light: #ededed;
-  --cus-gray-medium: #9b8e95;
-  --cus-gray-dark: #5c5459;
-  --cus-black: #131112;
-  --cus-brown: #322d30;
-  --cus-blackest: #000;
-  --cus-green: #4ced00;
-  --cus-orange: #cb9a2b;
-  --cus-pink: #df4395;
+  --cus-gray-light: #d1d2d3;
+  --cus-gray-medium: #9a9a9d;
+  --cus-gray-dark: #222529;
+  --cus-black: #1a1d21;
+  --cus-brown: #19171d;
+  --cus-blackest: #121016;
+  --cus-green: #2bac76;
+  --cus-orange: #ef6c00;
+  --cus-pink: #de4e26;
   --screen-max-width: 2200px;
 }
 
