@@ -6,6 +6,16 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import supabase from "./services/db";
 import { useState, useEffect } from "react";
+import Signup from "./pages/Signup";
+import AdminDashboard from "./pages/AdminDashboard";
+import Dashboard from "./pages/Dashboard";
+import {
+  URL_ADMIN,
+  URL_DASHBOARD,
+  URL_HOME,
+  URL_LOGIN,
+  URL_SIGNUP,
+} from "./lib/consts";
 
 // =======================================================================================================
 
@@ -26,7 +36,7 @@ function App() {
 
   const router = createBrowserRouter([
     {
-      path: "/",
+      path: URL_HOME,
       element: (
         <UserLayout>
           <Home />
@@ -34,12 +44,28 @@ function App() {
       ),
     },
     {
-      path: "admin",
-      element: <AdminLayout>Starter</AdminLayout>,
+      path: URL_ADMIN,
+      element: (
+        <AdminLayout>
+          <AdminDashboard />
+        </AdminLayout>
+      ),
     },
     {
-      path: "login",
+      path: URL_DASHBOARD,
+      element: (
+        <UserLayout>
+          <Dashboard />
+        </UserLayout>
+      ),
+    },
+    {
+      path: URL_LOGIN,
       element: <Login />,
+    },
+    {
+      path: URL_SIGNUP,
+      element: <Signup />,
     },
   ]);
 
