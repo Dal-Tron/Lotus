@@ -7,6 +7,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import RoundedBtn from "../RoundedBtn";
+import { LOGIN, SIGNUP, URL_LOGIN, URL_SIGNUP } from "../../../lib/consts";
 
 // =======================================================================================================
 
@@ -31,14 +32,14 @@ const Header: FC<
     <header>
       <nav className="flex justify-between items-center h-header-height border-b border-cus-gray-dark px-4">
         {/* Logo */}
-        <h1 className="text-2xl font-bold text-cus-pink">Logo</h1>
+        <h1 className="text-2xl font-bold text-cus-pink">Lotus</h1>
 
         {/* Desktop Navigation */}
         <ul className="hidden md:flex gap-3">
           {navItems.map((item) => (
             <li
               key={item.id}
-              className="px-3 hover:opacity-75 cursor-pointer duration-300"
+              className="px-3 hover:opacity-80 cursor-pointer duration-300"
             >
               <Link to="#">{item.text}</Link>
             </li>
@@ -49,16 +50,16 @@ const Header: FC<
           <RoundedBtn
             className="self-center py-1"
             variant="fill"
-            onClick={() => navigate("/login")}
+            onClick={() => navigate(`/${URL_LOGIN}`)}
           >
-            Log in
+            {LOGIN}
           </RoundedBtn>
           <RoundedBtn
             className="self-center py-1"
             variant="transparent"
-            onClick={() => alert("sign up")}
+            onClick={() => navigate(`/${URL_SIGNUP}`)}
           >
-            Sign up
+            {SIGNUP}
           </RoundedBtn>
         </div>
 
@@ -67,16 +68,16 @@ const Header: FC<
           <RoundedBtn
             className="self-center py-1"
             variant="fill"
-            onClick={() => alert("log in")}
+            onClick={() => navigate(`/${URL_LOGIN}`)}
           >
-            Log in
+            {LOGIN}
           </RoundedBtn>
           <RoundedBtn
             className="self-center py-1"
             variant="transparent"
-            onClick={() => alert("sign up")}
+            onClick={() => navigate(`/${URL_SIGNUP}`)}
           >
-            Sign up
+            {SIGNUP}
           </RoundedBtn>
           <div onClick={handleNav} className="">
             {nav ? <AiOutlineClose size={20} /> : <AiOutlineMenu size={20} />}
@@ -92,7 +93,7 @@ const Header: FC<
           }
         >
           {/* Mobile Logo */}
-          <h1 className="w-full m-4 text-2xl font-bold text-cus-pink">Logo</h1>
+          <h1 className="w-full m-4 text-2xl font-bold text-cus-pink">Lotus</h1>
           {/* Mobile Navigation Items */}
           {navItems.map((item) => (
             <li

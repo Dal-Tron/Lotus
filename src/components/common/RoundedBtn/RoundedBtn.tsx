@@ -7,6 +7,7 @@ interface RoundedBtnProps {
   variant: "fill" | "transparent";
   className?: string;
   onClick: VoidFunction;
+  disabled?: boolean;
 }
 
 // =======================================================================================================
@@ -16,6 +17,7 @@ const RoundedBtn = ({
   children,
   className,
   onClick,
+  disabled,
 }: PropsWithChildren<RoundedBtnProps>) => {
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -28,12 +30,12 @@ const RoundedBtn = ({
       className={cx(
         "rounded-full px-4 duration-300",
         variant == "fill"
-          ? "border border-cus-pink bg-cus-pink hover:opacity-75"
-          : "border border-cus-gray-light bg-transparent hover:opacity-75",
+          ? "border border-cus-pink bg-cus-pink hover:opacity-80"
+          : "border border-cus-gray-light bg-transparent hover:opacity-80",
         className
       )}
     >
-      {children}
+      {disabled ? "Loading..." : children}
     </button>
   );
 };
