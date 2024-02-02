@@ -36,7 +36,7 @@ function App() {
     {
       path: URL_HOME,
       element: (
-        <UserLayout>
+        <UserLayout session={session}>
           <Home />
         </UserLayout>
       ),
@@ -44,7 +44,7 @@ function App() {
     {
       path: URL_ADMIN,
       element: (
-        <AdminLayout>
+        <AdminLayout session={session}>
           <AdminDashboard />
         </AdminLayout>
       ),
@@ -52,7 +52,7 @@ function App() {
     {
       path: URL_DASHBOARD,
       element: (
-        <UserLayout>
+        <UserLayout session={session}>
           <Dashboard session={session} />
         </UserLayout>
       ),

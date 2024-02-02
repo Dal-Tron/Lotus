@@ -4,10 +4,13 @@ import Header from "../../components/common/Header";
 
 // =======================================================================================================
 
-const UserLayout = ({ children }: PropsWithChildren) => {
+const UserLayout = ({
+  children,
+  session,
+}: PropsWithChildren<{ session: any }>) => {
   return (
     <div className="bg-cus-black">
-      <Header />
+      <Header session={session} />
       <main className="h-main-height">
         <div className="">{children}</div>
       </main>

@@ -6,6 +6,7 @@ import {
 } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
+import { FaRegUser } from "react-icons/fa";
 import RoundedBtn from "../RoundedBtn";
 import {
   LOGIN,
@@ -17,16 +18,13 @@ import {
 
 // =======================================================================================================
 
-const Header: FC<
-  PropsWithChildren<ComponentPropsWithoutRef<"header">>
-> = () => {
+const Header = ({ session }: { session: any }) => {
   const [nav, setNav] = useState(false);
   const navigate = useNavigate();
-
   const handleNav = () => {
     setNav(!nav);
   };
-
+  console.log(session);
   const navItems = [
     { id: 1, text: "Company", to: "company" },
     { id: 2, text: "Resources", to: "resources" },
@@ -53,44 +51,60 @@ const Header: FC<
             </li>
           ))}
         </ul>
-
-        <div className="hidden md:flex gap-4">
-          <RoundedBtn
-            className="self-center py-1"
-            variant="fill"
-            onClick={() => navigate(`/${URL_LOGIN}`)}
-          >
-            {LOGIN}
-          </RoundedBtn>
-          <RoundedBtn
-            className="self-center py-1"
-            variant="transparent"
-            onClick={() => navigate(`/${URL_SIGNUP}`)}
-          >
-            {SIGNUP}
-          </RoundedBtn>
-        </div>
+        {!session ? (
+          <div className="hidden md:flex gap-4">
+            <RoundedBtn
+              className="self-center py-1"
+              variant="fill"
+              onClick={() => navigate(`/${URL_LOGIN}`)}
+            >
+              {LOGIN}
+            </RoundedBtn>
+            <RoundedBtn
+              className="self-center py-1"
+              variant="transparent"
+              onClick={() => navigate(`/${URL_SIGNUP}`)}
+            >
+              {SIGNUP}
+            </RoundedBtn>
+          </div>
+        ) : (
+          <button className="hidden md:flex">
+            <FaRegUser />
+          </button>
+        )}
 
         {/* Mobile Navigation Icon */}
-        <div className="flex items-center gap-2 md:hidden">
-          <RoundedBtn
-            className="self-center py-1"
-            variant="fill"
-            onClick={() => navigate(`/${URL_LOGIN}`)}
-          >
-            {LOGIN}
-          </RoundedBtn>
-          <RoundedBtn
-            className="self-center py-1"
-            variant="transparent"
-            onClick={() => navigate(`/${URL_SIGNUP}`)}
-          >
-            {SIGNUP}
-          </RoundedBtn>
-          <div onClick={handleNav} className="">
-            {nav ? <AiOutlineClose size={20} /> : <AiOutlineMenu size={20} />}
+        {!session ? (
+          <div className="flex items-center gap-2 md:hidden">
+            <RoundedBtn
+              className="self-center py-1"
+              variant="fill"
+              onClick={() => navigate(`/${URL_LOGIN}`)}
+            >
+              {LOGIN}
+            </RoundedBtn>
+            <RoundedBtn
+              className="self-center py-1"
+              variant="transparent"
+              onClick={() => navigate(`/${URL_SIGNUP}`)}
+            >
+              {SIGNUP}
+            </RoundedBtn>
+            <div onClick={handleNav} className="">
+              {nav ? <AiOutlineClose size={20} /> : <AiOutlineMenu size={20} />}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex items-center gap-4 md:hidden">
+            <button className="md:hidden">
+              <FaRegUser />
+            </button>
+            <div onClick={handleNav} className="">
+              {nav ? <AiOutlineClose size={20} /> : <AiOutlineMenu size={20} />}
+            </div>
+          </div>
+        )}
 
         {/* Mobile Navigation Menu */}
         <ul
