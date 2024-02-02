@@ -59,6 +59,7 @@ const Signup = () => {
           username,
           role: "normal",
         },
+        emailRedirectTo: `${process.env.REACT_APP_BASE_URL}/dashboard`,
       },
     });
     setLoading(false);
@@ -66,7 +67,7 @@ const Signup = () => {
       console.log(error.message);
     } else {
       alert(
-        "We've sent an email with verification code. Please confirm your email with it."
+        "We've sent an email with magic link. Please confirm your email with it."
       );
     }
   };
