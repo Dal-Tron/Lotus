@@ -4,7 +4,10 @@ const Footer: FC<
   PropsWithChildren<ComponentPropsWithoutRef<"footer">>
 > = () => {
   return (
-    <div className="h-footer-height border-t border-cus-gray-dark">Footer</div>
+    <div className="h-footer-height border-t border-cus-gray-dark text-center">
+      <p>We are inevitable!</p>
+      <p>© 2024</p>
+    </div>
   );
 };
 
