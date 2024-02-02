@@ -1,14 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AdminLayout from "./layouts/AdminLayout";
 import UserLayout from "./layouts/UserLayout";
-import Account from "./pages/Account";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
 import supabase from "./services/db";
 import { useState, useEffect } from "react";
-import Signup from "./pages/Signup";
-import AdminDashboard from "./pages/AdminDashboard";
-import Dashboard from "./pages/Dashboard";
 import {
   URL_ADMIN,
   URL_DASHBOARD,
@@ -16,6 +10,11 @@ import {
   URL_LOGIN,
   URL_SIGNUP,
 } from "./lib/consts";
+import DashboardPage from "./pages/Dashboard";
+import AdminDashboardPage from "./pages/AdminDashboard";
+import LoginPage from "./pages/Login";
+import HomePage from "./pages/Home";
+import SignupPage from "./pages/Signup";
 
 // =======================================================================================================
 
@@ -37,7 +36,7 @@ function App() {
       path: URL_HOME,
       element: (
         <UserLayout session={session}>
-          <Home />
+          <HomePage />
         </UserLayout>
       ),
     },
@@ -45,7 +44,7 @@ function App() {
       path: URL_ADMIN,
       element: (
         <AdminLayout session={session}>
-          <AdminDashboard />
+          <AdminDashboardPage />
         </AdminLayout>
       ),
     },
@@ -53,17 +52,17 @@ function App() {
       path: URL_DASHBOARD,
       element: (
         <UserLayout session={session}>
-          <Dashboard session={session} />
+          <DashboardPage session={session} />
         </UserLayout>
       ),
     },
     {
       path: URL_LOGIN,
-      element: <Login />,
+      element: <LoginPage />,
     },
     {
       path: URL_SIGNUP,
-      element: <Signup />,
+      element: <SignupPage />,
     },
   ]);
 
