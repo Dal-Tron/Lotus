@@ -51,9 +51,16 @@ const Signup = () => {
     const { email, password, username } = formValues;
     console.log(email, password, username);
     setLoading(true);
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          username,
+          role: "normal",
+        },
+      },
     });
     setLoading(false);
     if (error) {

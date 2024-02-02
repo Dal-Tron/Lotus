@@ -19,20 +19,18 @@ import {
 
 // =======================================================================================================
 
-// =======================================================================================================
-
 function App() {
-  // const [session, setSession] = useState(null)
+  const [session, setSession] = useState<any>(null);
 
-  // useEffect(() => {
-  //   supabase.auth.getSession().then(({ data: { session } }) => {
-  //     setSession(session)
-  //   })
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
 
-  //   supabase.auth.onAuthStateChange((_event, session) => {
-  //     setSession(session)
-  //   })
-  // }, [])
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, []);
 
   const router = createBrowserRouter([
     {
@@ -55,7 +53,7 @@ function App() {
       path: URL_DASHBOARD,
       element: (
         <UserLayout>
-          <Dashboard />
+          <Dashboard session={session} />
         </UserLayout>
       ),
     },
