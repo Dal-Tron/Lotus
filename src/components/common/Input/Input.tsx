@@ -5,17 +5,18 @@ import cx from "classnames";
 
 interface InputProps {
   id?: string;
-  type: "text" | "password" | "email";
+  type: "text" | "password" | "email" | "file";
   className?: string;
-  required: boolean;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => any;
   label?: string;
   placeholder?: string;
   icon?: ReactNode;
   errMsg?: string;
   err?: boolean;
-  value: string;
+  value?: string;
   name: string;
+  readOnly?: boolean;
 }
 
 // =======================================================================================================
@@ -33,9 +34,10 @@ const Input = ({
   err,
   value,
   name,
+  readOnly,
 }: InputProps) => {
   return (
-    <div>
+    <div className={className}>
       <label
         htmlFor={id}
         className="mb-2 text-sm font-medium text-cus-gray-medium"
@@ -59,6 +61,7 @@ const Input = ({
           onChange={onChange}
           value={value}
           name={name}
+          readOnly={readOnly}
         />
       </div>
       <p className="mt-1 text-sm text-cus-pink">{errMsg}</p>
