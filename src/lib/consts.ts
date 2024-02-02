@@ -16,3 +16,5 @@ export const CUS_BLACKEST = "#121016";
 export const CUS_GREEN = "#2bac76";
 export const CUS_ORANGE = "#ef6c00";
 export const CUS_PINK = "#de4e26";
+
+export const MSG_ERR_NOT_LOGIN = "Please log in.";
