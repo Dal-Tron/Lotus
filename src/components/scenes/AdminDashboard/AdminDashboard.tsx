@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import supabase from "../../services/db";
+import supabase from "../../../services/db";
 import { FaEdit } from "react-icons/fa";
-import RoundedBtn from "../../components/common/RoundedBtn";
-import UserEditModal from "../../components/elements/UserEditModal";
-import UserAddModal from "../../components/elements/UserAddModal";
+import RoundedBtn from "../../common/RoundedBtn";
+import UserEditModal from "../../elements/UserEditModal";
+import UserAddModal from "../../elements/UserAddModal";
 
 // =======================================================================================================
 

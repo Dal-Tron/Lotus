@@ -2,31 +2,24 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import validator from "validator";
 import { MdOutlineEmail, MdOutlineLock } from "react-icons/md";
+import { AiOutlineUser } from "react-icons/ai";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
-import Input from "../../components/common/Input";
-import RoundedBtn from "../../components/common/RoundedBtn";
-import { useFormFields } from "../../lib/hooksLib";
-import { strongPwdConfig } from "../../lib/validate";
-import supabase from "../../services/db";
-import {
-  CUS_GRAY_MEDIUM,
-  LOGIN,
-  URL_ADMIN,
-  URL_DASHBOARD,
-  URL_HOME,
-} from "../../lib/consts";
-import googleLogo from "../../assets/images/logo-google.png";
-import fbLogo from "../../assets/images/logo-facebook.png";
+import Input from "../../common/Input";
+import RoundedBtn from "../../common/RoundedBtn";
+import { useFormFields } from "../../../lib/hooksLib";
+import supabase from "../../../services/db";
+import { CUS_GRAY_MEDIUM, SIGNUP, URL_HOME } from "../../../lib/consts";
 
 // =======================================================================================================
 
-const Login = () => {
+const Signup = () => {
   const [showPwd, setShowPwd] = useState(false);
   const [isFormValidated, setIsFormValidated] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const initialForm = {
     email: "",
+    username: "",
     password: "",
   };
   const [formValues, handleFieldChange] = useFormFields(initialForm);
@@ -52,32 +45,37 @@ const Login = () => {
   //   );
   // };
 
-  const handleLogin = async (e: any) => {
+  const handleSignup = async (e: any) => {
     e.preventDefault();
-    const { email, password } = formValues;
+    const { email, password, username } = formValues;
+    console.log(email, password, username);
     setLoading(true);
-    const { data, error } = await supabase.auth.signInWithPassword({
+
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          username,
+          role: "normal",
+        },
+      },
     });
-    if (error) {
-      console.error(error.message);
-      alert("Failed to log in");
-    } else {
-      if (data?.user?.user_metadata.role === "admin") {
-        navigate(`/${URL_ADMIN}`);
-      } else {
-        navigate(`/${URL_DASHBOARD}`);
-      }
-    }
     setLoading(false);
+    if (error) {
+      console.log(error.message);
+    } else {
+      alert(
+        "We've sent an email with verification code. Please confirm your email with it."
+      );
+    }
   };
 
   return (
     <div className="flex justify-center items-center h-[100vh] bg-cus-black">
       <div className="p-10 w-[40rem] bg-cus-brown rounded-lg shadow-lg">
-        <h1 className="mb-10 text-5xl font-extrabold text-center">Log in</h1>
-        <form onSubmit={(e) => handleLogin(e)}>
+        <h1 className="mb-10 text-5xl font-extrabold text-center">{SIGNUP}</h1>
+        <form onSubmit={(e) => handleSignup(e)}>
           <div className="flex flex-col gap-2 mb-10">
             <Input
               name="email"
@@ -92,9 +90,21 @@ const Login = () => {
               required={true}
             />
             <Input
+              name="username"
+              id="username"
+              type="text"
+              label="Username"
+              onChange={(e) => handleFieldChange(e)}
+              icon={<AiOutlineUser style={{ fill: CUS_GRAY_MEDIUM }} />}
+              // errMsg="Invalid email"
+              err={false}
+              value={formValues.username}
+              required={true}
+            />
+            <Input
               name="password"
               id="password"
-              type={showPwd ? "text" : "password"}
+              type="password"
               label="Password"
               onChange={(e) => handleFieldChange(e)}
               icon={<MdOutlineLock style={{ fill: CUS_GRAY_MEDIUM }} />}
@@ -103,42 +113,19 @@ const Login = () => {
               value={formValues.password}
               required={true}
             />
-            <div className="flex justify-between w-full">
-              <button
-                className="flex items-center gap-1 text-cus-gray-medium hover:text-cus-gray-light duration-300"
-                type="button"
-                onClick={() => setShowPwd(!showPwd)}
-              >
-                {showPwd ? (
-                  <IoMdEyeOff style={{ fill: CUS_GRAY_MEDIUM }} />
-                ) : (
-                  <IoMdEye style={{ fill: CUS_GRAY_MEDIUM }} />
-                )}
-                Show password
-              </button>
-              <button
-                className="text-cus-gray-medium hover:text-cus-gray-light duration-300"
-                type="button"
-              >
-                Forgot password?
-              </button>
-            </div>
           </div>
           <div className="flex justify-between">
+            {/* <button disabled={loading}>
+              {loading ? <span>Loading</span> : <span>Send magic link</span>}
+            </button> */}
             <RoundedBtn
               variant="fill"
-              className="p-3 w-[10rem] align-self"
-              onClick={() => console.log(LOGIN)}
+              className="p-3 w-[10rem]"
+              onClick={() => console.log(SIGNUP)}
               disabled={loading}
             >
-              {LOGIN}
+              {SIGNUP}
             </RoundedBtn>
-            <button type="button">
-              <img src={googleLogo} width="40" />
-            </button>
-            <button type="button">
-              <img src={fbLogo} width="40" />
-            </button>
             <RoundedBtn
               variant="transparent"
               className="p-3 w-[10rem]"
@@ -153,4 +140,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;

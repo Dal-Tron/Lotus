@@ -1,4 +1,4 @@
-import supabase from "../../services/db";
+import supabase from "../../../services/db";
 
 const Home = () => {
   // const onClick = async () => {

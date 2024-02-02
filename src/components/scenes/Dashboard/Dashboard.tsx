@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { AiOutlineUser } from "react-icons/ai";
 import { MdOutlineEmail } from "react-icons/md";
 import { AiOutlineBarcode } from "react-icons/ai";
-import Input from "../../components/common/Input";
-import { CUS_GRAY_MEDIUM } from "../../lib/consts";
-import supabase from "../../services/db";
+import Input from "../../common/Input";
+import { CUS_GRAY_MEDIUM } from "../../../lib/consts";
+import supabase from "../../../services/db";
 
 // =======================================================================================================
 
