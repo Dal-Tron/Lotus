@@ -11,9 +11,12 @@ import supabase from "../../services/db";
 import {
   CUS_GRAY_MEDIUM,
   LOGIN,
+  URL_ADMIN,
   URL_DASHBOARD,
   URL_HOME,
 } from "../../lib/consts";
+import googleLogo from "../../assets/images/logo-google.png";
+import fbLogo from "../../assets/images/logo-facebook.png";
 
 // =======================================================================================================
 
@@ -53,15 +56,19 @@ const Login = () => {
     e.preventDefault();
     const { email, password } = formValues;
     setLoading(true);
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
     if (error) {
       console.error(error.message);
       alert("Failed to log in");
     } else {
-      navigate(`/${URL_DASHBOARD}`);
+      if (data?.user?.user_metadata.role === "admin") {
+        navigate(`/${URL_ADMIN}`);
+      } else {
+        navigate(`/${URL_DASHBOARD}`);
+      }
     }
     setLoading(false);
   };
@@ -120,12 +127,18 @@ const Login = () => {
           <div className="flex justify-between">
             <RoundedBtn
               variant="fill"
-              className="p-3 w-[10rem]"
+              className="p-3 w-[10rem] align-self"
               onClick={() => console.log(LOGIN)}
               disabled={loading}
             >
               {LOGIN}
             </RoundedBtn>
+            <button type="button">
+              <img src={googleLogo} width="40" />
+            </button>
+            <button type="button">
+              <img src={fbLogo} width="40" />
+            </button>
             <RoundedBtn
               variant="transparent"
               className="p-3 w-[10rem]"

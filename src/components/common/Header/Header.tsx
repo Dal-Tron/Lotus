@@ -7,7 +7,13 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import RoundedBtn from "../RoundedBtn";
-import { LOGIN, SIGNUP, URL_LOGIN, URL_SIGNUP } from "../../../lib/consts";
+import {
+  LOGIN,
+  SIGNUP,
+  URL_HOME,
+  URL_LOGIN,
+  URL_SIGNUP,
+} from "../../../lib/consts";
 
 // =======================================================================================================
 
@@ -32,7 +38,9 @@ const Header: FC<
     <header>
       <nav className="flex justify-between items-center h-header-height border-b border-cus-gray-dark px-4">
         {/* Logo */}
-        <h1 className="text-2xl font-bold text-cus-pink">Lotus</h1>
+        <Link to={`/${URL_HOME}`}>
+          <h1 className="text-2xl font-bold text-cus-pink">Lotus</h1>
+        </Link>
 
         {/* Desktop Navigation */}
         <ul className="hidden md:flex gap-3">
