@@ -15,6 +15,7 @@ import AdminDashboardPage from "./pages/AdminDashboard";
 import LoginPage from "./pages/Login";
 import HomePage from "./pages/Home";
 import SignupPage from "./pages/Signup";
+import AnonLayout from "./layouts/AnonLayout";
 
 // =======================================================================================================
 
@@ -35,9 +36,9 @@ function App() {
     {
       path: URL_HOME,
       element: (
-        <UserLayout session={session}>
+        <AnonLayout session={session}>
           <HomePage />
-        </UserLayout>
+        </AnonLayout>
       ),
     },
     {

@@ -7,6 +7,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { FaRegUser } from "react-icons/fa";
+import { FaSignOutAlt } from "react-icons/fa";
 import RoundedBtn from "../RoundedBtn";
 import {
   LOGIN,
@@ -15,22 +16,32 @@ import {
   URL_LOGIN,
   URL_SIGNUP,
 } from "../../../lib/consts";
+import supabase from "../../../services/db";
 
 // =======================================================================================================
 
 const Header = ({ session }: { session: any }) => {
   const [nav, setNav] = useState(false);
+  const [showPopup, setShowPopup] = useState<boolean>(false);
   const navigate = useNavigate();
   const handleNav = () => {
     setNav(!nav);
   };
-  console.log(session);
   const navItems = [
     { id: 1, text: "Company", to: "company" },
     { id: 2, text: "Resources", to: "resources" },
     { id: 3, text: "About", to: "about" },
     { id: 4, text: "Contact", to: "contact" },
   ];
+
+  const signout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      console.log(error.message);
+    } else {
+      navigate(`/${URL_HOME}`);
+    }
+  };
 
   return (
     <header>
@@ -69,9 +80,36 @@ const Header = ({ session }: { session: any }) => {
             </RoundedBtn>
           </div>
         ) : (
-          <button className="hidden md:flex">
-            <FaRegUser />
-          </button>
+          <div className="relative hidden md:flex">
+            <button
+              className="hidden md:flex"
+              id="menu-button"
+              aria-expanded={true}
+              aria-haspopup={true}
+              type="button"
+              onClick={() => setShowPopup(!showPopup)}
+            >
+              <FaRegUser />
+            </button>
+            {showPopup ? (
+              <div
+                className="absolute right-0 top-5 z-10 mt-2 w-40 origin-top-right rounded-md bg-cus-gray-dark shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="menu-button"
+                tabIndex={-1}
+              >
+                <div className="p-3" role="none">
+                  <button
+                    className="w-full flex items-center gap-3"
+                    onClick={signout}
+                  >
+                    <FaSignOutAlt /> Sign out
+                  </button>
+                </div>
+              </div>
+            ) : null}
+          </div>
         )}
 
         {/* Mobile Navigation Icon */}
@@ -97,9 +135,34 @@ const Header = ({ session }: { session: any }) => {
           </div>
         ) : (
           <div className="flex items-center gap-4 md:hidden">
-            <button className="md:hidden">
-              <FaRegUser />
-            </button>
+            <div className="relative">
+              <button
+                className="md:hidden"
+                id="menu-button"
+                aria-expanded={true}
+                aria-haspopup={true}
+                onClick={() => setShowPopup(!showPopup)}
+              >
+                <FaRegUser />
+              </button>
+              {showPopup ? (
+                <div
+                  className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-cus-gray-dark shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                  role="menu"
+                  aria-labelledby="menu-button"
+                  tabIndex={-1}
+                >
+                  <div className="p-3" role="none">
+                    <button
+                      className="w-full flex items-center gap-3"
+                      onClick={signout}
+                    >
+                      <FaSignOutAlt /> Sign out
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+            </div>
             <div onClick={handleNav} className="">
               {nav ? <AiOutlineClose size={20} /> : <AiOutlineMenu size={20} />}
             </div>
