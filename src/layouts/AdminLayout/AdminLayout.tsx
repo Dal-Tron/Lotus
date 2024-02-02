@@ -4,6 +4,8 @@ import Footer from "../../components/common/Footer";
 import Header from "../../components/common/Header";
 import Sidebar from "../../components/common/Sidebar";
 import { URL_HOME } from "../../lib/consts";
+import { toast } from "react-toastify";
+import { MSG_ERR_NOT_LOGIN } from "../../lib/consts";
 
 // =======================================================================================================
 
@@ -14,6 +16,7 @@ const AdminLayout = ({
   const navigate = useNavigate();
   useEffect(() => {
     if (!session) {
+      toast.error(MSG_ERR_NOT_LOGIN);
       navigate(`/${URL_HOME}`);
     }
   }, [session]);
