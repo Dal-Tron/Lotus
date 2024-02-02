@@ -5,10 +5,13 @@ import Sidebar from "../../components/common/Sidebar";
 
 // =======================================================================================================
 
-const AdminLayout = ({ children }: PropsWithChildren) => {
+const AdminLayout = ({
+  children,
+  session,
+}: PropsWithChildren<{ session: any }>) => {
   return (
     <div className="bg-cus-black">
-      <Header />
+      <Header session={session} />
       <main className="h-main-height flex gap-4">
         <div className="w-sidebar-width h-full">
           <Sidebar />
