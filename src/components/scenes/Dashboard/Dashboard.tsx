@@ -17,6 +17,7 @@ const Dashboard = ({ session }: { session: any }) => {
   const [avatar_url, setAvatarUrl] = useState<string>("");
   const [uploading, setUploading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
+  const [fullname, setFullname] = useState<string>("");
 
   useEffect(() => {
     if (session) {
@@ -40,11 +41,12 @@ const Dashboard = ({ session }: { session: any }) => {
       .eq("id", userId)
       .single();
     if (error) {
-      alert("Failed to fetch user data.");
+      toast.error("Failed to fetch user data.");
     } else {
       setUser(data);
       setAvatarUrl(data.avatar_url);
       setUsername(data.username);
+      setFullname(data.full_name);
     }
   };
 
@@ -67,14 +69,14 @@ const Dashboard = ({ session }: { session: any }) => {
     setLoading(true);
     const updates = {
       id: user.id,
-      username: username,
+      username,
+      full_name: fullname,
       avatar_url: avatarUrl,
       updated_at: new Date(),
     };
     const { error } = await supabase.from("profiles").upsert(updates);
-    console.log(error);
     if (error) {
-      alert(error.message);
+      toast.error(error.message);
     } else {
       setAvatarUrl(avatarUrl);
       toast.success("Successfully updated");
@@ -126,44 +128,50 @@ const Dashboard = ({ session }: { session: any }) => {
           )}
         </div>
 
-        <div className="flex justify-between items-center gap-3">
-          <Input
-            name="email"
-            type="email"
-            label="Email"
-            icon={<MdOutlineEmail style={{ fill: CUS_GRAY_MEDIUM }} />}
-            onChange={() => {}}
-            value={user ? user.email : ""}
-            className="border-cus-gray-medium mb-3 grow"
-            readOnly={true}
-          />
-        </div>
-        <div className="flex justify-between items-center gap-3">
-          <Input
-            name="username"
-            type="text"
-            label="Username"
-            icon={<AiOutlineUser style={{ fill: CUS_GRAY_MEDIUM }} />}
-            onChange={(e) => {
-              setUsername(e.target.value);
-            }}
-            value={username}
-            className="border-cus-gray-medium mb-3 grow"
-          />
-        </div>
-        <div className="flex justify-between items-center gap-3">
-          <Input
-            name="id"
-            type="text"
-            label="UUID"
-            icon={<AiOutlineBarcode style={{ fill: CUS_GRAY_MEDIUM }} />}
-            onChange={() => {}}
-            required
-            value={user ? user.id : ""}
-            className="border-cus-gray-medium mb-3 grow"
-            readOnly={true}
-          />
-        </div>
+        <Input
+          name="email"
+          type="email"
+          label="Email"
+          icon={<MdOutlineEmail style={{ fill: CUS_GRAY_MEDIUM }} />}
+          onChange={() => {}}
+          value={user ? user.email : ""}
+          className="border-cus-gray-medium mb-3 grow"
+          readOnly={true}
+        />
+        <Input
+          name="username"
+          type="text"
+          label="Username"
+          icon={<AiOutlineUser style={{ fill: CUS_GRAY_MEDIUM }} />}
+          onChange={(e) => {
+            setUsername(e.target.value);
+          }}
+          value={username}
+          className="border-cus-gray-medium mb-3 grow"
+        />
+        <Input
+          name="fullname"
+          id="fullname"
+          type="text"
+          label="Full name"
+          onChange={(e) => setFullname(e.target.value)}
+          icon={<AiOutlineUser style={{ fill: CUS_GRAY_MEDIUM }} />}
+          // errMsg="Invalid email"
+          err={false}
+          value={fullname}
+          className="border-cus-gray-medium mb-3 grow"
+        />
+        <Input
+          name="id"
+          type="text"
+          label="UUID"
+          icon={<AiOutlineBarcode style={{ fill: CUS_GRAY_MEDIUM }} />}
+          onChange={() => {}}
+          required
+          value={user ? user.id : ""}
+          className="border-cus-gray-medium mb-3 grow"
+          readOnly={true}
+        />
         <div className="flex justify-center items-center gap-3">
           <RoundedBtn
             variant="fill"
