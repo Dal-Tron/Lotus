@@ -74,6 +74,8 @@ const Login = () => {
     setLoading(false);
   };
 
+  const signinWithGoogle = async (e: any) => {};
+
   return (
     <div className="flex justify-center items-center h-[100vh] bg-cus-black">
       <div className="p-10 w-[40rem] bg-cus-brown rounded-lg shadow-lg">
@@ -134,12 +136,12 @@ const Login = () => {
             >
               {LOGIN}
             </RoundedBtn>
-            <button type="button">
+            {/* <button type="button" onClick={signinWithGoogle}>
               <img src={googleLogo} width="40" />
             </button>
             <button type="button">
               <img src={fbLogo} width="40" />
-            </button>
+            </button> */}
             <RoundedBtn
               variant="transparent"
               className="p-3 w-[10rem]"

@@ -31,7 +31,7 @@ const Dashboard = () => {
       fetchUser({ userId: id });
       setLoading(false);
     } else {
-      // toast.error("Plase log in.");
+      toast.error("Plase log in.");
       navigate(`/${URL_HOME}`);
     }
   }, [session]);
