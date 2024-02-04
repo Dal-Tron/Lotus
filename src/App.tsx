@@ -6,9 +6,11 @@ import { useState, useEffect } from "react";
 import {
   URL_ADMIN,
   URL_DASHBOARD,
+  URL_FORGOT_PWD,
   URL_HOME,
   URL_LOGIN,
   URL_SIGNUP,
+  URL_UPDATE_PWD,
 } from "./lib/consts";
 import DashboardPage from "./pages/Dashboard";
 import AdminDashboardPage from "./pages/AdminDashboard";
@@ -18,6 +20,8 @@ import SignupPage from "./pages/Signup";
 import AnonLayout from "./layouts/AnonLayout";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import ForgotPwdPage from "./pages/ForgotPwd";
+import UpdatePwdPage from "./pages/UpdatePwd";
 
 // =======================================================================================================
 
@@ -66,6 +70,14 @@ function App() {
     {
       path: URL_SIGNUP,
       element: <SignupPage />,
+    },
+    {
+      path: URL_FORGOT_PWD,
+      element: <ForgotPwdPage />,
+    },
+    {
+      path: URL_UPDATE_PWD,
+      element: <UpdatePwdPage />,
     },
   ]);
 

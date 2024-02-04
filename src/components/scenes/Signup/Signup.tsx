@@ -8,7 +8,13 @@ import Input from "../../common/Input";
 import RoundedBtn from "../../common/RoundedBtn";
 import { useFormFields } from "../../../lib/hooksLib";
 import supabase from "../../../services/db";
-import { CUS_GRAY_MEDIUM, SIGNUP, URL_HOME } from "../../../lib/consts";
+import {
+  BACK_TO_HOME,
+  CUS_GRAY_MEDIUM,
+  SIGNUP,
+  URL_HOME,
+} from "../../../lib/consts";
+import { toast } from "react-toastify";
 
 // =======================================================================================================
 
@@ -47,16 +53,15 @@ const Signup = () => {
 
   const handleSignup = async (e: any) => {
     e.preventDefault();
-    const { email, password, username } = formValues;
-    console.log(email, password, username);
+    const { email, password, username, fullname } = formValues;
     setLoading(true);
-
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
           username,
+          full_name: fullname,
           role: "normal",
         },
         emailRedirectTo: `${process.env.REACT_APP_BASE_URL}/dashboard`,
@@ -64,9 +69,9 @@ const Signup = () => {
     });
     setLoading(false);
     if (error) {
-      console.log(error.message);
+      toast.error(error.message);
     } else {
-      alert(
+      toast.success(
         "We've sent an email with magic link. Please confirm your email with it."
       );
     }
@@ -103,9 +108,21 @@ const Signup = () => {
               required={true}
             />
             <Input
+              name="fullname"
+              id="fullname"
+              type="text"
+              label="Full name"
+              onChange={(e) => handleFieldChange(e)}
+              icon={<AiOutlineUser style={{ fill: CUS_GRAY_MEDIUM }} />}
+              // errMsg="Invalid email"
+              err={false}
+              value={formValues.fullname}
+              required={true}
+            />
+            <Input
               name="password"
               id="password"
-              type="password"
+              type={showPwd ? "text" : "password"}
               label="Password"
               onChange={(e) => handleFieldChange(e)}
               icon={<MdOutlineLock style={{ fill: CUS_GRAY_MEDIUM }} />}
@@ -114,6 +131,18 @@ const Signup = () => {
               value={formValues.password}
               required={true}
             />
+            <button
+              className="flex items-center gap-1 text-cus-gray-medium hover:text-cus-gray-light duration-300"
+              type="button"
+              onClick={() => setShowPwd(!showPwd)}
+            >
+              {showPwd ? (
+                <IoMdEyeOff style={{ fill: CUS_GRAY_MEDIUM }} />
+              ) : (
+                <IoMdEye style={{ fill: CUS_GRAY_MEDIUM }} />
+              )}
+              Show password
+            </button>
           </div>
           <div className="flex justify-between">
             {/* <button disabled={loading}>
@@ -132,7 +161,7 @@ const Signup = () => {
               className="p-3 w-[10rem]"
               onClick={() => navigate(`/${URL_HOME}`)}
             >
-              Back to home
+              {BACK_TO_HOME}
             </RoundedBtn>
           </div>
         </form>
