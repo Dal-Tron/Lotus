@@ -8,7 +8,12 @@ import Input from "../../common/Input";
 import RoundedBtn from "../../common/RoundedBtn";
 import { useFormFields } from "../../../lib/hooksLib";
 import supabase from "../../../services/db";
-import { CUS_GRAY_MEDIUM, SIGNUP, URL_HOME } from "../../../lib/consts";
+import {
+  BACK_TO_HOME,
+  CUS_GRAY_MEDIUM,
+  SIGNUP,
+  URL_HOME,
+} from "../../../lib/consts";
 
 // =======================================================================================================
 
@@ -44,13 +49,13 @@ const Signup = () => {
   //     // && validator.isStrongPassword(password.trim(), { returnScore: false })
   //   );
   // };
+  console.log(process.env.REACT_APP_BASE_URL);
 
   const handleSignup = async (e: any) => {
     e.preventDefault();
     const { email, password, username } = formValues;
     console.log(email, password, username);
     setLoading(true);
-
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -132,7 +137,7 @@ const Signup = () => {
               className="p-3 w-[10rem]"
               onClick={() => navigate(`/${URL_HOME}`)}
             >
-              Back to home
+              {BACK_TO_HOME}
             </RoundedBtn>
           </div>
         </form>

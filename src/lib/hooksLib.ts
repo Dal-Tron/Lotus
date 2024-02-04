@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 
 type FormField = {
   [key: string]: string;
@@ -22,17 +22,3 @@ export const useFormFields = (initialState: FormField): FormFieldsHook => {
     },
   ];
 };
-
-// export const useMediaQuery = (mediaQueryString) => {
-//   const [matches, setMatches] = useState(null)
-
-//   useEffect(() => {
-//     const mediaQueryList = window.matchMedia(mediaQueryString)
-//     const listener = () => setMatches(!!mediaQueryList.matches)
-//     listener()
-//     mediaQueryList.addEventListener('change', listener)
-//     return () => mediaQueryList.removeEventListener('change', listener)
-//   }, [mediaQueryString])
-
-//   return matches
-// }

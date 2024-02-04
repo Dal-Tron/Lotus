@@ -40,7 +40,7 @@ const Dashboard = ({ session }: { session: any }) => {
       .eq("id", userId)
       .single();
     if (error) {
-      alert("Failed to fetch users list.");
+      alert("Failed to fetch user data.");
     } else {
       setUser(data);
       setAvatarUrl(data.avatar_url);

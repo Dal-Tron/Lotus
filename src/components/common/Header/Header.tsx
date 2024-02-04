@@ -3,6 +3,8 @@ import {
   ComponentPropsWithoutRef,
   FC,
   useState,
+  useRef,
+  useEffect,
 } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
@@ -27,6 +29,24 @@ const Header = ({ session }: { session: any }) => {
   const handleNav = () => {
     setNav(!nav);
   };
+  const dropdownMenuRef = useRef<any>(null);
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleClickOutside = (event: any) => {
+    if (
+      dropdownMenuRef.current &&
+      !dropdownMenuRef.current.contains(event.target)
+    ) {
+      setShowPopup(false);
+    }
+  };
+
   const navItems = [
     { id: 1, text: "Company", to: "company" },
     { id: 2, text: "Resources", to: "resources" },
@@ -99,7 +119,7 @@ const Header = ({ session }: { session: any }) => {
                 aria-labelledby="menu-button"
                 tabIndex={-1}
               >
-                <div className="p-3" role="none">
+                <div className="p-3" role="none" ref={dropdownMenuRef}>
                   <button
                     className="w-full flex items-center gap-3"
                     onClick={signout}
