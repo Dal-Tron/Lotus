@@ -17,6 +17,7 @@ interface InputProps {
   value?: string;
   name: string;
   readOnly?: boolean;
+  defaultValue?: string;
 }
 
 // =======================================================================================================
@@ -35,6 +36,7 @@ const Input = ({
   value,
   name,
   readOnly,
+  defaultValue,
 }: InputProps) => {
   return (
     <div className={className}>
@@ -62,6 +64,7 @@ const Input = ({
           value={value}
           name={name}
           readOnly={readOnly}
+          defaultValue={defaultValue}
         />
       </div>
       <p className="mt-1 text-sm text-cus-pink">{errMsg}</p>

@@ -14,8 +14,8 @@ import supabase from "../../../services/db";
 
 const Dashboard = () => {
   const session = useContext(AuthContext);
-  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<boolean>(false);
   const [user, setUser] = useState<any>(null);
   const [avatar_url, setAvatarUrl] = useState<string>("");
   const [uploading, setUploading] = useState<boolean>(false);
@@ -52,7 +52,7 @@ const Dashboard = () => {
       setUser(data);
       setAvatarUrl(data.avatar_url);
       setUsername(data.username);
-      setFullname(data.full_name);
+      setFullname(data.full_name || "");
     }
   };
 
