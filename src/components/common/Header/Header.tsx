@@ -87,13 +87,13 @@ const Header = () => {
             >
               {LOGIN}
             </RoundedBtn>
-            <RoundedBtn
+            {/* <RoundedBtn
               className="self-center py-1"
               variant="transparent"
               onClick={() => navigate(`/${URL_SIGNUP}`)}
             >
               {SIGNUP}
-            </RoundedBtn>
+            </RoundedBtn> */}
           </div>
         ) : (
           <div className="relative hidden md:flex">

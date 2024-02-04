@@ -1,12 +1,11 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AiOutlineUser } from "react-icons/ai";
 import { MdOutlineEmail } from "react-icons/md";
 import { AiOutlineBarcode } from "react-icons/ai";
 import Input from "../../common/Input";
 import RoundedBtn from "../../common/RoundedBtn";
-import { CUS_GRAY_MEDIUM, URL_HOME } from "../../../lib/consts";
+import { CUS_GRAY_MEDIUM } from "../../../lib/consts";
 import { AuthContext } from "../../../contexts/AuthContext";
 import supabase from "../../../services/db";
 
@@ -14,7 +13,6 @@ import supabase from "../../../services/db";
 
 const Dashboard = () => {
   const session = useContext(AuthContext);
-  const navigate = useNavigate();
   const [loading, setLoading] = useState<boolean>(false);
   const [user, setUser] = useState<any>(null);
   const [avatar_url, setAvatarUrl] = useState<string>("");
@@ -30,9 +28,6 @@ const Dashboard = () => {
       setLoading(true);
       fetchUser({ userId: id });
       setLoading(false);
-    } else {
-      toast.error("Plase log in.");
-      navigate(`/${URL_HOME}`);
     }
   }, [session]);
 

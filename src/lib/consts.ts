@@ -24,3 +24,12 @@ export const CUS_PINK = "#de4e26";
 export const MSG_ERR_NOT_LOGIN = "Please log in.";
 export const MSG_ERR_NOT_PERMITTED = "You are not allowed to access this page.";
 export const MSG_ERR_UNEXPECTED_ERROR = "Unexpected error.";
+
+export const ROLES = {
+  ADMIN: "admin",
+  NORMAL: "normal",
+};
+
+export const AUTH_STATES = {
+  SIGNED_IN: "SIGNED_IN",
+};

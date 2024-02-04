@@ -1,10 +1,31 @@
-import { PropsWithChildren } from "react";
+import { useEffect, PropsWithChildren } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import Footer from "../../components/common/Footer";
 import Header from "../../components/common/Header";
+import supabase from "../../services/db";
+import { URL_HOME, MSG_ERR_NOT_LOGIN } from "../../lib/consts";
 
 // =======================================================================================================
 
 const UserLayout = ({ children }: PropsWithChildren) => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        toast.error(MSG_ERR_NOT_LOGIN);
+        navigate(`/${URL_HOME}`);
+      }
+    });
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        navigate(`/${URL_HOME}`);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
   return (
     <div className="bg-cus-black">
       <Header />

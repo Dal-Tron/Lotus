@@ -1,30 +1,45 @@
-import { PropsWithChildren, useEffect, useContext } from "react";
+import { PropsWithChildren, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "../../components/common/Footer";
 import Header from "../../components/common/Header";
 import Sidebar from "../../components/common/Sidebar";
-import { AuthContext } from "../../contexts/AuthContext";
-import {
-  URL_HOME,
-  MSG_ERR_NOT_LOGIN,
-  MSG_ERR_NOT_PERMITTED,
-} from "../../lib/consts";
+import { URL_HOME, MSG_ERR_NOT_PERMITTED, ROLES } from "../../lib/consts";
+import supabase from "../../services/db";
 
 // =======================================================================================================
 
 const AdminLayout = ({ children }: PropsWithChildren) => {
-  const session = useContext(AuthContext);
   const navigate = useNavigate();
+
   useEffect(() => {
-    if (!session) {
-      toast.error(MSG_ERR_NOT_LOGIN);
-      navigate(`/${URL_HOME}`);
-    } else if (session.user.user_metadata.role !== "admin") {
-      toast.error(MSG_ERR_NOT_PERMITTED);
-      navigate(`/${URL_HOME}`);
-    }
-  }, [session]);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (
+        !session ||
+        (session && session.user.user_metadata.role !== ROLES.ADMIN)
+      ) {
+        toast.error(MSG_ERR_NOT_PERMITTED);
+        navigate(`/${URL_HOME}`);
+      }
+    });
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!session) {
+        navigate(`/${URL_HOME}`);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+  // useEffect(() => {
+  //   if (
+  //     !session ||
+  //     (session && session.user.user_metadata.role !== ROLES.ADMIN)
+  //   ) {
+  //     toast.error(MSG_ERR_NOT_PERMITTED);
+  //     navigate(`/${URL_HOME}`);
+  //   }
+  // }, [session]);
   return (
     <div className="bg-cus-black">
       <Header />
