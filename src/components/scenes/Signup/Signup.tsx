@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import validator from "validator";
+import { toast } from "react-toastify";
 import { MdOutlineEmail, MdOutlineLock } from "react-icons/md";
 import { AiOutlineUser } from "react-icons/ai";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import Input from "../../common/Input";
 import RoundedBtn from "../../common/RoundedBtn";
 import { useFormFields } from "../../../lib/hooksLib";
-import supabase from "../../../services/db";
 import {
   BACK_TO_HOME,
   CUS_GRAY_MEDIUM,
   SIGNUP,
   URL_HOME,
 } from "../../../lib/consts";
-import { toast } from "react-toastify";
+import supabase from "../../../services/db";
 
 // =======================================================================================================
 
@@ -145,13 +145,9 @@ const Signup = () => {
             </button>
           </div>
           <div className="flex justify-between">
-            {/* <button disabled={loading}>
-              {loading ? <span>Loading</span> : <span>Send magic link</span>}
-            </button> */}
             <RoundedBtn
               variant="fill"
               className="p-3 w-[10rem]"
-              onClick={() => console.log(SIGNUP)}
               disabled={loading}
             >
               {SIGNUP}

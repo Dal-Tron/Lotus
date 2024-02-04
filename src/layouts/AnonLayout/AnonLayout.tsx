@@ -4,13 +4,10 @@ import Header from "../../components/common/Header";
 
 // =======================================================================================================
 
-const AnonLayout = ({
-  children,
-  session,
-}: PropsWithChildren<{ session: any }>) => {
+const AnonLayout = ({ children }: PropsWithChildren) => {
   return (
     <div className="bg-cus-black">
-      <Header session={session} />
+      <Header />
       <main className="h-main-height">
         <div className="">{children}</div>
       </main>

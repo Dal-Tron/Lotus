@@ -1,12 +1,6 @@
-import {
-  PropsWithChildren,
-  ComponentPropsWithoutRef,
-  FC,
-  useState,
-  useRef,
-  useEffect,
-} from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { FaRegUser } from "react-icons/fa";
 import { FaSignOutAlt } from "react-icons/fa";
@@ -19,10 +13,12 @@ import {
   URL_SIGNUP,
 } from "../../../lib/consts";
 import supabase from "../../../services/db";
+import { AuthContext } from "../../../contexts/AuthContext";
 
 // =======================================================================================================
 
-const Header = ({ session }: { session: any }) => {
+const Header = () => {
+  const session = useContext(AuthContext);
   const [nav, setNav] = useState(false);
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -57,7 +53,7 @@ const Header = ({ session }: { session: any }) => {
   const signout = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
-      console.log(error.message);
+      toast.error(error.message);
     } else {
       navigate(`/${URL_HOME}`);
     }

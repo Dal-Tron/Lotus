@@ -1,21 +1,19 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { MdOutlineEmail } from "react-icons/md";
 import validator from "validator";
-import { MdOutlineEmail, MdOutlineLock } from "react-icons/md";
-import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import Input from "../../common/Input";
 import RoundedBtn from "../../common/RoundedBtn";
 import { useFormFields } from "../../../lib/hooksLib";
-import supabase from "../../../services/db";
 import {
   BACK_TO_HOME,
   CUS_GRAY_MEDIUM,
-  LOGIN,
   MSG_ERR_UNEXPECTED_ERROR,
   SUBMIT,
   URL_HOME,
 } from "../../../lib/consts";
-import { toast } from "react-toastify";
+import supabase from "../../../services/db";
 
 // =======================================================================================================
 
@@ -74,7 +72,6 @@ const ForgotPwd = () => {
             <RoundedBtn
               variant="fill"
               className="p-3 w-[10rem] align-self"
-              onClick={() => console.log(LOGIN)}
               disabled={loading}
             >
               {SUBMIT}

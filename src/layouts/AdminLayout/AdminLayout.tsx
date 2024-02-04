@@ -1,11 +1,10 @@
 import { PropsWithChildren, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import Footer from "../../components/common/Footer";
 import Header from "../../components/common/Header";
 import Sidebar from "../../components/common/Sidebar";
-import { URL_HOME } from "../../lib/consts";
-import { toast } from "react-toastify";
-import { MSG_ERR_NOT_LOGIN } from "../../lib/consts";
+import { URL_HOME, MSG_ERR_NOT_LOGIN } from "../../lib/consts";
 
 // =======================================================================================================
 
@@ -22,7 +21,7 @@ const AdminLayout = ({
   }, [session]);
   return (
     <div className="bg-cus-black">
-      <Header session={session} />
+      <Header />
       <main className="h-main-height flex gap-4">
         <div className="w-sidebar-width h-full">
           <Sidebar />

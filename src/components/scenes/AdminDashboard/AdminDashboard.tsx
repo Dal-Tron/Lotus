@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import supabase from "../../../services/db";
+import { toast } from "react-toastify";
 import { FaEdit } from "react-icons/fa";
 import RoundedBtn from "../../common/RoundedBtn";
 import UserEditModal from "../../elements/UserEditModal";
 import UserAddModal from "../../elements/UserAddModal";
+import supabase from "../../../services/db";
 
 // =======================================================================================================
 
@@ -21,7 +22,7 @@ const AdminDashboard = () => {
   const fetchUsers = async () => {
     const { data, error } = await supabase.from("profiles").select();
     if (error) {
-      alert("Failed to fetch users list.");
+      toast.error("Failed to fetch users list.");
     } else {
       setUsers(data);
     }

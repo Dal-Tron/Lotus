@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import validator from "validator";
+import { toast } from "react-toastify";
 import { MdOutlineEmail, MdOutlineLock } from "react-icons/md";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import Input from "../../common/Input";
 import RoundedBtn from "../../common/RoundedBtn";
 import { useFormFields } from "../../../lib/hooksLib";
-import supabase from "../../../services/db";
 import {
   BACK_TO_HOME,
   CUS_GRAY_MEDIUM,
@@ -18,7 +18,7 @@ import {
 } from "../../../lib/consts";
 import googleLogo from "../../../assets/images/logo-google.png";
 import fbLogo from "../../../assets/images/logo-facebook.png";
-import { toast } from "react-toastify";
+import supabase from "../../../services/db";
 
 // =======================================================================================================
 
@@ -130,7 +130,6 @@ const Login = () => {
             <RoundedBtn
               variant="fill"
               className="p-3 w-[10rem] align-self"
-              onClick={() => console.log(LOGIN)}
               disabled={loading}
             >
               {LOGIN}

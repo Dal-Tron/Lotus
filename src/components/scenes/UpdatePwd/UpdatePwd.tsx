@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import validator from "validator";
-import { MdOutlineEmail, MdOutlineLock } from "react-icons/md";
+import { MdOutlineLock } from "react-icons/md";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import Input from "../../common/Input";
 import RoundedBtn from "../../common/RoundedBtn";
@@ -10,12 +10,7 @@ import supabase from "../../../services/db";
 import {
   BACK_TO_HOME,
   CUS_GRAY_MEDIUM,
-  LOGIN,
-  MSG_ERR_UNEXPECTED_ERROR,
   SUBMIT,
-  URL_ADMIN,
-  URL_DASHBOARD,
-  URL_FORGOT_PWD,
   URL_HOME,
 } from "../../../lib/consts";
 import { toast } from "react-toastify";
@@ -40,11 +35,9 @@ const UpdatePwd = () => {
       password,
     });
     if (error) {
-      console.error(error.message);
-      toast.error(MSG_ERR_UNEXPECTED_ERROR);
+      toast.error(error.message);
     } else {
       toast.success("Success.");
-      console.log(data);
     }
     setLoading(false);
   };
@@ -88,7 +81,6 @@ const UpdatePwd = () => {
             <RoundedBtn
               variant="fill"
               className="p-3 w-[10rem] align-self"
-              onClick={() => console.log(SUBMIT)}
               disabled={loading}
             >
               {SUBMIT}
