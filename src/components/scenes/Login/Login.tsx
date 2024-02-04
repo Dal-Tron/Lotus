@@ -19,6 +19,8 @@ import {
 import googleLogo from "../../../assets/images/logo-google.png";
 import fbLogo from "../../../assets/images/logo-facebook.png";
 import supabase from "../../../services/db";
+import { Auth } from "@supabase/auth-ui-react";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
 
 // =======================================================================================================
 
@@ -73,8 +75,6 @@ const Login = () => {
     }
     setLoading(false);
   };
-
-  const signinWithGoogle = async (e: any) => {};
 
   return (
     <div className="flex justify-center items-center h-[100vh] bg-cus-black">

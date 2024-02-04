@@ -30,7 +30,7 @@ yarn build
 ```
 
 Runs the app in the development mode.
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Open [http://localhost:3010](http://localhost:3010) to view it in the browser.
 
 The page will reload if you make edits.
 You will also see any lint errors in the console.
@@ -85,3 +85,18 @@ Order: Out-to-in
 - cursor
 - opacity
 - duration
+
+# 3rd party log in
+
+Reference: [https://supabase.com/docs/guides/auth/social-login/auth-google?platform=web](https://supabase.com/docs/guides/auth/social-login/auth-google?platform=web)
+
+## Configure Providers
+
+Navigate to https://supabase.com/dashboard/project/<project-id>/auth/providers.
+Enable Google provider.
+Need to provide Client ID (for OAuth) and Client Secret (for OAuth).
+For this, go to Google console and register a new project, create OAuth credentials and get Client ID and Client Secret.
+
+## Create UI
+
+Reference: [https://supabase.com/docs/guides/auth/auth-helpers/auth-ui](https://supabase.com/docs/guides/auth/auth-helpers/auth-ui)
