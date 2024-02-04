@@ -6,7 +6,7 @@ import cx from "classnames";
 interface RoundedBtnProps {
   variant: "fill" | "transparent";
   className?: string;
-  onClick: VoidFunction;
+  onClick?: VoidFunction;
   disabled?: boolean;
 }
 
@@ -21,7 +21,7 @@ const RoundedBtn = ({
 }: PropsWithChildren<RoundedBtnProps>) => {
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
-    onClick();
+    if (onClick) onClick();
   };
 
   return (

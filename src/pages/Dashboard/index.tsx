@@ -1,7 +1,12 @@
 import Dashboard from "../../components/scenes/Dashboard";
+import UserLayout from "../../layouts/UserLayout";
 
-const DashboardPage = ({ session }: { session: any }) => {
-  return <Dashboard session={session} />;
+const DashboardPage = () => {
+  return (
+    <UserLayout>
+      <Dashboard />
+    </UserLayout>
+  );
 };
 
 export default DashboardPage;

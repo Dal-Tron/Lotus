@@ -1,5 +1,7 @@
 import Signup from "../../components/scenes/Signup";
 
+// =======================================================================================================
+
 const SignupPage = () => {
   return <Signup />;
 };

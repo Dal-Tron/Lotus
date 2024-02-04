@@ -1,6 +1,8 @@
-import Input from "../../common/Input";
 import { AiOutlineUser } from "react-icons/ai";
-import { MdOutlineEmail, MdOutlineLock } from "react-icons/md";
+import { MdOutlineEmail } from "react-icons/md";
+import Input from "../../common/Input";
+
+// =======================================================================================================
 
 const UserAddModal = ({
   setShowModal,
