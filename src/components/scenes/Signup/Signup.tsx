@@ -5,16 +5,16 @@ import { toast } from "react-toastify";
 import { MdOutlineEmail, MdOutlineLock } from "react-icons/md";
 import { AiOutlineUser } from "react-icons/ai";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
-import Input from "../../common/Input";
-import RoundedBtn from "../../common/RoundedBtn";
-import { useFormFields } from "../../../lib/hooksLib";
+import Input from "src/components/common/Input";
+import RoundedBtn from "src/components/common/RoundedBtn";
+import { useFormFields } from "src/lib/hooksLib";
 import {
   BACK_TO_HOME,
   CUS_GRAY_MEDIUM,
   SIGNUP,
   URL_HOME,
-} from "../../../lib/consts";
-import supabase from "../../../services/db";
+} from "src/lib/consts";
+import supabase from "src/services/db";
 
 // =======================================================================================================
 

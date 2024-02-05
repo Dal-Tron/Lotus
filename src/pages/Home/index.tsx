@@ -1,5 +1,5 @@
-import Home from "../../components/scenes/Home";
-import AnonLayout from "../../layouts/AnonLayout";
+import Home from "src/components/scenes/Home";
+import AnonLayout from "src/layouts/AnonLayout";
 
 // =======================================================================================================
 

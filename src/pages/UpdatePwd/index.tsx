@@ -1,4 +1,4 @@
-import UpdatePwd from "../../components/scenes/UpdatePwd";
+import UpdatePwd from "src/components/scenes/UpdatePwd";
 
 // =======================================================================================================
 

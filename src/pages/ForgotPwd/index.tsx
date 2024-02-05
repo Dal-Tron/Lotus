@@ -1,4 +1,4 @@
-import ForgotPwd from "../../components/scenes/ForgotPwd";
+import ForgotPwd from "src/components/scenes/ForgotPwd";
 
 // =======================================================================================================
 

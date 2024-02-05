@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import supabase from "../../services/db";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import {
@@ -8,7 +7,8 @@ import {
   ROLES,
   URL_ADMIN,
   URL_DASHBOARD,
-} from "../../lib/consts";
+} from "src/lib/consts";
+import supabase from "src/services/db";
 
 // =======================================================================================================
 

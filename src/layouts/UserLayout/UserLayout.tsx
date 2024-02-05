@@ -1,10 +1,10 @@
 import { useEffect, PropsWithChildren } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import Footer from "../../components/common/Footer";
-import Header from "../../components/common/Header";
-import supabase from "../../services/db";
-import { URL_HOME, MSG_ERR_NOT_LOGIN } from "../../lib/consts";
+import Footer from "src/components/common/Footer";
+import Header from "src/components/common/Header";
+import supabase from "src/services/db";
+import { URL_HOME, MSG_ERR_NOT_LOGIN } from "src/lib/consts";
 
 // =======================================================================================================
 

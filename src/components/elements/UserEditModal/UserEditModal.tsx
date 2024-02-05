@@ -1,8 +1,8 @@
 import React, { Dispatch, SetStateAction } from "react";
-import Input from "../../common/Input";
 import { AiOutlineUser } from "react-icons/ai";
 import { MdOutlineEmail } from "react-icons/md";
-import { User } from "../../../Types";
+import Input from "src/components/common/Input";
+import { User } from "src/Types";
 
 // =======================================================================================================
 

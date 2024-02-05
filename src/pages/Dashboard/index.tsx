@@ -1,5 +1,7 @@
-import Dashboard from "../../components/scenes/Dashboard";
-import UserLayout from "../../layouts/UserLayout";
+import Dashboard from "src/components/scenes/Dashboard";
+import UserLayout from "src/layouts/UserLayout";
+
+// =======================================================================================================
 
 const DashboardPage = () => {
   return (

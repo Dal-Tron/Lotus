@@ -1,11 +1,11 @@
 import { PropsWithChildren, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import Footer from "../../components/common/Footer";
-import Header from "../../components/common/Header";
-import Sidebar from "../../components/common/Sidebar";
-import { URL_HOME, MSG_ERR_NOT_PERMITTED, ROLES } from "../../lib/consts";
-import supabase from "../../services/db";
+import Footer from "src/components/common/Footer";
+import Header from "src/components/common/Header";
+import Sidebar from "src/components/common/Sidebar";
+import { URL_HOME, MSG_ERR_NOT_PERMITTED, ROLES } from "src/lib/consts";
+import supabase from "src/services/db";
 
 // =======================================================================================================
 

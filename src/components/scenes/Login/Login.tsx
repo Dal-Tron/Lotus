@@ -4,9 +4,9 @@ import validator from "validator";
 import { toast } from "react-toastify";
 import { MdOutlineEmail, MdOutlineLock } from "react-icons/md";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
-import Input from "../../common/Input";
-import RoundedBtn from "../../common/RoundedBtn";
-import { useFormFields } from "../../../lib/hooksLib";
+import Input from "src/components/common/Input";
+import RoundedBtn from "src/components/common/RoundedBtn";
+import { useFormFields } from "src/lib/hooksLib";
 import {
   BACK_TO_HOME,
   CUS_GRAY_MEDIUM,
@@ -15,12 +15,8 @@ import {
   URL_DASHBOARD,
   URL_FORGOT_PWD,
   URL_HOME,
-} from "../../../lib/consts";
-import googleLogo from "../../../assets/images/logo-google.png";
-import fbLogo from "../../../assets/images/logo-facebook.png";
-import supabase from "../../../services/db";
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
+} from "src/lib/consts";
+import supabase from "src/services/db";
 
 // =======================================================================================================
 

@@ -5,15 +5,9 @@ import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { FaRegUser } from "react-icons/fa";
 import { FaSignOutAlt } from "react-icons/fa";
 import RoundedBtn from "../RoundedBtn";
-import {
-  LOGIN,
-  SIGNUP,
-  URL_HOME,
-  URL_LOGIN,
-  URL_SIGNUP,
-} from "../../../lib/consts";
-import supabase from "../../../services/db";
-import { AuthContext } from "../../../contexts/AuthContext";
+import { LOGIN, SIGNUP, URL_HOME, URL_LOGIN, URL_SIGNUP } from "src/lib/consts";
+import supabase from "src/services/db";
+import { AuthContext } from "src/contexts/AuthContext";
 
 // =======================================================================================================
 

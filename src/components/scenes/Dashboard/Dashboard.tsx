@@ -3,12 +3,12 @@ import { toast } from "react-toastify";
 import { AiOutlineUser } from "react-icons/ai";
 import { MdOutlineEmail } from "react-icons/md";
 import { AiOutlineBarcode } from "react-icons/ai";
-import Input from "../../common/Input";
-import RoundedBtn from "../../common/RoundedBtn";
-import { CUS_GRAY_MEDIUM } from "../../../lib/consts";
-import { AuthContext } from "../../../contexts/AuthContext";
-import supabase from "../../../services/db";
-import { User } from "../../../Types";
+import Input from "src/components/common/Input";
+import RoundedBtn from "src/components/common/RoundedBtn";
+import { CUS_GRAY_MEDIUM } from "src/lib/consts";
+import { AuthContext } from "src/contexts/AuthContext";
+import supabase from "src/services/db";
+import { User } from "src/Types";
 
 // =======================================================================================================
 
