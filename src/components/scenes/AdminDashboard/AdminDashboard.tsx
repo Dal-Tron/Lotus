@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FaEdit } from "react-icons/fa";
-import RoundedBtn from "../../common/RoundedBtn";
-import UserEditModal from "../../elements/UserEditModal";
-import UserAddModal from "../../elements/UserAddModal";
-import supabase from "../../../services/db";
-import { User, NewUser } from "../../../Types";
+import RoundedBtn from "src/components/common/RoundedBtn";
+import UserEditModal from "src/components/elements/UserEditModal";
+import UserAddModal from "src/components/elements/UserAddModal";
+import supabase from "src/services/db";
+import { User, NewUser } from "src/Types";
 
 // =======================================================================================================
 

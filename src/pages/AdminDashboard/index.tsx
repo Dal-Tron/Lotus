@@ -1,5 +1,5 @@
-import AdminDashboard from "../../components/scenes/AdminDashboard";
-import AdminLayout from "../../layouts/AdminLayout";
+import AdminDashboard from "src/components/scenes/AdminDashboard";
+import AdminLayout from "src/layouts/AdminLayout";
 
 // =======================================================================================================
 

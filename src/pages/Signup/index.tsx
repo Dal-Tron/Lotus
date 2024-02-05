@@ -1,4 +1,4 @@
-import Signup from "../../components/scenes/Signup";
+import Signup from "src/components/scenes/Signup";
 
 // =======================================================================================================
 

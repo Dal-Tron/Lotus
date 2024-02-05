@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
-import Footer from "../../components/common/Footer";
-import Header from "../../components/common/Header";
+import Footer from "src/components/common/Footer";
+import Header from "src/components/common/Header";
 
 // =======================================================================================================
 

@@ -1,4 +1,4 @@
-import Login from "../../components/scenes/Login";
+import Login from "src/components/scenes/Login";
 
 // =======================================================================================================
 
