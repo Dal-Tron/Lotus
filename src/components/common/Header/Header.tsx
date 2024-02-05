@@ -19,13 +19,13 @@ import { AuthContext } from "../../../contexts/AuthContext";
 
 const Header = () => {
   const session = useContext(AuthContext);
-  const [nav, setNav] = useState(false);
-  const [showPopup, setShowPopup] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [nav, setNav] = useState<boolean>(false);
+  const [showPopup, setShowPopup] = useState<boolean>(false);
   const handleNav = () => {
     setNav(!nav);
   };
-  const dropdownMenuRef = useRef<any>(null);
+  const dropdownMenuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -34,10 +34,10 @@ const Header = () => {
     };
   }, []);
 
-  const handleClickOutside = (event: any) => {
+  const handleClickOutside = (event: MouseEvent) => {
     if (
       dropdownMenuRef.current &&
-      !dropdownMenuRef.current.contains(event.target)
+      !dropdownMenuRef.current.contains(event.target as Node)
     ) {
       setShowPopup(false);
     }

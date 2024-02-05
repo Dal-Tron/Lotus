@@ -8,13 +8,14 @@ import RoundedBtn from "../../common/RoundedBtn";
 import { CUS_GRAY_MEDIUM } from "../../../lib/consts";
 import { AuthContext } from "../../../contexts/AuthContext";
 import supabase from "../../../services/db";
+import { User } from "../../../Types";
 
 // =======================================================================================================
 
 const Dashboard = () => {
   const session = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [avatar_url, setAvatarUrl] = useState<string>("");
   const [uploading, setUploading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
@@ -69,7 +70,7 @@ const Dashboard = () => {
   const updateProfile = async (avatarUrl: string) => {
     setLoading(true);
     const updates = {
-      id: user.id,
+      id: user?.id,
       username,
       full_name: fullname,
       avatar_url: avatarUrl,

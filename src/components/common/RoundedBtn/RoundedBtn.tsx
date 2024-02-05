@@ -1,14 +1,6 @@
 import { MouseEvent, PropsWithChildren } from "react";
 import cx from "classnames";
-
-// =======================================================================================================
-
-interface RoundedBtnProps {
-  variant: "fill" | "transparent";
-  className?: string;
-  onClick?: VoidFunction;
-  disabled?: boolean;
-}
+import { RoundedBtnProps } from "./Types";
 
 // =======================================================================================================
 

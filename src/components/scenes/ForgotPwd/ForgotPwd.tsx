@@ -18,9 +18,9 @@ import supabase from "../../../services/db";
 // =======================================================================================================
 
 const ForgotPwd = () => {
-  const [isFormValidated, setIsFormValidated] = useState(false);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [isFormValidated, setIsFormValidated] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const initialForm = {
     email: "",
   };
