@@ -90,7 +90,6 @@ const Signup = () => {
               label="Email"
               onChange={(e) => handleFieldChange(e)}
               icon={<MdOutlineEmail style={{ fill: CUS_GRAY_MEDIUM }} />}
-              // errMsg="Invalid email"
               err={false}
               value={formValues.email}
               required={true}
@@ -102,7 +101,6 @@ const Signup = () => {
               label="Username"
               onChange={(e) => handleFieldChange(e)}
               icon={<AiOutlineUser style={{ fill: CUS_GRAY_MEDIUM }} />}
-              // errMsg="Invalid email"
               err={false}
               value={formValues.username}
               required={true}
@@ -114,7 +112,6 @@ const Signup = () => {
               label="Full name"
               onChange={(e) => handleFieldChange(e)}
               icon={<AiOutlineUser style={{ fill: CUS_GRAY_MEDIUM }} />}
-              // errMsg="Invalid email"
               err={false}
               value={formValues.fullname}
               required={true}
@@ -126,7 +123,6 @@ const Signup = () => {
               label="Password"
               onChange={(e) => handleFieldChange(e)}
               icon={<MdOutlineLock style={{ fill: CUS_GRAY_MEDIUM }} />}
-              // errMsg="Invalid email"
               err={false}
               value={formValues.password}
               required={true}

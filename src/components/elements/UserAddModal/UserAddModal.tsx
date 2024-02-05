@@ -1,6 +1,17 @@
+import { Dispatch, SetStateAction } from "react";
 import { AiOutlineUser } from "react-icons/ai";
 import { MdOutlineEmail } from "react-icons/md";
+import { NewUser } from "../../../Types";
 import Input from "../../common/Input";
+
+// =======================================================================================================
+
+interface UserAddModalProps {
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  setNewUser: Dispatch<SetStateAction<NewUser>>;
+  newUser: NewUser;
+  addNewUser: VoidFunction;
+}
 
 // =======================================================================================================
 
@@ -9,12 +20,7 @@ const UserAddModal = ({
   setNewUser,
   newUser,
   addNewUser,
-}: {
-  setShowModal: any;
-  setNewUser: any;
-  newUser: any;
-  addNewUser: any;
-}) => {
+}: UserAddModalProps) => {
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">

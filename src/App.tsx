@@ -20,10 +20,6 @@ import {
   // URL_UPDATE_PWD,
 } from "./lib/consts";
 
-// const LoginPage = React.lazy(() => import("./pages/Login"));
-// const SignupPage = React.lazy(() => import("./pages/Signup"));
-// const ForgotPwdPage = React.lazy(() => import("./pages/ForgotPwd"));
-// const UpdatePwdPage = React.lazy(() => import("./pages/UpdatePwd"));
 const HomePage = React.lazy(() => import("./pages/Home"));
 const DashboardPage = React.lazy(() => import("./pages/Dashboard"));
 const AdminDashboardPage = React.lazy(() => import("./pages/AdminDashboard"));

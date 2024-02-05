@@ -31,15 +31,6 @@ const AdminLayout = ({ children }: PropsWithChildren) => {
     });
     return () => subscription.unsubscribe();
   }, []);
-  // useEffect(() => {
-  //   if (
-  //     !session ||
-  //     (session && session.user.user_metadata.role !== ROLES.ADMIN)
-  //   ) {
-  //     toast.error(MSG_ERR_NOT_PERMITTED);
-  //     navigate(`/${URL_HOME}`);
-  //   }
-  // }, [session]);
   return (
     <div className="bg-cus-black">
       <Header />

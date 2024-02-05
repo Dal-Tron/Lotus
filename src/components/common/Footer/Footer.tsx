@@ -1,5 +1,7 @@
 import { PropsWithChildren, ComponentPropsWithoutRef, FC } from "react";
 
+// =======================================================================================================
+
 const Footer: FC<
   PropsWithChildren<ComponentPropsWithoutRef<"footer">>
 > = () => {

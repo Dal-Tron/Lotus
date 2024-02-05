@@ -1,6 +1,17 @@
+import React, { Dispatch, SetStateAction } from "react";
 import Input from "../../common/Input";
 import { AiOutlineUser } from "react-icons/ai";
 import { MdOutlineEmail } from "react-icons/md";
+import { User } from "../../../Types";
+
+// =======================================================================================================
+
+interface UserEditModalProps {
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  setSelectedUser: Dispatch<SetStateAction<User | null | undefined>>;
+  selectedUser: User | null | undefined;
+  saveChanges: VoidFunction;
+}
 
 // =======================================================================================================
 
@@ -9,12 +20,7 @@ const UserEditModal = ({
   selectedUser,
   setSelectedUser,
   saveChanges,
-}: {
-  setShowModal: any;
-  selectedUser: any;
-  setSelectedUser: any;
-  saveChanges: VoidFunction;
-}) => {
+}: UserEditModalProps) => {
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -36,11 +42,11 @@ const UserEditModal = ({
                 type="email"
                 name="email"
                 required={true}
-                value={selectedUser.email}
-                onChange={(e) => {
+                value={selectedUser?.email}
+                onChange={(e: React.FormEvent<HTMLInputElement>) => {
                   setSelectedUser({
                     ...selectedUser,
-                    email: e.target.value,
+                    email: (e.target as HTMLInputElement).value,
                   });
                 }}
                 icon={<MdOutlineEmail />}
@@ -49,7 +55,7 @@ const UserEditModal = ({
                 type="text"
                 name="username"
                 required={true}
-                value={selectedUser.username}
+                value={selectedUser?.username}
                 onChange={(e) => {
                   setSelectedUser({
                     ...selectedUser,

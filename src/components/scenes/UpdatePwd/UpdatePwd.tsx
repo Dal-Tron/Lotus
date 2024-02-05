@@ -57,7 +57,6 @@ const UpdatePwd = () => {
               label="Password"
               onChange={(e) => handleFieldChange(e)}
               icon={<MdOutlineLock style={{ fill: CUS_GRAY_MEDIUM }} />}
-              // errMsg="Invalid email"
               err={false}
               value={formValues.password}
               required={true}

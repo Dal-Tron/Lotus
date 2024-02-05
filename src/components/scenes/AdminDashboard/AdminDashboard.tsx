@@ -5,20 +5,21 @@ import RoundedBtn from "../../common/RoundedBtn";
 import UserEditModal from "../../elements/UserEditModal";
 import UserAddModal from "../../elements/UserAddModal";
 import supabase from "../../../services/db";
+import { User, NewUser } from "../../../Types";
 
 // =======================================================================================================
 
 const AdminDashboard = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [users, setUsers] = useState<any>([]);
+  const [users, setUsers] = useState<User[] | []>([]);
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
-  const [selectedUser, setSelectedUser] = useState<any>();
-  const [newUser, setNewUser] = useState<any>({
+  const [selectedUser, setSelectedUser] = useState<User | null>();
+  const [newUser, setNewUser] = useState<NewUser>({
     email: "",
     username: "",
+    fullName: "",
   });
-
   const fetchUsers = async () => {
     const { data, error } = await supabase.from("profiles").select();
     if (error) {
@@ -46,11 +47,11 @@ const AdminDashboard = () => {
   const saveChanges = async () => {
     const { data, error } = await supabase
       .from("profiles")
-      .update({ email: selectedUser.email, username: selectedUser.username })
-      .eq("id", selectedUser.id)
+      .update({ email: selectedUser?.email, username: selectedUser?.username })
+      .eq("id", selectedUser?.id)
       .select();
     const updatedUsers = users.map((user: any) => {
-      if (user.id === selectedUser.id) {
+      if (user.id === selectedUser?.id) {
         return data;
       }
       return user;
