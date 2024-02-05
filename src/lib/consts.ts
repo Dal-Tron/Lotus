@@ -1,5 +1,8 @@
+export const APP_NAME = "Lotus";
+
 export const LOGIN = "Log in";
 export const SIGNUP = "Sign up";
+export const SIGNOUT = "Sign out";
 export const SUBMIT = "Submit";
 export const BACK_TO_HOME = "Back to Home";
 

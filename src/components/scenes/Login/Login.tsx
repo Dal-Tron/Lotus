@@ -11,6 +11,7 @@ import {
   BACK_TO_HOME,
   CUS_GRAY_MEDIUM,
   LOGIN,
+  ROLES,
   URL_ADMIN,
   URL_DASHBOARD,
   URL_FORGOT_PWD,
@@ -63,7 +64,7 @@ const Login = () => {
     if (error) {
       toast.error(error.message);
     } else {
-      if (data?.user?.user_metadata.role === "admin") {
+      if (data?.user?.user_metadata.role === ROLES.ADMIN) {
         navigate(`/${URL_ADMIN}`);
       } else {
         navigate(`/${URL_DASHBOARD}`);
@@ -75,7 +76,7 @@ const Login = () => {
   return (
     <div className="flex justify-center items-center h-[100vh] bg-cus-black">
       <div className="p-10 w-[40rem] bg-cus-brown rounded-lg shadow-lg">
-        <h1 className="mb-10 text-5xl font-extrabold text-center">Log in</h1>
+        <h1 className="mb-10 text-5xl font-extrabold text-center">{LOGIN}</h1>
         <form onSubmit={(e) => handleLogin(e)}>
           <div className="flex flex-col gap-2 mb-10">
             <Input
