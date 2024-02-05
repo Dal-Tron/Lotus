@@ -12,6 +12,7 @@ import {
   MSG_ERR_UNEXPECTED_ERROR,
   SUBMIT,
   URL_HOME,
+  URL_UPDATE_PWD,
 } from "src/lib/consts";
 import supabase from "src/services/db";
 
@@ -31,7 +32,7 @@ const ForgotPwd = () => {
     const { email } = formValues;
     setLoading(true);
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${process.env.REACT_APP_BASE_URL}/update-pwd`,
+      redirectTo: `${process.env.REACT_APP_BASE_URL}/${URL_UPDATE_PWD}`,
     });
     if (error) {
       console.error(error.message);

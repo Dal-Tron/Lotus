@@ -5,7 +5,18 @@ import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
 import { FaRegUser } from "react-icons/fa";
 import { FaSignOutAlt } from "react-icons/fa";
 import RoundedBtn from "../RoundedBtn";
-import { LOGIN, SIGNUP, URL_HOME, URL_LOGIN, URL_SIGNUP } from "src/lib/consts";
+import {
+  APP_NAME,
+  LOGIN,
+  ROLES,
+  SIGNOUT,
+  SIGNUP,
+  URL_ADMIN,
+  URL_DASHBOARD,
+  URL_HOME,
+  URL_LOGIN,
+  URL_SIGNUP,
+} from "src/lib/consts";
 import supabase from "src/services/db";
 import { AuthContext } from "src/contexts/AuthContext";
 
@@ -37,13 +48,6 @@ const Header = () => {
     }
   };
 
-  const navItems = [
-    { id: 1, text: "Company", to: "company" },
-    { id: 2, text: "Resources", to: "resources" },
-    { id: 3, text: "About", to: "about" },
-    { id: 4, text: "Contact", to: "contact" },
-  ];
-
   const signout = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
@@ -56,21 +60,26 @@ const Header = () => {
   return (
     <header>
       <nav className="flex justify-between items-center h-header-height border-b border-cus-gray-dark px-4">
-        {/* Logo */}
         <Link to={`/${URL_HOME}`}>
-          <h1 className="text-2xl font-bold text-cus-pink">Lotus</h1>
+          <h1 className="text-2xl font-bold text-cus-pink">{APP_NAME}</h1>
         </Link>
-
-        {/* Desktop Navigation */}
         <ul className="hidden md:flex gap-3">
-          {navItems.map((item) => (
-            <li
-              key={item.id}
-              className="px-3 hover:opacity-80 cursor-pointer duration-300"
-            >
-              <Link to="#">{item.text}</Link>
-            </li>
-          ))}
+          {session ? (
+            session.user.user_metadata.role == ROLES.ADMIN ? (
+              <>
+                <li className="px-3 hover:opacity-80 cursor-pointer duration-300">
+                  <Link to={`/${URL_ADMIN}`}>Admin</Link>
+                </li>
+                <li className="px-3 hover:opacity-80 cursor-pointer duration-300">
+                  <Link to={`/${URL_DASHBOARD}`}>Dashboard</Link>
+                </li>
+              </>
+            ) : (
+              <li className="px-3 hover:opacity-80 cursor-pointer duration-300">
+                Dashboard
+              </li>
+            )
+          ) : null}
         </ul>
         {!session ? (
           <div className="hidden md:flex gap-4">
@@ -114,7 +123,7 @@ const Header = () => {
                     className="w-full flex items-center gap-3"
                     onClick={signout}
                   >
-                    <FaSignOutAlt /> Sign out
+                    <FaSignOutAlt /> {SIGNOUT}
                   </button>
                 </div>
               </div>
@@ -122,7 +131,6 @@ const Header = () => {
           </div>
         )}
 
-        {/* Mobile Navigation Icon */}
         {!session ? (
           <div className="flex items-center gap-2 md:hidden">
             <RoundedBtn
@@ -132,13 +140,13 @@ const Header = () => {
             >
               {LOGIN}
             </RoundedBtn>
-            <RoundedBtn
+            {/* <RoundedBtn
               className="self-center py-1"
               variant="transparent"
               onClick={() => navigate(`/${URL_SIGNUP}`)}
             >
               {SIGNUP}
-            </RoundedBtn>
+            </RoundedBtn> */}
             <div onClick={handleNav} className="">
               {nav ? <AiOutlineClose size={20} /> : <AiOutlineMenu size={20} />}
             </div>
@@ -167,7 +175,7 @@ const Header = () => {
                       className="w-full flex items-center gap-3"
                       onClick={signout}
                     >
-                      <FaSignOutAlt /> Sign out
+                      <FaSignOutAlt /> {SIGNOUT}
                     </button>
                   </div>
                 </div>
@@ -178,26 +186,32 @@ const Header = () => {
             </div>
           </div>
         )}
-
-        {/* Mobile Navigation Menu */}
         <ul
           className={
             nav
-              ? "fixed md:hidden left-0 top-0 w-[80%] sm:w-[60%] h-full bg-cus-brown ease-in-out duration-500"
+              ? "fixed md:hidden left-0 top-0 w-[80%] sm:w-[60%] h-full bg-cus-brown ease-in-out duration-500 z-10"
               : "fixed top-0 bottom-0 left-[-100%] ease-in-out duration-500"
           }
         >
-          {/* Mobile Logo */}
-          <h1 className="w-full m-4 text-2xl font-bold text-cus-pink">Lotus</h1>
-          {/* Mobile Navigation Items */}
-          {navItems.map((item) => (
-            <li
-              key={item.id}
-              className="border-b border-cus-gray-dark p-4 hover:text-cus-pink cursor-pointer duration-300"
-            >
-              {item.text}
-            </li>
-          ))}
+          <h1 className="w-full m-4 text-2xl font-bold text-cus-pink">
+            {APP_NAME}
+          </h1>
+          {session ? (
+            session.user.user_metadata.role == ROLES.ADMIN ? (
+              <>
+                <li className="border-b border-cus-gray-dark p-4 hover:text-cus-pink cursor-pointer duration-300">
+                  <Link to={`/${URL_ADMIN}`}>Admin</Link>
+                </li>
+                <li className="border-b border-cus-gray-dark p-4 hover:text-cus-pink cursor-pointer duration-300">
+                  <Link to={`/${URL_DASHBOARD}`}>Dashboard</Link>
+                </li>
+              </>
+            ) : (
+              <li className="border-b border-cus-gray-dark p-4 hover:text-cus-pink cursor-pointer duration-300">
+                Dashboard
+              </li>
+            )
+          ) : null}
         </ul>
       </nav>
     </header>

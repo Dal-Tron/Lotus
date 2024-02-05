@@ -12,6 +12,7 @@ import {
   BACK_TO_HOME,
   CUS_GRAY_MEDIUM,
   SIGNUP,
+  URL_DASHBOARD,
   URL_HOME,
 } from "src/lib/consts";
 import supabase from "src/services/db";
@@ -64,7 +65,7 @@ const Signup = () => {
           full_name: fullname,
           role: "normal",
         },
-        emailRedirectTo: `${process.env.REACT_APP_BASE_URL}/dashboard`,
+        emailRedirectTo: `${process.env.REACT_APP_BASE_URL}/${URL_DASHBOARD}`,
       },
     });
     setLoading(false);
