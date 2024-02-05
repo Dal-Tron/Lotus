@@ -11,6 +11,8 @@ import {
   ROLES,
   SIGNOUT,
   SIGNUP,
+  TEXT_URL_ADMIN,
+  TEXT_URL_DASHBOARD,
   URL_ADMIN,
   URL_DASHBOARD,
   URL_HOME,
@@ -68,15 +70,15 @@ const Header = () => {
             session.user.user_metadata.role == ROLES.ADMIN ? (
               <>
                 <li className="px-3 hover:opacity-80 cursor-pointer duration-300">
-                  <Link to={`/${URL_ADMIN}`}>Admin</Link>
+                  <Link to={`/${URL_ADMIN}`}>{TEXT_URL_ADMIN}</Link>
                 </li>
                 <li className="px-3 hover:opacity-80 cursor-pointer duration-300">
-                  <Link to={`/${URL_DASHBOARD}`}>Dashboard</Link>
+                  <Link to={`/${URL_DASHBOARD}`}>{TEXT_URL_DASHBOARD}</Link>
                 </li>
               </>
             ) : (
               <li className="px-3 hover:opacity-80 cursor-pointer duration-300">
-                Dashboard
+                {TEXT_URL_DASHBOARD}
               </li>
             )
           ) : null}
@@ -200,15 +202,15 @@ const Header = () => {
             session.user.user_metadata.role == ROLES.ADMIN ? (
               <>
                 <li className="border-b border-cus-gray-dark p-4 hover:text-cus-pink cursor-pointer duration-300">
-                  <Link to={`/${URL_ADMIN}`}>Admin</Link>
+                  <Link to={`/${URL_ADMIN}`}>{TEXT_URL_ADMIN}</Link>
                 </li>
                 <li className="border-b border-cus-gray-dark p-4 hover:text-cus-pink cursor-pointer duration-300">
-                  <Link to={`/${URL_DASHBOARD}`}>Dashboard</Link>
+                  <Link to={`/${URL_DASHBOARD}`}>{TEXT_URL_DASHBOARD}</Link>
                 </li>
               </>
             ) : (
               <li className="border-b border-cus-gray-dark p-4 hover:text-cus-pink cursor-pointer duration-300">
-                Dashboard
+                {TEXT_URL_DASHBOARD}
               </li>
             )
           ) : null}

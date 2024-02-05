@@ -57,6 +57,7 @@ const Dashboard = () => {
       const { data, error } = await supabase.storage
         .from("avatars")
         .download(path);
+      console.log(data, error);
       if (error) {
         throw error;
       }
@@ -91,7 +92,7 @@ const Dashboard = () => {
       <div className="pt-10 w-1/2 mx-auto">
         <div className="w-40 h-40 mx-auto rounded overflow-hidden relative border flex justify-center items-center">
           <input
-            className="absolute h-full w-full"
+            className="absolute h-full w-full text-transparent file:hidden"
             type="file"
             id="single"
             accept="image/*"
