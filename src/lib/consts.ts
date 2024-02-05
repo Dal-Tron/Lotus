@@ -14,6 +14,9 @@ export const URL_ADMIN = "admin";
 export const URL_FORGOT_PWD = "forgot-pwd";
 export const URL_UPDATE_PWD = "update-pwd";
 
+export const TEXT_URL_DASHBOARD = "Dashboard";
+export const TEXT_URL_ADMIN = "Admin";
+
 export const CUS_GRAY_LIGHT = "#d1d2d3";
 export const CUS_GRAY_MEDIUM = "#9a9a9d";
 export const CUS_GRAY_DARK = "#222529";
