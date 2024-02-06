@@ -30,7 +30,7 @@ const Sidebar = ({
   return (
     <aside
       className={cx(
-        "h-full border-r border-cus-gray-dark p-3 ease-in-out duration-500",
+        "h-full border-r border-cus-gray-dark p-3 bg-cus-brown",
         isExpanded ? "w-sidebar-width" : "w-fit"
       )}
       aria-label="Sidebar"

@@ -7,7 +7,7 @@ import UserEditModal from "src/components/elements/UserEditModal";
 import UserAddModal from "src/components/elements/UserAddModal";
 import supabase from "src/services/db";
 import { User, NewUser } from "src/Types";
-import { TEXT_NO_DATA } from "src/lib/consts";
+import { TEXT_NO_DATA, TEXT_NO_IMAGE } from "src/lib/consts";
 
 // =======================================================================================================
 interface columnType {
@@ -100,20 +100,20 @@ const AdminDashboard = ({
                 <table className="min-w-full text-left text-sm font-light overflow-x-scroll">
                   <thead className="border-b font-medium dark:border-neutral-500">
                     <tr>
-                      <th scope="col" className="px-3 py-1">
+                      <th scope="col" className="px-3 py-2">
                         #
                       </th>
-                      <th scope="col" className="px-3 py-1">
+                      <th scope="col" className="px-3 py-2">
                         Avatar
                       </th>
                       {columns.map((col) => {
                         return (
-                          <th scope="col" key={col.name} className="px-3 py-1">
+                          <th scope="col" key={col.name} className="px-3 py-2">
                             {col.name}
                           </th>
                         );
                       })}
-                      <th scope="col" className="px-3 py-1">
+                      <th scope="col" className="px-3 py-2">
                         Action
                       </th>
                     </tr>
@@ -122,31 +122,32 @@ const AdminDashboard = ({
                     {users.length ? (
                       users.map((user: any, idx: number) => {
                         return (
-                          <tr className="border-b" key={user.id}>
-                            <td className="whitespace-nowrap px-3 py-1 font-medium">
+                          <tr
+                            className="border-b border-b-cus-gray-dark"
+                            key={user.id}
+                          >
+                            <td className="whitespace-nowrap px-3 py-2 font-medium">
                               {idx + 1}
                             </td>
-                            <td className="whitespace-nowrap px-3 py-1 font-medium">
-                              <div className="flex justify-center items-center w-20 h-20 rounded-sm overflow-hidden border border-cus-gray-dark">
-                                {user.avatar_url ? (
+                            <td className="whitespace-nowrap px-3 py-2 font-medium">
+                              {user.avatar_url ? (
+                                <div className="flex justify-center items-center w-10 h-10 rounded-full overflow-hidden border border-cus-gray-dark">
                                   <img src={user.avatar_url} />
-                                ) : (
-                                  <p className="text-cus-gray-medium">
-                                    No image
-                                  </p>
-                                )}
-                              </div>
+                                </div>
+                              ) : (
+                                <div className="w-10 h-10 rounded-full border border-cus-gray-dark bg-cus-gray-dark"></div>
+                              )}
                             </td>
-                            <td className="whitespace-nowrap px-3 py-1 font-medium">
+                            <td className="whitespace-nowrap px-3 py-2 font-medium">
                               {user.email}
                             </td>
-                            <td className="whitespace-nowrap px-3 py-1">
+                            <td className="whitespace-nowrap px-3 py-2">
                               {user.username}
                             </td>
-                            <td className="whitespace-nowrap px-3 py-1">
+                            <td className="whitespace-nowrap px-3 py-2">
                               {user.full_name}
                             </td>
-                            <td className="whitespace-nowrap px-3 py-1">
+                            <td className="whitespace-nowrap px-3 py-2">
                               <button onClick={() => onEdit({ idx })}>
                                 <FaEdit />
                               </button>
@@ -186,7 +187,9 @@ const AdminDashboard = ({
                             {user.avatar_url ? (
                               <img src={user.avatar_url} />
                             ) : (
-                              <p className="text-cus-gray-medium">No image</p>
+                              <p className="text-cus-gray-medium">
+                                {TEXT_NO_IMAGE}
+                              </p>
                             )}
                           </div>
                           <p>
