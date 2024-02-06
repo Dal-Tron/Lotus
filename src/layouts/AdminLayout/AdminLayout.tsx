@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "src/components/common/Footer";
@@ -8,9 +8,10 @@ import { URL_HOME, MSG_ERR_NOT_PERMITTED, ROLES } from "src/lib/consts";
 import supabase from "src/services/db";
 
 // =======================================================================================================
-
-const AdminLayout = ({ children }: PropsWithChildren) => {
+type ClildrenFunction = (isExpanded: boolean) => JSX.Element;
+const AdminLayout = ({ children }: { children: ClildrenFunction }) => {
   const navigate = useNavigate();
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState<boolean>(true);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -36,9 +37,12 @@ const AdminLayout = ({ children }: PropsWithChildren) => {
       <Header />
       <main className="h-main-height flex gap-4">
         <div className="min-w-fit h-full">
-          <Sidebar />
+          <Sidebar
+            isExpanded={isSidebarExpanded}
+            setIsExpanded={setIsSidebarExpanded}
+          />
         </div>
-        <div className="">{children}</div>
+        <div className="w-full h-full">{children(isSidebarExpanded)}</div>
       </main>
       <Footer />
     </div>

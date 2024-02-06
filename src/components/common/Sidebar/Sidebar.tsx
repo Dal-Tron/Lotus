@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Link } from "react-router-dom";
 import cx from "classnames";
 import { FiUsers } from "react-icons/fi";
@@ -20,9 +20,13 @@ const sidebarItems: SidebarItem[] = [
   },
 ];
 
-const Sidebar = () => {
-  const [isExpanded, setIsExpanded] = useState<boolean>(true);
-
+const Sidebar = ({
+  isExpanded,
+  setIsExpanded,
+}: {
+  isExpanded: boolean;
+  setIsExpanded: Dispatch<SetStateAction<boolean>>;
+}) => {
   return (
     <aside
       className={cx(

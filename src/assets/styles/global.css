@@ -23,3 +23,18 @@ body * {
   font-family: "Maven Pro";
   color: var(--cus-gray-light);
 }
+::-webkit-scrollbar {
+  width: 8px;
+  scroll-behavior: smooth;
+  scroll-snap-align: end;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--cus-black);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--cus-gray-dark);
+  border-radius: 20px;
+  border: 1px solid black;
+}
