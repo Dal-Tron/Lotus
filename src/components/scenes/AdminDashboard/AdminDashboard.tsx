@@ -8,6 +8,7 @@ import UserAddModal from "src/components/elements/UserAddModal";
 import supabase from "src/services/db";
 import { User, NewUser } from "src/Types";
 import { TEXT_NO_DATA, TEXT_NO_IMAGE } from "src/lib/consts";
+import { FaUserPlus } from "react-icons/fa6";
 
 // =======================================================================================================
 interface columnType {
@@ -85,17 +86,18 @@ const AdminDashboard = ({
       {loading ? (
         "Loading..."
       ) : (
-        <div className="">
+        <div className="px-3">
           <RoundedBtn
             variant="fill"
             onClick={() => {
               setShowAddModal(true);
             }}
+            className="flex items-center gap-3 py-2 mb-3"
           >
-            Add
+            <FaUserPlus /> Add
           </RoundedBtn>
           <div className="">
-            <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+            <div className="inline-block min-w-full">
               <div className="hidden md:block">
                 <table className="min-w-full text-left text-sm font-light overflow-x-scroll">
                   <thead className="border-b font-medium dark:border-neutral-500">
