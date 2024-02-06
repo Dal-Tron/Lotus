@@ -1,7 +1,11 @@
 import { useState, useRef, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
+import { AiOutlineMenu } from "react-icons/ai";
+import {
+  MdOutlineAdminPanelSettings,
+  MdOutlineSpaceDashboard,
+} from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
 import { FaSignOutAlt } from "react-icons/fa";
 import RoundedBtn from "../RoundedBtn";
@@ -27,11 +31,7 @@ import { AuthContext } from "src/contexts/AuthContext";
 const Header = () => {
   const session = useContext(AuthContext);
   const navigate = useNavigate();
-  const [nav, setNav] = useState<boolean>(false);
   const [showPopup, setShowPopup] = useState<boolean>(false);
-  const handleNav = () => {
-    setNav(!nav);
-  };
   const dropdownMenuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -101,16 +101,16 @@ const Header = () => {
             </RoundedBtn> */}
           </div>
         ) : (
-          <div className="relative hidden md:flex">
+          <div className="relative">
             <button
-              className="hidden md:flex"
+              className=""
               id="menu-button"
-              aria-expanded={true}
               aria-haspopup={true}
               type="button"
               onClick={() => setShowPopup(!showPopup)}
             >
-              <FaRegUser />
+              <FaRegUser className="hidden md:block" />
+              <AiOutlineMenu size={20} className="block md:hidden" />
             </button>
             {showPopup ? (
               <div
@@ -119,10 +119,52 @@ const Header = () => {
                 aria-orientation="vertical"
                 aria-labelledby="menu-button"
                 tabIndex={-1}
+                ref={dropdownMenuRef}
               >
-                <div className="p-3" role="none" ref={dropdownMenuRef}>
+                <div className="hidden md:block" role="none">
                   <button
-                    className="w-full flex items-center gap-3"
+                    className="px-3 py-1 w-full flex items-center gap-3 hover:bg-cus-gray-medium rounded duration-300"
+                    onClick={signout}
+                  >
+                    <FaSignOutAlt /> {SIGNOUT}
+                  </button>
+                </div>
+                <div className="block md:hidden" role="none">
+                  <ul className="border-b border-cus-gray-medium pb-2">
+                    {session ? (
+                      session.user.user_metadata.role == ROLES.ADMIN ? (
+                        <>
+                          <li className="px-3 py-1 hover:bg-cus-gray-medium rounded cursor-pointer duration-300">
+                            <Link
+                              to={`/${URL_ADMIN}`}
+                              className="flex items-center gap-3"
+                            >
+                              <MdOutlineAdminPanelSettings /> {TEXT_URL_ADMIN}
+                            </Link>
+                          </li>
+                          <li className="px-3 py-1 hover:bg-cus-gray-medium rounded cursor-pointer duration-300">
+                            <Link
+                              to={`/${URL_DASHBOARD}`}
+                              className="flex items-center gap-3"
+                            >
+                              <MdOutlineSpaceDashboard /> {TEXT_URL_DASHBOARD}
+                            </Link>
+                          </li>
+                        </>
+                      ) : (
+                        <li className="px-3 py-1 hover:bg-cus-gray-medium rounded cursor-pointer duration-300">
+                          <Link
+                            to={`/${URL_DASHBOARD}`}
+                            className="flex items-center gap-3"
+                          >
+                            <MdOutlineSpaceDashboard /> {TEXT_URL_DASHBOARD}
+                          </Link>
+                        </li>
+                      )
+                    ) : null}
+                  </ul>
+                  <button
+                    className="px-3 py-1 mt-3 hover:bg-cus-gray-medium w-full flex items-center rounded gap-3 duration-300"
                     onClick={signout}
                   >
                     <FaSignOutAlt /> {SIGNOUT}
@@ -132,89 +174,6 @@ const Header = () => {
             ) : null}
           </div>
         )}
-
-        {!session ? (
-          <div className="flex items-center gap-2 md:hidden">
-            <RoundedBtn
-              className="self-center py-1"
-              variant="fill"
-              onClick={() => navigate(`/${URL_LOGIN}`)}
-            >
-              {LOGIN}
-            </RoundedBtn>
-            {/* <RoundedBtn
-              className="self-center py-1"
-              variant="transparent"
-              onClick={() => navigate(`/${URL_SIGNUP}`)}
-            >
-              {SIGNUP}
-            </RoundedBtn> */}
-            <div onClick={handleNav} className="">
-              {nav ? <AiOutlineClose size={20} /> : <AiOutlineMenu size={20} />}
-            </div>
-          </div>
-        ) : (
-          <div className="flex items-center gap-4 md:hidden">
-            <div className="relative">
-              <button
-                className="md:hidden"
-                id="menu-button"
-                aria-expanded={true}
-                aria-haspopup={true}
-                onClick={() => setShowPopup(!showPopup)}
-              >
-                <FaRegUser />
-              </button>
-              {showPopup ? (
-                <div
-                  className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-cus-gray-dark shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                  role="menu"
-                  aria-labelledby="menu-button"
-                  tabIndex={-1}
-                >
-                  <div className="p-3" role="none">
-                    <button
-                      className="w-full flex items-center gap-3"
-                      onClick={signout}
-                    >
-                      <FaSignOutAlt /> {SIGNOUT}
-                    </button>
-                  </div>
-                </div>
-              ) : null}
-            </div>
-            <div onClick={handleNav} className="">
-              {nav ? <AiOutlineClose size={20} /> : <AiOutlineMenu size={20} />}
-            </div>
-          </div>
-        )}
-        <ul
-          className={
-            nav
-              ? "fixed md:hidden left-0 top-0 w-[80%] sm:w-[60%] h-full bg-cus-brown ease-in-out duration-500 z-10"
-              : "fixed top-0 bottom-0 left-[-100%] ease-in-out duration-500"
-          }
-        >
-          <h1 className="w-full m-4 text-2xl font-bold text-cus-pink">
-            {APP_NAME}
-          </h1>
-          {session ? (
-            session.user.user_metadata.role == ROLES.ADMIN ? (
-              <>
-                <li className="border-b border-cus-gray-dark p-4 hover:text-cus-pink cursor-pointer duration-300">
-                  <Link to={`/${URL_ADMIN}`}>{TEXT_URL_ADMIN}</Link>
-                </li>
-                <li className="border-b border-cus-gray-dark p-4 hover:text-cus-pink cursor-pointer duration-300">
-                  <Link to={`/${URL_DASHBOARD}`}>{TEXT_URL_DASHBOARD}</Link>
-                </li>
-              </>
-            ) : (
-              <li className="border-b border-cus-gray-dark p-4 hover:text-cus-pink cursor-pointer duration-300">
-                {TEXT_URL_DASHBOARD}
-              </li>
-            )
-          ) : null}
-        </ul>
       </nav>
     </header>
   );
