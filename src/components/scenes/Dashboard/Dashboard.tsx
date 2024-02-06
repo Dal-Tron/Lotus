@@ -57,12 +57,11 @@ const Dashboard = () => {
       const { data, error } = await supabase.storage
         .from("avatars")
         .download(path);
-      console.log(data, error);
       if (error) {
         throw error;
       }
       const url = URL.createObjectURL(data);
-      setAvatarUrl(url);
+      setAvatarUrl("");
     } catch (error: any) {
       console.log("Error downloading image: ", error.message);
     }
