@@ -17,6 +17,7 @@ export const URL_UPDATE_PWD = "update-pwd";
 export const TEXT_URL_DASHBOARD = "Dashboard";
 export const TEXT_URL_ADMIN = "Admin";
 export const TEXT_NO_DATA = "No data";
+export const TEXT_NO_IMAGE = "No image";
 
 export const CUS_GRAY_LIGHT = "#d1d2d3";
 export const CUS_GRAY_MEDIUM = "#9a9a9d";
