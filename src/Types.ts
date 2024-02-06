@@ -9,6 +9,7 @@ export interface User {
 }
 
 export interface NewUser {
+  avatarUrl?: string;
   email: string;
   fullName: string;
   username: string;
