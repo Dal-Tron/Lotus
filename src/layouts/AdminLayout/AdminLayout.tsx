@@ -35,7 +35,7 @@ const AdminLayout = ({ children }: PropsWithChildren) => {
     <div className="bg-cus-black">
       <Header />
       <main className="h-main-height flex gap-4">
-        <div className="w-sidebar-width h-full">
+        <div className="min-w-fit h-full">
           <Sidebar />
         </div>
         <div className="">{children}</div>

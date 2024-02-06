@@ -88,7 +88,7 @@ const Dashboard = () => {
 
   return (
     <div className="p-5">
-      <div className="pt-10 w-1/2 mx-auto">
+      <div className="pt-10 w-11/12 md:w-1/2 mx-auto">
         <div className="w-40 h-40 mx-auto rounded overflow-hidden relative border flex justify-center items-center">
           <input
             className="absolute h-full w-full text-transparent file:hidden"
