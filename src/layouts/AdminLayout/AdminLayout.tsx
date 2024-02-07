@@ -35,7 +35,7 @@ const AdminLayout = ({ children }: { children: ClildrenFunction }) => {
   return (
     <div className="bg-cus-black">
       <Header />
-      <main className="h-main-height flex gap-4">
+      <main className="h-main-height flex">
         <div className="min-w-fit h-full">
           <Sidebar
             isExpanded={isSidebarExpanded}

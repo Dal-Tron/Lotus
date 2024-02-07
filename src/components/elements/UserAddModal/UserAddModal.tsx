@@ -68,7 +68,7 @@ const UserAddModal = ({
                     username: e.target.value,
                   });
                 }}
-                label="username"
+                label="Username"
                 icon={<AiOutlineUser />}
               />
               <Input
@@ -86,7 +86,6 @@ const UserAddModal = ({
                 icon={<AiOutlineUser />}
               />
             </div>
-            {/*footer*/}
             <div className="flex items-center justify-end p-3 border-t border-cus-gray-medium rounded-b">
               <button
                 className="text-cus-pink background-transparent px-6 py-2 outline-none focus:outline-none mr-1 mb-1 transition-all duration-300 hover:opacity-80"

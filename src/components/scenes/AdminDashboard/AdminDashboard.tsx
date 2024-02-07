@@ -24,6 +24,9 @@ const columns: columnType[] = [
   {
     name: "Full name",
   },
+  {
+    name: "role",
+  },
 ];
 
 const AdminDashboard = ({
@@ -150,6 +153,9 @@ const AdminDashboard = ({
                               {user.full_name}
                             </td>
                             <td className="whitespace-nowrap px-3 py-2">
+                              {user.role}
+                            </td>
+                            <td className="whitespace-nowrap px-3 py-2">
                               <button onClick={() => onEdit({ idx })}>
                                 <FaEdit />
                               </button>
@@ -160,7 +166,7 @@ const AdminDashboard = ({
                     ) : (
                       <tr className="border-b">
                         <td
-                          colSpan={4}
+                          colSpan={7}
                           className="text-center text-cus-pink px-6 py-4"
                         >
                           {TEXT_NO_DATA}
@@ -185,15 +191,13 @@ const AdminDashboard = ({
                           key={user.id}
                           className="border border-cus-gray-dark p-2 overflow-hidden"
                         >
-                          <div className="flex justify-center items-center w-20 h-20 rounded-sm overflow-hidden border border-cus-gray-dark">
-                            {user.avatar_url ? (
+                          {user.avatar_url ? (
+                            <div className="flex justify-center items-center w-20 h-20 rounded-full overflow-hidden border border-cus-gray-dark mx-auto mb-2">
                               <img src={user.avatar_url} />
-                            ) : (
-                              <p className="text-cus-gray-medium">
-                                {TEXT_NO_IMAGE}
-                              </p>
-                            )}
-                          </div>
+                            </div>
+                          ) : (
+                            <div className="w-20 h-20 rounded-full border border-cus-gray-dark bg-cus-gray-dark mx-auto mb-2"></div>
+                          )}
                           <p>
                             Email: <span>{user.email}</span>
                           </p>
@@ -202,6 +206,9 @@ const AdminDashboard = ({
                           </p>
                           <p>
                             Full name: <span>{user.full_name}</span>
+                          </p>
+                          <p>
+                            Role: <span>{user.role}</span>
                           </p>
                         </div>
                       );
