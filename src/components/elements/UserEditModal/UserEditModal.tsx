@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { AiOutlineUser } from "react-icons/ai";
 import { MdOutlineEmail } from "react-icons/md";
 import { FaTimes } from "react-icons/fa";
@@ -23,6 +23,7 @@ const UserEditModal = ({
   setSelectedUser,
   saveChanges,
 }: UserEditModalProps) => {
+  const [_role, _setRole] = useState("admin");
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -68,7 +69,7 @@ const UserEditModal = ({
                     username: e.target.value,
                   });
                 }}
-                label="username"
+                label="Username"
                 icon={<AiOutlineUser />}
               />
               <Input
