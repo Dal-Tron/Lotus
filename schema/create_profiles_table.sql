@@ -16,8 +16,6 @@ create policy "Public profiles are viewable by everyone." on profiles for select
 create policy "Users can insert their own profile." on profiles for insert with check (auth.uid() = id);
 create policy "Users can update own profile." on profiles for update using (auth.uid() = id);
 
-insert into profiles (id, email, role, username) values ('563c96cd-fd1d-4dc7-bce5-3bd0df5369d9', 'hurricanehunter0702@gmail.com', 'admin', 'hunter');
-
 create or replace function public.handle_new_user()
   returns trigger as $$
     begin
