@@ -5,7 +5,7 @@ import { MdOutlineLock } from "react-icons/md";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import Input from "src/components/common/Input";
 import RoundedBtn from "src/components/common/RoundedBtn";
-import { useFormFields } from "src/lib/hooksLib";
+import { useFormFields } from "src/lib/hooks";
 import supabase from "src/services/db";
 import {
   BACK_TO_HOME,

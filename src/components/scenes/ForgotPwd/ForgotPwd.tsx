@@ -5,7 +5,7 @@ import { MdOutlineEmail } from "react-icons/md";
 import validator from "validator";
 import Input from "src/components/common/Input";
 import RoundedBtn from "src/components/common/RoundedBtn";
-import { useFormFields } from "src/lib/hooksLib";
+import { useFormFields } from "src/lib/hooks";
 import {
   BACK_TO_HOME,
   CUS_GRAY_MEDIUM,
