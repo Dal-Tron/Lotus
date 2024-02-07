@@ -1,10 +1,10 @@
 drop table if exists profiles;
 create table profiles (
   id uuid references auth.users not null primary key,
-  email varchar unique,
+  email varchar unique not null,
   username varchar unique,
   full_name varchar,
-  role varchar,
+  role varchar default 'normal',
   avatar_url varchar,
   updated_at timestamp with time zone,
   constraint username_length check (char_length(username) >= 3)
@@ -19,8 +19,8 @@ create policy "Users can update own profile." on profiles for update using (auth
 create or replace function public.handle_new_user()
   returns trigger as $$
     begin
-      insert into public.profiles (id, email, username, full_name, avatar_url, role)
-      values (new.id, new.email, new.raw_user_meta_data->>'username', new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'avatar_url', new.raw_user_meta_data->>'role');
+      insert into public.profiles (id, email, username, full_name, avatar_url)
+      values (new.id, new.email, new.raw_user_meta_data->>'username', new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'avatar_url');
       return new;
     end;
   $$ language plpgsql security definer;
