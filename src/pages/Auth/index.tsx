@@ -38,9 +38,6 @@ const AuthPages = () => {
               },
             },
           }}
-          additionalData={{
-            role: ROLES.NORMAL,
-          }}
           providers={["google", "facebook", "linkedin"]}
           theme="dark"
           redirectTo={`${process.env.REACT_APP_BASE_URL}/${URL_DASHBOARD}`}
