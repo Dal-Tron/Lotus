@@ -1,22 +1,21 @@
-drop table if exists profiles;
-create table profiles (
-  id uuid references auth.users not null primary key,
-  email varchar unique not null,
-  username varchar unique,
-  full_name varchar,
-  role varchar default 'normal',
-  avatar_url varchar,
-  updated_at timestamp with time zone,
-  constraint username_length check (char_length(username) >= 3)
+DROP TABLE IF EXISTS profiles;
+CREATE TABLE profiles (
+  id uuid REFERENCES auth.users NOT NULL PRIMARY KEY,
+  username VARCHAR NOT NULL,
+  email VARCHAR UNIQUE NOT NULL,
+  full_name VARCHAR,
+  role VARCHAR DEFAULT 'normal',
+  avatar_url VARCHAR,
+  updated_at TIMESTAMP WITH TIME ZONE
 );
 
-alter table profiles enable row level security;
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
-create policy "Public profiles are viewable by everyone." on profiles for select using (true);
-create policy "Users can insert their own profile." on profiles for insert with check (auth.uid() = id);
-create policy "Users can update own profile." on profiles for update using (auth.uid() = id);
+CREATE POLICY "Public profiles are viewable by everyone." ON profiles FOR SELECT USING (TRUE);
+CREATE POLICY "Users can insert their own profile." ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
+CREATE POLICY "Users can update own profile." ON profiles FOR update USING (auth.uid() = id);
 
-create or replace function public.handle_new_user()
+CREATE OR REPLACE FUNCTION public.handle_new_user()
   returns trigger as $$
     begin
       insert into public.profiles (id, email, username, full_name, avatar_url)

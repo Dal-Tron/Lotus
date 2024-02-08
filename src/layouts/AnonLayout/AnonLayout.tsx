@@ -8,7 +8,7 @@ const AnonLayout = ({ children }: PropsWithChildren) => {
   return (
     <div className="bg-cus-black">
       <Header />
-      <main className="h-main-height">
+      <main className="min-h-[var(--main-height)]">
         <div className="">{children}</div>
       </main>
       <Footer />

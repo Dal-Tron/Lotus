@@ -21,7 +21,7 @@ const RoundedBtn = ({
       onClick={handleClick}
       className={cx(
         "rounded-full px-4 duration-300",
-        variant == "fill"
+        variant === "fill"
           ? "border border-cus-pink bg-cus-pink hover:opacity-80"
           : "border border-cus-gray-light bg-transparent hover:opacity-80",
         className

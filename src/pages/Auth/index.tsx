@@ -1,26 +1,27 @@
 import { useNavigate } from "react-router-dom";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-import {
-  AUTH_STATES,
-  CUS_GREEN,
-  ROLES,
-  URL_ADMIN,
-  URL_DASHBOARD,
-} from "src/lib/consts";
+import { AUTH_STATES, CUS_COLORS, URLS } from "src/utils/consts";
 import supabase from "src/services/db";
+import { useEffect } from "react";
+import { randomStringGenerator } from "src/utils/helpers";
 
 // =======================================================================================================
 
 const AuthPages = () => {
   const navigate = useNavigate();
-  supabase.auth.onAuthStateChange((e: string, session: any) => {
-    if (e == AUTH_STATES.SIGNED_IN) {
-      if (session.user.user_metadata.role == ROLES.ADMIN)
-        navigate(`/${URL_ADMIN}`);
-      else navigate(`/${URL_DASHBOARD}`);
-    }
-  });
+  const newUsername = randomStringGenerator(12);
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((e) => {
+      if (e === AUTH_STATES.SIGNED_IN) {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        navigate(`/${URLS.DASHBOARD}`);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <div className="flex justify-center items-center h-[100vh] bg-cus-black">
@@ -33,17 +34,19 @@ const AuthPages = () => {
             variables: {
               default: {
                 colors: {
-                  brand: CUS_GREEN,
+                  brand: CUS_COLORS.GREEN,
                 },
               },
             },
           }}
           additionalData={{
-            role: ROLES.NORMAL,
+            role: "normal",
+            username: newUsername,
           }}
           providers={["google", "facebook", "linkedin"]}
+          showLinks={true}
           theme="dark"
-          redirectTo={`${process.env.REACT_APP_BASE_URL}/${URL_DASHBOARD}`}
+          redirectTo={`${process.env.REACT_APP_BASE_URL}/users/${newUsername}/${URLS.DASHBOARD}`}
         />
       </div>
     </div>

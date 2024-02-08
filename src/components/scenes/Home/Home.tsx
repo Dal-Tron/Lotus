@@ -1,4 +1,4 @@
-import { APP_NAME } from "src/lib/consts";
+import { APP_NAME } from "src/utils/consts";
 
 const Home = () => {
   return (

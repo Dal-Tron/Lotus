@@ -9,20 +9,7 @@ import {
 import { FaRegUser } from "react-icons/fa";
 import { FaSignOutAlt } from "react-icons/fa";
 import RoundedBtn from "../RoundedBtn";
-import {
-  APP_NAME,
-  LOGIN,
-  ROLES,
-  SIGNOUT,
-  SIGNUP,
-  TEXT_URL_ADMIN,
-  TEXT_URL_DASHBOARD,
-  URL_ADMIN,
-  URL_DASHBOARD,
-  URL_HOME,
-  URL_LOGIN,
-  URL_SIGNUP,
-} from "src/lib/consts";
+import { APP_NAME, ROLES, TEXT_BTNS, TEXT_URLS, URLS } from "src/utils/consts";
 import supabase from "src/services/db";
 import { AuthContext } from "src/contexts/AuthContext";
 
@@ -55,30 +42,38 @@ const Header = () => {
     if (error) {
       toast.error(error.message);
     } else {
-      navigate(`/${URL_HOME}`);
+      navigate(`/${URLS.HOME}`);
     }
   };
 
   return (
     <header>
       <nav className="flex justify-between items-center h-header-height border-b border-cus-gray-dark px-4">
-        <Link to={`/${URL_HOME}`}>
+        <Link to={`/${URLS.HOME}`}>
           <h1 className="text-2xl font-bold text-cus-pink">{APP_NAME}</h1>
         </Link>
         <ul className="hidden md:flex gap-3">
           {session ? (
-            session.user.user_metadata.role == ROLES.ADMIN ? (
+            session.user.user_metadata.role === ROLES.ADMIN ? (
               <>
                 <li className="px-3 hover:opacity-80 cursor-pointer duration-300">
-                  <Link to={`/${URL_ADMIN}`}>{TEXT_URL_ADMIN}</Link>
+                  <Link to={`/${URLS.ADMIN}`}>{TEXT_URLS.ADMIN}</Link>
                 </li>
                 <li className="px-3 hover:opacity-80 cursor-pointer duration-300">
-                  <Link to={`/${URL_DASHBOARD}`}>{TEXT_URL_DASHBOARD}</Link>
+                  <Link
+                    to={`/users/${session.user.user_metadata.username}/${URLS.DASHBOARD}`}
+                  >
+                    {TEXT_URLS.DASHBOARD}
+                  </Link>
                 </li>
               </>
             ) : (
               <li className="px-3 hover:opacity-80 cursor-pointer duration-300">
-                {TEXT_URL_DASHBOARD}
+                <Link
+                  to={`/users/${session.user.user_metadata.username}/${URLS.DASHBOARD}`}
+                >
+                  {TEXT_URLS.DASHBOARD}
+                </Link>
               </li>
             )
           ) : null}
@@ -88,17 +83,10 @@ const Header = () => {
             <RoundedBtn
               className="self-center py-1"
               variant="fill"
-              onClick={() => navigate(`/${URL_LOGIN}`)}
+              onClick={() => navigate(`/${URLS.LOGIN}`)}
             >
-              {LOGIN}
+              {TEXT_BTNS.LOGIN}
             </RoundedBtn>
-            {/* <RoundedBtn
-              className="self-center py-1"
-              variant="transparent"
-              onClick={() => navigate(`/${URL_SIGNUP}`)}
-            >
-              {SIGNUP}
-            </RoundedBtn> */}
           </div>
         ) : (
           <div className="relative">
@@ -126,38 +114,38 @@ const Header = () => {
                     className="px-3 py-1 w-full flex items-center gap-3 hover:bg-cus-gray-medium rounded duration-300"
                     onClick={signout}
                   >
-                    <FaSignOutAlt /> {SIGNOUT}
+                    <FaSignOutAlt /> {TEXT_BTNS.SIGNOUT}
                   </button>
                 </div>
                 <div className="block md:hidden" role="none">
                   <ul className="border-b border-cus-gray-medium pb-2">
                     {session ? (
-                      session.user.user_metadata.role == ROLES.ADMIN ? (
+                      session.user.user_metadata.role === ROLES.ADMIN ? (
                         <>
                           <li className="px-3 py-1 hover:bg-cus-gray-medium rounded cursor-pointer duration-300">
                             <Link
-                              to={`/${URL_ADMIN}`}
+                              to={`/${URLS.ADMIN}`}
                               className="flex items-center gap-3"
                             >
-                              <MdOutlineAdminPanelSettings /> {TEXT_URL_ADMIN}
+                              <MdOutlineAdminPanelSettings /> {TEXT_URLS.ADMIN}
                             </Link>
                           </li>
                           <li className="px-3 py-1 hover:bg-cus-gray-medium rounded cursor-pointer duration-300">
                             <Link
-                              to={`/${URL_DASHBOARD}`}
+                              to={`/${URLS.DASHBOARD}`}
                               className="flex items-center gap-3"
                             >
-                              <MdOutlineSpaceDashboard /> {TEXT_URL_DASHBOARD}
+                              <MdOutlineSpaceDashboard /> {TEXT_URLS.DASHBOARD}
                             </Link>
                           </li>
                         </>
                       ) : (
                         <li className="px-3 py-1 hover:bg-cus-gray-medium rounded cursor-pointer duration-300">
                           <Link
-                            to={`/${URL_DASHBOARD}`}
+                            to={`/${URLS.DASHBOARD}`}
                             className="flex items-center gap-3"
                           >
-                            <MdOutlineSpaceDashboard /> {TEXT_URL_DASHBOARD}
+                            <MdOutlineSpaceDashboard /> {TEXT_URLS.DASHBOARD}
                           </Link>
                         </li>
                       )
@@ -167,7 +155,7 @@ const Header = () => {
                     className="px-3 py-1 mt-3 hover:bg-cus-gray-medium w-full flex items-center rounded gap-3 duration-300"
                     onClick={signout}
                   >
-                    <FaSignOutAlt /> {SIGNOUT}
+                    <FaSignOutAlt /> {TEXT_BTNS.SIGNOUT}
                   </button>
                 </div>
               </div>

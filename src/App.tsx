@@ -9,16 +9,7 @@ import { AuthContext } from "./contexts/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import supabase from "./services/db";
-import {
-  URL_ADMIN,
-  URL_DASHBOARD,
-  URL_HOME,
-  URL_LOGIN,
-  // URL_FORGOT_PWD,
-  // URL_LOGIN,
-  // URL_SIGNUP,
-  // URL_UPDATE_PWD,
-} from "./lib/consts";
+import { URLS } from "./utils/consts";
 
 const HomePage = React.lazy(() => import("./pages/Home"));
 const DashboardPage = React.lazy(() => import("./pages/Dashboard"));
@@ -47,14 +38,13 @@ function App() {
       <Router>
         <Suspense>
           <Routes>
-            <Route path={`/${URL_HOME}`} element={<HomePage />} />
-            {/* <Route path={`/${URL_LOGIN}`} element={<LoginPage />} /> */}
-            {/* <Route path={`/${URL_SIGNUP}`} element={<SignupPage />} /> */}
-            {/* <Route path={`/${URL_FORGOT_PWD}`} element={<ForgotPwdPage />} /> */}
-            {/* <Route path={`/${URL_UPDATE_PWD}`} element={<UpdatePwdPage />} /> */}
-            <Route path={`/${URL_DASHBOARD}`} element={<DashboardPage />} />
-            <Route path={`/${URL_ADMIN}`} element={<AdminDashboardPage />} />
-            <Route path={`/${URL_LOGIN}`} element={<AuthPages />} />
+            <Route path={`/${URLS.HOME}`} element={<HomePage />} />
+            <Route
+              path={`/users/:id/${URLS.DASHBOARD}`}
+              element={<DashboardPage />}
+            />
+            <Route path={`/${URLS.ADMIN}`} element={<AdminDashboardPage />} />
+            <Route path={`/${URLS.LOGIN}`} element={<AuthPages />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>
