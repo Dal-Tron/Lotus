@@ -9,7 +9,7 @@ import {
 import { FaRegUser } from "react-icons/fa";
 import { FaSignOutAlt } from "react-icons/fa";
 import RoundedBtn from "../RoundedBtn";
-import { APP_NAME, ROLES, TEXT_BTNS, TEXT_URLS, URLS } from "src/lib/consts";
+import { APP_NAME, ROLES, TEXT_BTNS, TEXT_URLS, URLS } from "src/utils/consts";
 import supabase from "src/services/db";
 import { AuthContext } from "src/contexts/AuthContext";
 
@@ -60,12 +60,20 @@ const Header = () => {
                   <Link to={`/${URLS.ADMIN}`}>{TEXT_URLS.ADMIN}</Link>
                 </li>
                 <li className="px-3 hover:opacity-80 cursor-pointer duration-300">
-                  <Link to={`/${URLS.DASHBOARD}`}>{TEXT_URLS.DASHBOARD}</Link>
+                  <Link
+                    to={`/users/${session.user.user_metadata.username}/${URLS.DASHBOARD}`}
+                  >
+                    {TEXT_URLS.DASHBOARD}
+                  </Link>
                 </li>
               </>
             ) : (
               <li className="px-3 hover:opacity-80 cursor-pointer duration-300">
-                <Link to={`/${URLS.DASHBOARD}`}>{TEXT_URLS.DASHBOARD}</Link>
+                <Link
+                  to={`/users/${session.user.user_metadata.username}/${URLS.DASHBOARD}`}
+                >
+                  {TEXT_URLS.DASHBOARD}
+                </Link>
               </li>
             )
           ) : null}

@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import Footer from "src/components/common/Footer";
 import Header from "src/components/common/Header";
 import Sidebar from "src/components/common/Sidebar";
-import { MSG_ERRS, ROLES, URLS } from "src/lib/consts";
+import { MSG_ERRS, ROLES, URLS } from "src/utils/consts";
 import supabase from "src/services/db";
 
 // =======================================================================================================
@@ -19,7 +19,6 @@ const AdminLayout = ({ children }: { children: ClildrenFunction }) => {
         !session ||
         (session && session.user.user_metadata.role !== ROLES.ADMIN)
       ) {
-        console.log(session);
         toast.error(MSG_ERRS.NOT_PERMITTED);
         navigate(`/${URLS.HOME}`);
       }
@@ -32,7 +31,9 @@ const AdminLayout = ({ children }: { children: ClildrenFunction }) => {
       }
     });
     return () => subscription.unsubscribe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return (
     <div className="bg-cus-black">
       <Header />

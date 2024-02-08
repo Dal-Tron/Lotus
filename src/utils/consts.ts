@@ -46,4 +46,5 @@ export const AUTH_STATES = {
 export const MSG_ERRS = {
   NOT_LOGGED_IN: "Please log in.",
   NOT_PERMITTED: "You are not allowed to access this page",
+  NOT_FOUND: "Can't find the page.",
 };

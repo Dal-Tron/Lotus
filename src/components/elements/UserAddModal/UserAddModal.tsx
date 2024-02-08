@@ -41,7 +41,7 @@ const UserAddModal = ({
             </div>
             <div className="relative p-3 flex flex-col gap-2">
               <div className="w-40 h-40 mx-auto rounded overflow-hidden relative border border-cus-gray-medium flex justify-center items-center">
-                <img width="100%" src={newUser?.avatarUrl} />
+                <img width="100%" src={newUser?.avatarUrl} alt="avatar" />
               </div>
               <Input
                 type="email"

@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { AiOutlineUser } from "react-icons/ai";
 import { MdOutlineEmail } from "react-icons/md";
 import { FaTimes } from "react-icons/fa";
@@ -23,7 +23,6 @@ const UserEditModal = ({
   setSelectedUser,
   saveChanges,
 }: UserEditModalProps) => {
-  const [_role, _setRole] = useState("admin");
   return (
     <>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
@@ -42,7 +41,7 @@ const UserEditModal = ({
             </div>
             <div className="relative p-3 flex flex-col gap-2">
               <div className="w-40 h-40 mx-auto rounded overflow-hidden relative border border-cus-gray-medium flex justify-center items-center">
-                <img width="100%" src={selectedUser?.avatar_url} />
+                <img width="100%" src={selectedUser?.avatar_url} alt="avatar" />
               </div>
               <Input
                 type="email"
@@ -56,19 +55,21 @@ const UserEditModal = ({
                   });
                 }}
                 label="Email"
+                readOnly={true}
                 icon={<MdOutlineEmail />}
               />
               <Input
                 type="text"
                 name="username"
                 required={true}
-                value={selectedUser?.username}
+                value={selectedUser?.username || ""}
                 onChange={(e) => {
                   setSelectedUser({
                     ...selectedUser,
                     username: e.target.value,
                   });
                 }}
+                readOnly={true}
                 label="Username"
                 icon={<AiOutlineUser />}
               />
@@ -76,7 +77,7 @@ const UserEditModal = ({
                 type="text"
                 name="full_name"
                 required={true}
-                value={selectedUser?.full_name}
+                value={selectedUser?.full_name || ""}
                 onChange={(e) => {
                   setSelectedUser({
                     ...selectedUser,
