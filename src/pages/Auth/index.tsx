@@ -1,13 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-import {
-  AUTH_STATES,
-  CUS_GREEN,
-  ROLES,
-  URL_ADMIN,
-  URL_DASHBOARD,
-} from "src/lib/consts";
+import { AUTH_STATES, CUS_COLORS, ROLES, URLS } from "src/lib/consts";
 import supabase from "src/services/db";
 
 // =======================================================================================================
@@ -15,10 +9,11 @@ import supabase from "src/services/db";
 const AuthPages = () => {
   const navigate = useNavigate();
   supabase.auth.onAuthStateChange((e: string, session: any) => {
-    if (e == AUTH_STATES.SIGNED_IN) {
+    console.log(session);
+    if (e === AUTH_STATES.SIGNED_IN) {
       if (session.user.user_metadata.role == ROLES.ADMIN)
-        navigate(`/${URL_ADMIN}`);
-      else navigate(`/${URL_DASHBOARD}`);
+        navigate(`/${URLS.ADMIN}`);
+      else navigate(`/${URLS.DASHBOARD}`);
     }
   });
 
@@ -33,14 +28,14 @@ const AuthPages = () => {
             variables: {
               default: {
                 colors: {
-                  brand: CUS_GREEN,
+                  brand: CUS_COLORS.GREEN,
                 },
               },
             },
           }}
           providers={["google", "facebook", "linkedin"]}
           theme="dark"
-          redirectTo={`${process.env.REACT_APP_BASE_URL}/${URL_DASHBOARD}`}
+          redirectTo={`${process.env.REACT_APP_BASE_URL}/${URLS.DASHBOARD}`}
         />
       </div>
     </div>

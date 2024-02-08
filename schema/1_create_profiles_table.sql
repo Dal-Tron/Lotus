@@ -42,7 +42,7 @@ create policy "Anyone can update their own avatar." on storage.objects for updat
 
 ------------------------------------------------------------------------------------------------------------------
 
-create or replace function delete_storage_object(bucket text, object text, out status int, out content text)
+CREATE OR replace function delete_storage_object(bucket text, object text, out status int, out content text)
   returns record
   language 'plpgsql'
   security definer as $$
@@ -51,7 +51,7 @@ create or replace function delete_storage_object(bucket text, object text, out s
       service_role_key text := '';
       url text := project_url||'/storage/v1/object/'||bucket||'/'||object;
     begin
-      select into status, content result.status::int, result.content::text FROM extensions.http(('DELETE', url, ARRAY[extensions.http_header('authorization','Bearer '||service_role_key)], NULL, NULL)::extensions.http_request) as result;
+      SELECT INTO status, content result.status::int, result.content::text FROM extensions.http(('DELETE', url, ARRAY[extensions.http_header('authorization','Bearer '||service_role_key)], NULL, NULL)::extensions.http_request);
     end;
   $$;
 
