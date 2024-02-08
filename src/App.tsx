@@ -9,7 +9,7 @@ import { AuthContext } from "./contexts/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import supabase from "./services/db";
-import { URLS } from "./lib/consts";
+import { URLS } from "./utils/consts";
 
 const HomePage = React.lazy(() => import("./pages/Home"));
 const DashboardPage = React.lazy(() => import("./pages/Dashboard"));
@@ -39,7 +39,10 @@ function App() {
         <Suspense>
           <Routes>
             <Route path={`/${URLS.HOME}`} element={<HomePage />} />
-            <Route path={`/${URLS.DASHBOARD}`} element={<DashboardPage />} />
+            <Route
+              path={`/users/:id/${URLS.DASHBOARD}`}
+              element={<DashboardPage />}
+            />
             <Route path={`/${URLS.ADMIN}`} element={<AdminDashboardPage />} />
             <Route path={`/${URLS.LOGIN}`} element={<AuthPages />} />
             <Route path="*" element={<Navigate to="/" replace />} />

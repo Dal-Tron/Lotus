@@ -7,7 +7,7 @@ import UserEditModal from "src/components/elements/UserEditModal";
 import UserAddModal from "src/components/elements/UserAddModal";
 import supabase from "src/services/db";
 import { User, NewUser } from "src/Types";
-import { TEXTS } from "src/lib/consts";
+import { TEXTS } from "src/utils/consts";
 import { FaUserPlus } from "react-icons/fa6";
 
 // =======================================================================================================
@@ -47,7 +47,7 @@ const AdminDashboard = ({
   const fetchUsers = async () => {
     const { data, error } = await supabase.from("profiles").select();
     if (error) {
-      toast.error("Failed to fetch users list.");
+      toast.error(error.message);
     } else {
       setUsers(data);
     }
@@ -60,7 +60,8 @@ const AdminDashboard = ({
   }, []);
 
   const addNewUser = async () => {
-    const { data, error } = await supabase.from("profiles").insert({});
+    alert("Add user");
+    // const { data, error } = await supabase.from("profiles").insert({});
   };
 
   const onEdit = ({ idx }: { idx: number }) => {
@@ -69,7 +70,7 @@ const AdminDashboard = ({
   };
 
   const saveChanges = async () => {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("profiles")
       .update({ email: selectedUser?.email, username: selectedUser?.username })
       .eq("id", selectedUser?.id)
@@ -137,7 +138,7 @@ const AdminDashboard = ({
                             <td className="whitespace-nowrap px-3 py-2 font-medium">
                               {user.avatar_url ? (
                                 <div className="flex justify-center items-center w-10 h-10 rounded-full overflow-hidden border border-cus-gray-dark">
-                                  <img src={user.avatar_url} />
+                                  <img src={user.avatar_url} alt="avatar" />
                                 </div>
                               ) : (
                                 <div className="w-10 h-10 rounded-full border border-cus-gray-dark bg-cus-gray-dark"></div>
@@ -193,7 +194,7 @@ const AdminDashboard = ({
                         >
                           {user.avatar_url ? (
                             <div className="flex justify-center items-center w-20 h-20 rounded-full overflow-hidden border border-cus-gray-dark mx-auto mb-2">
-                              <img src={user.avatar_url} />
+                              <img src={user.avatar_url} alt="avatar" />
                             </div>
                           ) : (
                             <div className="w-20 h-20 rounded-full border border-cus-gray-dark bg-cus-gray-dark mx-auto mb-2"></div>

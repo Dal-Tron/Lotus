@@ -5,7 +5,7 @@ import { MdOutlineEmail } from "react-icons/md";
 import { AiOutlineBarcode } from "react-icons/ai";
 import Input from "src/components/common/Input";
 import RoundedBtn from "src/components/common/RoundedBtn";
-import { CUS_COLORS, TEXTS } from "src/lib/consts";
+import { CUS_COLORS, TEXTS } from "src/utils/consts";
 import { AuthContext } from "src/contexts/AuthContext";
 import supabase from "src/services/db";
 import { User } from "src/Types";
@@ -126,7 +126,7 @@ const Dashboard = () => {
           {uploading ? (
             "Uploading..."
           ) : avatar_url ? (
-            <img width="100%" src={avatar_url} />
+            <img width="100%" src={avatar_url} alt="avatar" />
           ) : (
             TEXTS.NO_IMAGE
           )}
