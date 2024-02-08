@@ -1,10 +1,10 @@
-import { PropsWithChildren, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "src/components/common/Footer";
 import Header from "src/components/common/Header";
 import Sidebar from "src/components/common/Sidebar";
-import { URL_HOME, MSG_ERR_NOT_PERMITTED, ROLES } from "src/lib/consts";
+import { MSG_ERRS, ROLES, URLS } from "src/lib/consts";
 import supabase from "src/services/db";
 
 // =======================================================================================================
@@ -19,15 +19,16 @@ const AdminLayout = ({ children }: { children: ClildrenFunction }) => {
         !session ||
         (session && session.user.user_metadata.role !== ROLES.ADMIN)
       ) {
-        toast.error(MSG_ERR_NOT_PERMITTED);
-        navigate(`/${URL_HOME}`);
+        console.log(session);
+        toast.error(MSG_ERRS.NOT_PERMITTED);
+        navigate(`/${URLS.HOME}`);
       }
     });
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!session) {
-        navigate(`/${URL_HOME}`);
+        navigate(`/${URLS.HOME}`);
       }
     });
     return () => subscription.unsubscribe();

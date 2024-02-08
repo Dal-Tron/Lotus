@@ -7,7 +7,7 @@ import UserEditModal from "src/components/elements/UserEditModal";
 import UserAddModal from "src/components/elements/UserAddModal";
 import supabase from "src/services/db";
 import { User, NewUser } from "src/Types";
-import { TEXT_NO_DATA, TEXT_NO_IMAGE } from "src/lib/consts";
+import { TEXTS } from "src/lib/consts";
 import { FaUserPlus } from "react-icons/fa6";
 
 // =======================================================================================================
@@ -169,7 +169,7 @@ const AdminDashboard = ({
                           colSpan={7}
                           className="text-center text-cus-pink px-6 py-4"
                         >
-                          {TEXT_NO_DATA}
+                          {TEXTS.NO_DATA}
                         </td>
                       </tr>
                     )}
@@ -213,7 +213,7 @@ const AdminDashboard = ({
                         </div>
                       );
                     })
-                  : TEXT_NO_DATA}
+                  : TEXTS.NO_DATA}
               </div>
             </div>
           </div>

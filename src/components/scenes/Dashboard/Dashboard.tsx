@@ -5,7 +5,7 @@ import { MdOutlineEmail } from "react-icons/md";
 import { AiOutlineBarcode } from "react-icons/ai";
 import Input from "src/components/common/Input";
 import RoundedBtn from "src/components/common/RoundedBtn";
-import { CUS_GRAY_MEDIUM, TEXT_NO_IMAGE } from "src/lib/consts";
+import { CUS_COLORS, TEXTS } from "src/lib/consts";
 import { AuthContext } from "src/contexts/AuthContext";
 import supabase from "src/services/db";
 import { User } from "src/Types";
@@ -61,7 +61,7 @@ const Dashboard = () => {
         throw error;
       }
       const url = URL.createObjectURL(data);
-      setAvatarUrl("");
+      setAvatarUrl(url);
     } catch (error: any) {
       console.log("Error downloading image: ", error.message);
     }
@@ -71,12 +71,14 @@ const Dashboard = () => {
     setLoading(true);
     const updates = {
       id: user?.id,
+      email: user?.email,
       username,
       full_name: fullname,
       avatar_url: avatarUrl,
       updated_at: new Date(),
     };
-    const { error } = await supabase.from("profiles").upsert(updates);
+    const { error, data } = await supabase.from("profiles").upsert(updates);
+    console.log("data:>>", data);
     if (error) {
       toast.error(error.message);
     } else {
@@ -126,7 +128,7 @@ const Dashboard = () => {
           ) : avatar_url ? (
             <img width="100%" src={avatar_url} />
           ) : (
-            TEXT_NO_IMAGE
+            TEXTS.NO_IMAGE
           )}
         </div>
 
@@ -134,7 +136,7 @@ const Dashboard = () => {
           name="email"
           type="email"
           label="Email"
-          icon={<MdOutlineEmail style={{ fill: CUS_GRAY_MEDIUM }} />}
+          icon={<MdOutlineEmail style={{ fill: CUS_COLORS.GRAY_MEDIUM }} />}
           onChange={() => {}}
           value={user ? user.email : ""}
           className="border-cus-gray-medium mb-3 grow"
@@ -144,11 +146,11 @@ const Dashboard = () => {
           name="username"
           type="text"
           label="Username"
-          icon={<AiOutlineUser style={{ fill: CUS_GRAY_MEDIUM }} />}
+          icon={<AiOutlineUser style={{ fill: CUS_COLORS.GRAY_MEDIUM }} />}
           onChange={(e) => {
             setUsername(e.target.value);
           }}
-          value={username}
+          value={username || ""}
           className="border-cus-gray-medium mb-3 grow"
         />
         <Input
@@ -157,7 +159,7 @@ const Dashboard = () => {
           type="text"
           label="Full name"
           onChange={(e) => setFullname(e.target.value)}
-          icon={<AiOutlineUser style={{ fill: CUS_GRAY_MEDIUM }} />}
+          icon={<AiOutlineUser style={{ fill: CUS_COLORS.GRAY_MEDIUM }} />}
           // errMsg="Invalid email"
           err={false}
           value={fullname}
@@ -167,7 +169,7 @@ const Dashboard = () => {
           name="id"
           type="text"
           label="UUID"
-          icon={<AiOutlineBarcode style={{ fill: CUS_GRAY_MEDIUM }} />}
+          icon={<AiOutlineBarcode style={{ fill: CUS_COLORS.GRAY_MEDIUM }} />}
           onChange={() => {}}
           required
           value={user ? user.id : ""}

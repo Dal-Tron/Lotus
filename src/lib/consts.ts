@@ -1,37 +1,38 @@
 export const APP_NAME = "Lotus";
 
-export const LOGIN = "Log in";
-export const SIGNUP = "Sign up";
-export const SIGNOUT = "Sign out";
-export const SUBMIT = "Submit";
-export const BACK_TO_HOME = "Back to Home";
+export const CUS_COLORS = {
+  GRAY_LIGHT: "#d1d2d3",
+  GRAY_MEDIUM: "#9a9a9d",
+  GRAY_DARK: "#222529",
+  BLACK: "#1a1d21",
+  BROWN: "#19171d",
+  BLACKEST: "#121016",
+  GREEN: "#2bac76",
+  ORANGE: "#ef6c00",
+  PINK: "#de4e26",
+};
 
-export const URL_HOME = "";
-export const URL_LOGIN = "login";
-export const URL_SIGNUP = "signup";
-export const URL_DASHBOARD = "dashboard";
-export const URL_ADMIN = "admin";
-export const URL_FORGOT_PWD = "forgot-pwd";
-export const URL_UPDATE_PWD = "update-pwd";
+export const TEXT_BTNS = {
+  LOGIN: "Log in",
+  SIGNOUT: "Sign out",
+};
 
-export const TEXT_URL_DASHBOARD = "Dashboard";
-export const TEXT_URL_ADMIN = "Admin";
-export const TEXT_NO_DATA = "No data";
-export const TEXT_NO_IMAGE = "No image";
+export const TEXT_URLS = {
+  DASHBOARD: "Dashboard",
+  ADMIN: "Admin",
+};
 
-export const CUS_GRAY_LIGHT = "#d1d2d3";
-export const CUS_GRAY_MEDIUM = "#9a9a9d";
-export const CUS_GRAY_DARK = "#222529";
-export const CUS_BLACK = "#1a1d21";
-export const CUS_BROWN = "#19171d";
-export const CUS_BLACKEST = "#121016";
-export const CUS_GREEN = "#2bac76";
-export const CUS_ORANGE = "#ef6c00";
-export const CUS_PINK = "#de4e26";
+export const URLS = {
+  HOME: "",
+  LOGIN: "login",
+  DASHBOARD: "dashboard",
+  ADMIN: "admin",
+};
 
-export const MSG_ERR_NOT_LOGIN = "Please log in.";
-export const MSG_ERR_NOT_PERMITTED = "You are not allowed to access this page.";
-export const MSG_ERR_UNEXPECTED_ERROR = "Unexpected error.";
+export const TEXTS = {
+  NO_DATA: "No data",
+  NO_IMAGE: "No image",
+};
 
 export const ROLES = {
   ADMIN: "admin",
@@ -40,4 +41,9 @@ export const ROLES = {
 
 export const AUTH_STATES = {
   SIGNED_IN: "SIGNED_IN",
+};
+
+export const MSG_ERRS = {
+  NOT_LOGGED_IN: "Please log in.",
+  NOT_PERMITTED: "You are not allowed to access this page",
 };
