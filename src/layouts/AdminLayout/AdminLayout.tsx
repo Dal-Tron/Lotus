@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "src/components/common/Footer";
@@ -6,33 +6,39 @@ import Header from "src/components/common/Header";
 import Sidebar from "src/components/common/Sidebar";
 import { MSG_ERRS, ROLES, URLS } from "src/utils/consts";
 import supabase from "src/services/db";
+import { AuthContext } from "src/contexts/AuthContext";
 
 // =======================================================================================================
+
 type ClildrenFunction = (isExpanded: boolean) => JSX.Element;
 const AdminLayout = ({ children }: { children: ClildrenFunction }) => {
+  const { session, user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState<boolean>(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (
-        !session ||
-        (session && session.user.user_metadata.role !== ROLES.ADMIN)
-      ) {
-        toast.error(MSG_ERRS.NOT_PERMITTED);
+    if (session) {
+      if (user && user.role !== ROLES.ADMIN) {
+        toast.error(`${MSG_ERRS.NOT_PERMITTED}`);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         navigate(`/${URLS.HOME}`);
+      } else {
+        const {
+          data: { subscription },
+        } = supabase.auth.onAuthStateChange((_e, _session) => {
+          if (!_session) {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            navigate(`/${URLS.HOME}`);
+          }
+        });
+        return () => subscription.unsubscribe();
       }
-    });
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
-        navigate(`/${URLS.HOME}`);
-      }
-    });
-    return () => subscription.unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    } else {
+      toast.error(`${MSG_ERRS.NOT_PERMITTED}`);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      navigate(`/${URLS.HOME}`);
+    }
+  }, [session, user]);
 
   return (
     <div className="bg-cus-black">

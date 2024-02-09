@@ -1,27 +1,23 @@
+import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
-import { AUTH_STATES, CUS_COLORS, URLS } from "src/utils/consts";
+import { CUS_COLORS, URLS } from "src/utils/consts";
 import supabase from "src/services/db";
-import { useEffect } from "react";
-import { randomStringGenerator } from "src/utils/helpers";
+import { AuthContext } from "src/contexts/AuthContext";
 
 // =======================================================================================================
 
 const AuthPages = () => {
   const navigate = useNavigate();
-  const newUsername = randomStringGenerator(12);
+  const { user } = useContext(AuthContext);
+
   useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((e) => {
-      if (e === AUTH_STATES.SIGNED_IN) {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        navigate(`/${URLS.DASHBOARD}`);
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, []);
+    if (user) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      navigate(`/users/${user?.username}/${URLS.DASHBOARD}`);
+    }
+  }, [user]);
 
   return (
     <div className="flex justify-center items-center h-[100vh] bg-cus-black">
@@ -39,14 +35,9 @@ const AuthPages = () => {
               },
             },
           }}
-          additionalData={{
-            role: "normal",
-            username: newUsername,
-          }}
           providers={["google", "facebook", "linkedin"]}
           showLinks={true}
           theme="dark"
-          redirectTo={`${process.env.REACT_APP_BASE_URL}/users/${newUsername}/${URLS.DASHBOARD}`}
         />
       </div>
     </div>
