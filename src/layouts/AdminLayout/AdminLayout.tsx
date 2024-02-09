@@ -31,6 +31,10 @@ const AdminLayout = ({ children }: { children: ClildrenFunction }) => {
         }
       });
       return () => subscription.unsubscribe();
+    } else {
+      toast.error(MSG_ERRS.NOT_PERMITTED);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      navigate(`/${URLS.HOME}`);
     }
   }, [user]);
 
