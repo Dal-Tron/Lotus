@@ -49,7 +49,14 @@ const AdminDashboard = ({
     if (error) {
       toast.error(error.message);
     } else {
-      setUsers(data);
+      const _users: User[] = [];
+      for (let user of data) {
+        if (user.avatar_url && !user.avatar_url.includes("https://")) {
+          user.avatar_url = await downloadImage(user.avatar_url);
+        }
+        _users.push(user);
+      }
+      setUsers(_users);
     }
   };
 
@@ -70,19 +77,35 @@ const AdminDashboard = ({
   };
 
   const saveChanges = async () => {
-    const { data } = await supabase
-      .from("profiles")
-      .update({ email: selectedUser?.email, username: selectedUser?.username })
-      .eq("id", selectedUser?.id)
-      .select();
-    const updatedUsers = users.map((user: any) => {
-      if (user.id === selectedUser?.id) {
-        return data;
+    alert("edit user");
+    // const { data } = await supabase
+    //   .from("profiles")
+    //   .update({ email: selectedUser?.email, username: selectedUser?.username })
+    //   .eq("id", selectedUser?.id)
+    //   .select();
+    // const updatedUsers = users.map((user: any) => {
+    //   if (user.id === selectedUser?.id) {
+    //     return data;
+    //   }
+    //   return user;
+    // });
+    // setUsers(updatedUsers);
+    // setShowEditModal(false);
+  };
+
+  const downloadImage = async (path: string) => {
+    try {
+      const { data, error } = await supabase.storage
+        .from("avatars")
+        .download(path);
+      if (error) {
+        throw error;
       }
-      return user;
-    });
-    setUsers(updatedUsers);
-    setShowEditModal(false);
+      const url = URL.createObjectURL(data);
+      return url;
+    } catch (error: any) {
+      console.log("Error downloading image: ", error.message);
+    }
   };
 
   return (
@@ -125,55 +148,57 @@ const AdminDashboard = ({
                     </tr>
                   </thead>
                   <tbody>
-                    {users.length ? (
-                      users.map((user: any, idx: number) => {
-                        return (
-                          <tr
-                            className="border-b border-b-cus-gray-dark"
-                            key={user.id}
+                    <>
+                      {users.length ? (
+                        users.map((user: any, idx: number) => {
+                          return (
+                            <tr
+                              className="border-b border-b-cus-gray-dark"
+                              key={user.id}
+                            >
+                              <td className="whitespace-nowrap px-3 py-2 font-medium">
+                                {idx + 1}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-2 font-medium">
+                                {user.avatar_url ? (
+                                  <div className="flex justify-center items-center w-10 h-10 rounded-full overflow-hidden border border-cus-gray-dark">
+                                    <img src={user.avatar_url} alt="avatar" />
+                                  </div>
+                                ) : (
+                                  <div className="w-10 h-10 rounded-full border border-cus-gray-dark bg-cus-gray-dark"></div>
+                                )}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-2 font-medium">
+                                {user.email}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-2">
+                                {user.username || user.user_id}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-2">
+                                {user.full_name}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-2">
+                                {user.role}
+                              </td>
+                              <td className="whitespace-nowrap px-3 py-2">
+                                <button onClick={() => onEdit({ idx })}>
+                                  <FaEdit />
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })
+                      ) : (
+                        <tr className="border-b">
+                          <td
+                            colSpan={7}
+                            className="text-center text-cus-pink px-6 py-4"
                           >
-                            <td className="whitespace-nowrap px-3 py-2 font-medium">
-                              {idx + 1}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-2 font-medium">
-                              {user.avatar_url ? (
-                                <div className="flex justify-center items-center w-10 h-10 rounded-full overflow-hidden border border-cus-gray-dark">
-                                  <img src={user.avatar_url} alt="avatar" />
-                                </div>
-                              ) : (
-                                <div className="w-10 h-10 rounded-full border border-cus-gray-dark bg-cus-gray-dark"></div>
-                              )}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-2 font-medium">
-                              {user.email}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-2">
-                              {user.username || user.user_id}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-2">
-                              {user.full_name}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-2">
-                              {user.role}
-                            </td>
-                            <td className="whitespace-nowrap px-3 py-2">
-                              <button onClick={() => onEdit({ idx })}>
-                                <FaEdit />
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      })
-                    ) : (
-                      <tr className="border-b">
-                        <td
-                          colSpan={7}
-                          className="text-center text-cus-pink px-6 py-4"
-                        >
-                          {TEXTS.NO_DATA}
-                        </td>
-                      </tr>
-                    )}
+                            {TEXTS.NO_DATA}
+                          </td>
+                        </tr>
+                      )}
+                    </>
                   </tbody>
                 </table>
               </div>
