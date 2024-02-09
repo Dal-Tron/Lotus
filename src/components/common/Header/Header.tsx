@@ -16,7 +16,7 @@ import { AuthContext } from "src/contexts/AuthContext";
 // =======================================================================================================
 
 const Header = () => {
-  const session = useContext(AuthContext);
+  const { session, user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const dropdownMenuRef = useRef<HTMLDivElement | null>(null);
@@ -42,6 +42,7 @@ const Header = () => {
     if (error) {
       toast.error(error.message);
     } else {
+      setUser(null);
       navigate(`/${URLS.HOME}`);
     }
   };
@@ -54,24 +55,20 @@ const Header = () => {
         </Link>
         <ul className="hidden md:flex gap-3">
           {session ? (
-            session.user.user_metadata.role === ROLES.ADMIN ? (
+            user?.role === ROLES.ADMIN ? (
               <>
                 <li className="px-3 hover:opacity-80 cursor-pointer duration-300">
                   <Link to={`/${URLS.ADMIN}`}>{TEXT_URLS.ADMIN}</Link>
                 </li>
                 <li className="px-3 hover:opacity-80 cursor-pointer duration-300">
-                  <Link
-                    to={`/users/${session.user.user_metadata.username}/${URLS.DASHBOARD}`}
-                  >
+                  <Link to={`/users/${user?.username}/${URLS.DASHBOARD}`}>
                     {TEXT_URLS.DASHBOARD}
                   </Link>
                 </li>
               </>
             ) : (
               <li className="px-3 hover:opacity-80 cursor-pointer duration-300">
-                <Link
-                  to={`/users/${session.user.user_metadata.username}/${URLS.DASHBOARD}`}
-                >
+                <Link to={`/users/${user?.username}/${URLS.DASHBOARD}`}>
                   {TEXT_URLS.DASHBOARD}
                 </Link>
               </li>
@@ -120,7 +117,7 @@ const Header = () => {
                 <div className="block md:hidden" role="none">
                   <ul className="border-b border-cus-gray-medium pb-2">
                     {session ? (
-                      session.user.user_metadata.role === ROLES.ADMIN ? (
+                      user?.role === ROLES.ADMIN ? (
                         <>
                           <li className="px-3 py-1 hover:bg-cus-gray-medium rounded cursor-pointer duration-300">
                             <Link
@@ -132,7 +129,7 @@ const Header = () => {
                           </li>
                           <li className="px-3 py-1 hover:bg-cus-gray-medium rounded cursor-pointer duration-300">
                             <Link
-                              to={`/${URLS.DASHBOARD}`}
+                              to={`/users/${user?.username}/${URLS.DASHBOARD}`}
                               className="flex items-center gap-3"
                             >
                               <MdOutlineSpaceDashboard /> {TEXT_URLS.DASHBOARD}
@@ -142,7 +139,7 @@ const Header = () => {
                       ) : (
                         <li className="px-3 py-1 hover:bg-cus-gray-medium rounded cursor-pointer duration-300">
                           <Link
-                            to={`/${URLS.DASHBOARD}`}
+                            to={`/users/${user?.username}/${URLS.DASHBOARD}`}
                             className="flex items-center gap-3"
                           >
                             <MdOutlineSpaceDashboard /> {TEXT_URLS.DASHBOARD}
