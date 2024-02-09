@@ -16,7 +16,7 @@ import { UserService, AuthService } from "src/services";
 const HomePage = React.lazy(() => import("./pages/Home"));
 const DashboardPage = React.lazy(() => import("./pages/Dashboard"));
 const AdminDashboardPage = React.lazy(() => import("./pages/AdminDashboard"));
-const AuthPages = React.lazy(() => import("./pages/Auth"));
+const SignInPage = React.lazy(() => import("./pages/SignIn"));
 
 function App() {
   const [session, setSession] = useState<any>(null);
@@ -63,7 +63,7 @@ function App() {
                 />
               }
             />
-            <Route path={`/${URLS.LOGIN}`} element={<AuthPages />} />
+            <Route path={`/${URLS.SIGN_IN}`} element={<SignInPage />} />
             <Route path="*" element={<Navigate to="/" replace={true} />} />
           </Routes>
         </Suspense>

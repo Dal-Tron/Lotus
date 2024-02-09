@@ -16,6 +16,6 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   return isAuthenticated ? (
     element
   ) : (
-    <Navigate to="/login" state={{ from: location }} replace />
+    <Navigate to="/sign-in" state={{ from: location }} replace />
   );
 };

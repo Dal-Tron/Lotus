@@ -13,7 +13,7 @@ export const CUS_COLORS = {
 };
 
 export const TEXT_BTNS = {
-  LOGIN: "Log in",
+  SIGN_IN: "Sign In",
   SIGNOUT: "Sign out",
 };
 
@@ -24,7 +24,7 @@ export const TEXT_URLS = {
 
 export const URLS = {
   HOME: "",
-  LOGIN: "login",
+  SIGN_IN: "sign-in",
   DASHBOARD: "dashboard",
   ADMIN: "admin",
 };
