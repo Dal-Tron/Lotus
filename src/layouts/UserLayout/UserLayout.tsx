@@ -11,13 +11,13 @@ import { AuthContext } from "src/contexts/AuthContext";
 // =======================================================================================================
 
 const UserLayout = ({ children }: PropsWithChildren) => {
-  const { user } = useContext(AuthContext);
+  const { user, session } = useContext(AuthContext);
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const extractedUserId = extractUsernameFromPath(pathname);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    if (user) {
       if (!session) {
         toast.error(MSG_ERRS.NOT_LOGGED_IN);
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -27,16 +27,16 @@ const UserLayout = ({ children }: PropsWithChildren) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         navigate(`/${URLS.HOME}`);
       }
-    });
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
-        navigate(`/${URLS.HOME}`);
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, []);
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange((_event, session) => {
+        if (!session) {
+          navigate(`/${URLS.HOME}`);
+        }
+      });
+      return () => subscription.unsubscribe();
+    }
+  }, [user]);
 
   return (
     <div className="bg-cus-black">
