@@ -9,6 +9,7 @@ import supabase from "src/services/db";
 import { AuthContext } from "src/contexts/AuthContext";
 
 // =======================================================================================================
+
 type ClildrenFunction = (isExpanded: boolean) => JSX.Element;
 const AdminLayout = ({ children }: { children: ClildrenFunction }) => {
   const { session, user } = useContext(AuthContext);
@@ -16,20 +17,22 @@ const AdminLayout = ({ children }: { children: ClildrenFunction }) => {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState<boolean>(true);
 
   useEffect(() => {
-    if (!session || (session && user?.role !== ROLES.ADMIN)) {
-      toast.error(MSG_ERRS.NOT_PERMITTED);
-      navigate(`/${URLS.HOME}`);
-    }
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (user) {
+      if (!session || (session && user?.role !== ROLES.ADMIN)) {
+        toast.error(MSG_ERRS.NOT_PERMITTED);
         navigate(`/${URLS.HOME}`);
       }
-    });
-    return () => subscription.unsubscribe();
-  }, []);
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange((_event, session) => {
+        if (!session) {
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+          navigate(`/${URLS.HOME}`);
+        }
+      });
+      return () => subscription.unsubscribe();
+    }
+  }, [user]);
 
   return (
     <div className="bg-cus-black">
