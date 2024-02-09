@@ -5,34 +5,26 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { AuthContext } from "./contexts/AuthContext";
-import { toast, ToastContainer } from "react-toastify";
+import { AuthContext } from "src/contexts/AuthContext";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import supabase from "./services/db";
-import { URLS } from "./utils/consts";
+import { ROLES, URLS } from "src/utils/consts";
 import { User } from "./Types";
+import { ProtectedRoute } from "src/components/common/ProtectedRoute";
+import { UserService, AuthService } from "src/services";
 
 const HomePage = React.lazy(() => import("./pages/Home"));
 const DashboardPage = React.lazy(() => import("./pages/Dashboard"));
 const AdminDashboardPage = React.lazy(() => import("./pages/AdminDashboard"));
 const AuthPages = React.lazy(() => import("./pages/Auth"));
 
-// =======================================================================================================
-
 function App() {
   const [session, setSession] = useState<any>(null);
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-    return () => subscription.unsubscribe();
+    AuthService.initSession(setSession);
+    return AuthService.onAuthStateChange(setSession);
   }, []);
 
   useEffect(() => {
@@ -40,21 +32,16 @@ function App() {
       const {
         user: { id },
       } = session;
-      fetchUser({ userId: id });
+      UserService.getProfile(id).then((profile) => {
+        if (profile) {
+          setUser(profile);
+        }
+      });
     }
   }, [session]);
 
-  const fetchUser = async ({ userId }: { userId: string }) => {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select()
-      .eq("id", userId)
-      .single();
-    if (error) {
-      toast.error("Failed to fetch user data.");
-    } else {
-      setUser(data);
-    }
+  const isAdmin = () => {
+    return session && user?.role === ROLES.ADMIN;
   };
 
   return (
@@ -67,9 +54,17 @@ function App() {
               path={`/users/:id/${URLS.DASHBOARD}`}
               element={<DashboardPage />}
             />
-            <Route path={`/${URLS.ADMIN}`} element={<AdminDashboardPage />} />
+            <Route
+              path={`/${URLS.ADMIN}`}
+              element={
+                <ProtectedRoute
+                  element={<AdminDashboardPage />}
+                  checkAuth={isAdmin}
+                />
+              }
+            />
             <Route path={`/${URLS.LOGIN}`} element={<AuthPages />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="*" element={<Navigate to="/" replace={true} />} />
           </Routes>
         </Suspense>
         <ToastContainer
