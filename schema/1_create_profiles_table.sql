@@ -1,7 +1,25 @@
+CREATE OR REPLACE FUNCTION f_random_text(
+    length integer
+)
+RETURNS text AS
+$body$
+WITH chars AS (
+    SELECT unnest(string_to_array('A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9', ' ')) AS _char
+),
+charlist AS
+(
+    SELECT _char FROM chars ORDER BY random() LIMIT $1
+)
+SELECT string_agg(_char, '')
+FROM charlist
+;
+$body$
+LANGUAGE sql;
+
 DROP TABLE IF EXISTS profiles;
 CREATE TABLE profiles (
   id uuid REFERENCES auth.users NOT NULL PRIMARY KEY,
-  username VARCHAR NOT NULL,
+  username VARCHAR default f_random_text(12),
   email VARCHAR UNIQUE NOT NULL,
   full_name VARCHAR,
   role VARCHAR DEFAULT 'normal',
@@ -18,8 +36,8 @@ CREATE POLICY "Users can update own profile." ON profiles FOR update USING (auth
 CREATE OR REPLACE FUNCTION public.handle_new_user()
   returns trigger as $$
     begin
-      insert into public.profiles (id, email, username, full_name, avatar_url)
-      values (new.id, new.email, new.raw_user_meta_data->>'username', new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'avatar_url');
+      insert into public.profiles (id, email, full_name, avatar_url)
+      values (new.id, new.email, new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'avatar_url');
       return new;
     end;
   $$ language plpgsql security definer;

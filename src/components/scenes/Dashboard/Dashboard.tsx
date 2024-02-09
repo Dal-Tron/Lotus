@@ -8,49 +8,28 @@ import RoundedBtn from "src/components/common/RoundedBtn";
 import { CUS_COLORS, TEXTS } from "src/utils/consts";
 import { AuthContext } from "src/contexts/AuthContext";
 import supabase from "src/services/db";
-import { User } from "src/Types";
 
 // =======================================================================================================
 
 const Dashboard = () => {
-  const session = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const [user, setUser] = useState<User | null>(null);
   const [avatar_url, setAvatarUrl] = useState<string>("");
   const [uploading, setUploading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [fullname, setFullname] = useState<string>("");
 
   useEffect(() => {
-    if (session) {
-      const {
-        user: { id },
-      } = session;
-      setLoading(true);
-      fetchUser({ userId: id });
-      setLoading(false);
+    if (user) {
+      setAvatarUrl(user.avatar_url);
+      setUsername(user.username);
+      setFullname(user.full_name || "");
     }
-  }, [session]);
+  }, [user]);
 
   useEffect(() => {
     if (avatar_url) downloadImage(avatar_url);
   }, [avatar_url]);
-
-  const fetchUser = async ({ userId }: { userId: string }) => {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select()
-      .eq("id", userId)
-      .single();
-    if (error) {
-      toast.error("Failed to fetch user data.");
-    } else {
-      setUser(data);
-      setAvatarUrl(data.avatar_url);
-      setUsername(data.username);
-      setFullname(data.full_name || "");
-    }
-  };
 
   const downloadImage = async (path: string) => {
     try {
@@ -150,7 +129,7 @@ const Dashboard = () => {
           onChange={(e) => {
             setUsername(e.target.value);
           }}
-          value={username || ""}
+          value={user?.username || ""}
           className="border-cus-gray-medium mb-3 grow"
         />
         <Input

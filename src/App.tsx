@@ -6,10 +6,11 @@ import {
   Navigate,
 } from "react-router-dom";
 import { AuthContext } from "./contexts/AuthContext";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import supabase from "./services/db";
 import { URLS } from "./utils/consts";
+import { User } from "./Types";
 
 const HomePage = React.lazy(() => import("./pages/Home"));
 const DashboardPage = React.lazy(() => import("./pages/Dashboard"));
@@ -20,6 +21,7 @@ const AuthPages = React.lazy(() => import("./pages/Auth"));
 
 function App() {
   const [session, setSession] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -33,8 +35,30 @@ function App() {
     return () => subscription.unsubscribe();
   }, []);
 
+  useEffect(() => {
+    if (session) {
+      const {
+        user: { id },
+      } = session;
+      fetchUser({ userId: id });
+    }
+  }, [session]);
+
+  const fetchUser = async ({ userId }: { userId: string }) => {
+    const { data, error } = await supabase
+      .from("profiles")
+      .select()
+      .eq("id", userId)
+      .single();
+    if (error) {
+      toast.error("Failed to fetch user data.");
+    } else {
+      setUser(data);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={session}>
+    <AuthContext.Provider value={{ session, user, setUser }}>
       <Router>
         <Suspense>
           <Routes>
