@@ -17,26 +17,27 @@ const UserLayout = ({ children }: PropsWithChildren) => {
   const extractedUserId = extractUsernameFromPath(pathname);
 
   useEffect(() => {
-    if (user) {
-      if (!session) {
-        toast.error(MSG_ERRS.NOT_LOGGED_IN);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        navigate(`/${URLS.HOME}`);
-      } else if (user?.username !== extractedUserId) {
+    if (session) {
+      if (user && user.username !== extractedUserId) {
         toast.error(MSG_ERRS.NOT_FOUND);
         // eslint-disable-next-line react-hooks/exhaustive-deps
         navigate(`/${URLS.HOME}`);
+      } else {
+        const {
+          data: { subscription },
+        } = supabase.auth.onAuthStateChange((_e, _session) => {
+          if (!_session) {
+            navigate(`/${URLS.HOME}`);
+          }
+        });
+        return () => subscription.unsubscribe();
       }
-      const {
-        data: { subscription },
-      } = supabase.auth.onAuthStateChange((_event, session) => {
-        if (!session) {
-          navigate(`/${URLS.HOME}`);
-        }
-      });
-      return () => subscription.unsubscribe();
+    } else {
+      toast.error(MSG_ERRS.NOT_LOGGED_IN);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      navigate(`/${URLS.HOME}`);
     }
-  }, [user]);
+  }, [session, user]);
 
   return (
     <div className="bg-cus-black">

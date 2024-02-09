@@ -17,26 +17,28 @@ const AdminLayout = ({ children }: { children: ClildrenFunction }) => {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState<boolean>(true);
 
   useEffect(() => {
-    if (user) {
-      if (!session || (session && user?.role !== ROLES.ADMIN)) {
-        toast.error(MSG_ERRS.NOT_PERMITTED);
+    if (session) {
+      if (user && user.role !== ROLES.ADMIN) {
+        toast.error(`${MSG_ERRS.NOT_PERMITTED}`);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         navigate(`/${URLS.HOME}`);
+      } else {
+        const {
+          data: { subscription },
+        } = supabase.auth.onAuthStateChange((_e, _session) => {
+          if (!_session) {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            navigate(`/${URLS.HOME}`);
+          }
+        });
+        return () => subscription.unsubscribe();
       }
-      const {
-        data: { subscription },
-      } = supabase.auth.onAuthStateChange((_event, session) => {
-        if (!session) {
-          // eslint-disable-next-line react-hooks/exhaustive-deps
-          navigate(`/${URLS.HOME}`);
-        }
-      });
-      return () => subscription.unsubscribe();
     } else {
-      toast.error(MSG_ERRS.NOT_PERMITTED);
+      toast.error(`${MSG_ERRS.NOT_PERMITTED}`);
       // eslint-disable-next-line react-hooks/exhaustive-deps
       navigate(`/${URLS.HOME}`);
     }
-  }, [user]);
+  }, [session, user]);
 
   return (
     <div className="bg-cus-black">
