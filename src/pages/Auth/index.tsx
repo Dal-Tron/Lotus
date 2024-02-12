@@ -14,9 +14,9 @@ const AuthPages = () => {
 
   useEffect(() => {
     if (user) {
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       navigate(`/users/${user?.username}/${URLS.DASHBOARD}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (

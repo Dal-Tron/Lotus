@@ -5,9 +5,14 @@ import { MdOutlineEmail } from "react-icons/md";
 import { AiOutlineBarcode } from "react-icons/ai";
 import Input from "src/components/common/Input";
 import RoundedBtn from "src/components/common/RoundedBtn";
-import { CUS_COLORS, TEXTS } from "src/utils/consts";
+import AvatarInput from "src/components/common/AvatarInput";
+import { CUS_COLORS } from "src/utils/consts";
 import { AuthContext } from "src/contexts/AuthContext";
-import supabase from "src/services/db";
+import {
+  downloadImageReq,
+  updateProfileReq,
+  uploadAvatarReq,
+} from "src/services/api";
 
 // =======================================================================================================
 
@@ -33,13 +38,11 @@ const Dashboard = () => {
 
   const downloadImage = async (path: string) => {
     try {
-      const { data, error } = await supabase.storage
-        .from("avatars")
-        .download(path);
+      const { data, error } = await downloadImageReq(path);
       if (error) {
         throw error;
       }
-      const url = URL.createObjectURL(data);
+      const url = URL.createObjectURL(data!);
       setAvatarUrl(url);
     } catch (error: any) {
       console.log("Error downloading image: ", error.message);
@@ -56,7 +59,7 @@ const Dashboard = () => {
       avatar_url: avatarUrl,
       updated_at: new Date(),
     };
-    const { error, data } = await supabase.from("profiles").upsert(updates);
+    const { error, data } = await updateProfileReq(updates);
     console.log("data:>>", data);
     if (error) {
       toast.error(error.message);
@@ -67,50 +70,40 @@ const Dashboard = () => {
     setLoading(false);
   };
 
+  const uploadAvatar = async (e: ChangeEvent<HTMLInputElement>) => {
+    try {
+      setUploading(true);
+      const file = (e.target as HTMLInputElement).files
+        ? (e.target as HTMLInputElement).files![0]
+        : null;
+      const fileExt = file!.name.split(".").pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { uploadError } = await uploadAvatarReq({ filePath, file });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+      updateProfile(filePath);
+    } catch (error: any) {
+      console.log("Error:>>", error.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <div className="p-5">
-      <div className="pt-10 w-11/12 md:w-1/2 mx-auto">
-        <div className="w-40 h-40 mx-auto rounded overflow-hidden relative border flex justify-center items-center">
-          <input
-            className="absolute h-full w-full text-transparent file:hidden"
-            type="file"
-            id="single"
-            accept="image/*"
-            onChange={async (e: ChangeEvent<HTMLInputElement>) => {
-              try {
-                setUploading(true);
-                const file = (e.target as HTMLInputElement).files
-                  ? (e.target as HTMLInputElement).files![0]
-                  : null;
-                const fileExt = file!.name.split(".").pop();
-                const fileName = `${Math.random()}.${fileExt}`;
-                const filePath = `${fileName}`;
-
-                const { error: uploadError } = await supabase.storage
-                  .from("avatars")
-                  .upload(filePath, file!);
-
-                if (uploadError) {
-                  throw uploadError;
-                }
-                updateProfile(filePath);
-              } catch (error: any) {
-                console.log("Error:>>", error.message);
-              } finally {
-                setUploading(false);
-              }
-            }}
+      <div className="mx-auto md:w-1/2 pt-10 w-11/12">
+        <div className="relative flex justify-center items-center mx-auto w-40 h-40 border rounded overflow-hidden">
+          <AvatarInput
             disabled={loading}
+            uploading={uploading}
+            uploadAvatar={(e: ChangeEvent<HTMLInputElement>) => uploadAvatar(e)}
+            avatar_url={avatar_url}
           />
-          {uploading ? (
-            "Uploading..."
-          ) : avatar_url ? (
-            <img width="100%" src={avatar_url} alt="avatar" />
-          ) : (
-            TEXTS.NO_IMAGE
-          )}
         </div>
-
         <Input
           name="email"
           type="email"
@@ -118,19 +111,19 @@ const Dashboard = () => {
           icon={<MdOutlineEmail style={{ fill: CUS_COLORS.GRAY_MEDIUM }} />}
           onChange={() => {}}
           value={user ? user.email : ""}
-          className="border-cus-gray-medium mb-3 grow"
+          className="grow mb-3 border-cus-gray-medium"
           readOnly={true}
         />
         <Input
           name="username"
           type="text"
           label="Username"
-          icon={<AiOutlineUser style={{ fill: CUS_COLORS.GRAY_MEDIUM }} />}
+          icon={"@"}
           onChange={(e) => {
             setUsername(e.target.value);
           }}
           value={user?.username || ""}
-          className="border-cus-gray-medium mb-3 grow"
+          className="grow mb-3 border-cus-gray-medium"
         />
         <Input
           name="fullname"
@@ -142,7 +135,7 @@ const Dashboard = () => {
           // errMsg="Invalid email"
           err={false}
           value={fullname}
-          className="border-cus-gray-medium mb-3 grow"
+          className="grow mb-3 border-cus-gray-medium"
         />
         <Input
           name="id"
@@ -152,7 +145,7 @@ const Dashboard = () => {
           onChange={() => {}}
           required
           value={user ? user.id : ""}
-          className="border-cus-gray-medium mb-3 grow"
+          className="grow mb-3 border-cus-gray-medium"
           readOnly={true}
         />
         <div className="flex justify-center items-center gap-3">
