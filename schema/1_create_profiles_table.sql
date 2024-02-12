@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION f_random_text(length INTEGER)
 
 DROP TABLE IF EXISTS profiles;
 CREATE TABLE profiles (
-  id uuid REFERENCES auth.users NOT NULL PRIMARY KEY,
+  id uuid REFERENCES auth.users NOT NULL PRIMARY KEY ON DELETE CASCADE,
   username VARCHAR UINQUE DEFAULT f_random_text(12),
   email VARCHAR UNIQUE NOT NULL,
   full_name VARCHAR,

@@ -11,3 +11,9 @@ export interface AvatarProps {
   filePath: string;
   file: File | null;
 }
+
+export interface AddUserProps {
+  email: string;
+  password: string;
+  user_metadata: any;
+}

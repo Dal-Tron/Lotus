@@ -1,17 +1,23 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import cx from "classnames";
 import RoundedBtn from "src/components/common/RoundedBtn";
 import UserEditModal from "src/components/elements/UserEditModal";
 import UserAddModal from "src/components/elements/UserAddModal";
 import { User, NewUser } from "src/Types";
-import { TEXTS } from "src/utils/consts";
+import { CUS_COLORS, TEXTS } from "src/utils/consts";
 import { FaUserPlus } from "react-icons/fa6";
 import DefaultAvatar from "src/assets/images/60111.png";
-import { downloadImageReq, fetchUsersReq } from "src/services/api";
+import {
+  addNewUserReq,
+  deleteUserReq,
+  downloadImageReq,
+  fetchUsersReq,
+} from "src/services/api";
 import { columnType } from "./Types";
 import { supabaseAdmin } from "src/services/db";
+import UserDeleteModal from "src/components/elements/UserDeleteModal";
 
 // =======================================================================================================
 
@@ -41,6 +47,7 @@ const AdminDashboard = ({
   const [users, setUsers] = useState<User[] | []>([]);
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<User | null>();
   const [newUser, setNewUser] = useState<NewUser>({
     email: "",
@@ -74,8 +81,7 @@ const AdminDashboard = ({
   }, []);
 
   const addNewUser = async () => {
-    console.log(newUser);
-    const { data, error } = await supabaseAdmin.auth.admin.createUser({
+    const { data, error } = await addNewUserReq({
       email: newUser.email,
       password: "adminuser",
       user_metadata: { full_name: newUser.fullName },
@@ -92,6 +98,22 @@ const AdminDashboard = ({
   const onEdit = ({ idx }: { idx: number }) => {
     setSelectedUser(users[idx]);
     setShowEditModal(true);
+  };
+
+  const onDelete = ({ idx }: { idx: number }) => {
+    setSelectedUser(users[idx]);
+    setShowDeleteModal(true);
+  };
+
+  const deleteUser = async () => {
+    const { data, error } = await deleteUserReq(selectedUser?.id!);
+    console.log(data);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      fetchUsers();
+      setShowDeleteModal(false);
+    }
   };
 
   const saveChanges = async () => {
@@ -199,9 +221,22 @@ const AdminDashboard = ({
                                 {user.role}
                               </td>
                               <td className="px-3 py-2 whitespace-nowrap">
-                                <button onClick={() => onEdit({ idx })}>
+                                <button
+                                  onClick={() => onEdit({ idx })}
+                                  className="mr-3"
+                                >
                                   <FaEdit />
                                 </button>
+                                {user.role !== "admin" ? (
+                                  <button
+                                    onClick={() => onDelete({ idx })}
+                                    className="text-cus-pink"
+                                  >
+                                    <FaTrash
+                                      style={{ fill: CUS_COLORS.PINK }}
+                                    />
+                                  </button>
+                                ) : null}
                               </td>
                             </tr>
                           );
@@ -279,6 +314,13 @@ const AdminDashboard = ({
           selectedUser={selectedUser}
           setSelectedUser={setSelectedUser}
           saveChanges={saveChanges}
+        />
+      ) : null}
+      {showDeleteModal ? (
+        <UserDeleteModal
+          setShowModal={setShowDeleteModal}
+          deleteUser={deleteUser}
+          selectedUser={selectedUser}
         />
       ) : null}
     </div>
