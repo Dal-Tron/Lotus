@@ -20,6 +20,7 @@ export const TEXT_BTNS = {
 export const TEXT_URLS = {
   DASHBOARD: "Dashboard",
   ADMIN: "Admin",
+  SETTINGS: "Settings",
 };
 
 export const URLS = {
@@ -27,6 +28,7 @@ export const URLS = {
   SIGN_IN: "sign-in",
   DASHBOARD: "dashboard",
   ADMIN: "admin",
+  SETTINGS: "settings",
 };
 
 export const TEXTS = {

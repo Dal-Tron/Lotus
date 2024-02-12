@@ -10,7 +10,7 @@ const AvatarInput = ({
   avatar_url,
 }: AvatarInputProps) => {
   return (
-    <div>
+    <>
       <input
         className="absolute h-full w-full text-transparent file:hidden cursor-pointer"
         type="file"
@@ -26,7 +26,7 @@ const AvatarInput = ({
       ) : (
         <img width="100%" src={DefaultAvatar} alt="avatar" />
       )}
-    </div>
+    </>
   );
 };
 

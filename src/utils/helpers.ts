@@ -12,8 +12,5 @@ export const randomStringGenerator = (length: number) => {
 };
 
 export const extractUsernameFromPath = (path: string) => {
-  const pattern = /\/users\/(\w+)\/dashboard/;
-  const match = path.match(pattern) || "";
-  const extractedUsername = match[1];
-  return extractedUsername;
+  return path.split("/")[2];
 };

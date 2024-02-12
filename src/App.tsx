@@ -15,6 +15,7 @@ import { UserService, AuthService } from "src/services";
 
 const HomePage = React.lazy(() => import("./pages/Home"));
 const DashboardPage = React.lazy(() => import("./pages/Dashboard"));
+const SettingsPage = React.lazy(() => import("./pages/Settings"));
 const AdminDashboardPage = React.lazy(() => import("./pages/AdminDashboard"));
 const SignInPage = React.lazy(() => import("./pages/SignIn"));
 
@@ -53,6 +54,10 @@ function App() {
             <Route
               path={`/users/:id/${URLS.DASHBOARD}`}
               element={<DashboardPage />}
+            />
+            <Route
+              path={`/users/:id/${URLS.SETTINGS}`}
+              element={<SettingsPage />}
             />
             <Route
               path={`/${URLS.ADMIN}`}

@@ -12,7 +12,10 @@ export const fetchUsersReq = async () => {
 };
 
 export const updateProfileReq = async (params: ProfileProps) => {
-  const { error, data } = await supabase.from("profiles").upsert(params);
+  const { error, data } = await supabase
+    .from("profiles")
+    .upsert(params)
+    .select();
   return {
     error,
     data,

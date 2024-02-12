@@ -5,6 +5,7 @@ import { AiOutlineMenu } from "react-icons/ai";
 import {
   MdOutlineAdminPanelSettings,
   MdOutlineSpaceDashboard,
+  MdOutlineSettings,
 } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa";
 import { FaSignOutAlt } from "react-icons/fa";
@@ -12,6 +13,7 @@ import RoundedBtn from "../RoundedBtn";
 import { APP_NAME, ROLES, TEXT_BTNS, TEXT_URLS, URLS } from "src/utils/consts";
 import supabase from "src/services/db";
 import { AuthContext } from "src/contexts/AuthContext";
+import PopupLink from "./PopupLink";
 
 // =======================================================================================================
 
@@ -107,8 +109,15 @@ const Header = () => {
                 ref={dropdownMenuRef}
               >
                 <div className="hidden md:block" role="none">
+                  <ul className="border-b border-cus-gray-medium pb-2">
+                    <PopupLink
+                      to={`users/${user.username}/${URLS.SETTINGS}`}
+                      text={TEXT_URLS.SETTINGS}
+                      icon={<MdOutlineSettings />}
+                    />
+                  </ul>
                   <button
-                    className="px-3 py-1 w-full flex items-center gap-3 hover:bg-cus-gray-medium rounded duration-300"
+                    className="px-3 py-1 mt-3 hover:bg-cus-gray-medium w-full flex items-center rounded gap-3 duration-300"
                     onClick={signout}
                   >
                     <FaSignOutAlt /> {TEXT_BTNS.SIGNOUT}
@@ -119,32 +128,35 @@ const Header = () => {
                     {session ? (
                       user?.role === ROLES.ADMIN ? (
                         <>
-                          <li className="px-3 py-1 hover:bg-cus-gray-medium rounded cursor-pointer duration-300">
-                            <Link
-                              to={`/${URLS.ADMIN}`}
-                              className="flex items-center gap-3"
-                            >
-                              <MdOutlineAdminPanelSettings /> {TEXT_URLS.ADMIN}
-                            </Link>
-                          </li>
-                          <li className="px-3 py-1 hover:bg-cus-gray-medium rounded cursor-pointer duration-300">
-                            <Link
-                              to={`/users/${user?.username}/${URLS.DASHBOARD}`}
-                              className="flex items-center gap-3"
-                            >
-                              <MdOutlineSpaceDashboard /> {TEXT_URLS.DASHBOARD}
-                            </Link>
-                          </li>
+                          <PopupLink
+                            to={URLS.ADMIN}
+                            text={TEXT_URLS.ADMIN}
+                            icon={<MdOutlineAdminPanelSettings />}
+                          />
+                          <PopupLink
+                            to={`users/${user?.username}/${URLS.DASHBOARD}`}
+                            text={TEXT_URLS.DASHBOARD}
+                            icon={<MdOutlineSpaceDashboard />}
+                          />
+                          <PopupLink
+                            to={`users/${user.username}/${URLS.SETTINGS}`}
+                            text={TEXT_URLS.SETTINGS}
+                            icon={<MdOutlineSettings />}
+                          />
                         </>
                       ) : (
-                        <li className="px-3 py-1 hover:bg-cus-gray-medium rounded cursor-pointer duration-300">
-                          <Link
-                            to={`/users/${user?.username}/${URLS.DASHBOARD}`}
-                            className="flex items-center gap-3"
-                          >
-                            <MdOutlineSpaceDashboard /> {TEXT_URLS.DASHBOARD}
-                          </Link>
-                        </li>
+                        <>
+                          <PopupLink
+                            to={`users/${user?.username}/${URLS.DASHBOARD}`}
+                            text={TEXT_URLS.DASHBOARD}
+                            icon={<MdOutlineSpaceDashboard />}
+                          />
+                          <PopupLink
+                            to={`users/${user.username}/${URLS.SETTINGS}`}
+                            text={TEXT_URLS.SETTINGS}
+                            icon={<MdOutlineSettings />}
+                          />
+                        </>
                       )
                     ) : null}
                   </ul>
