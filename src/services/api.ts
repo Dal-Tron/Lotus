@@ -1,8 +1,9 @@
 import {
+  AddUserProps,
   AvatarProps,
   ProfileProps,
 } from "src/components/scenes/Dashboard/Types";
-import supabase from "./db";
+import supabase, { supabaseAdmin } from "./db";
 
 // =======================================================================================================
 
@@ -35,4 +36,23 @@ export const downloadImageReq = async (path: string) => {
     error,
     data,
   };
+};
+
+export const addNewUserReq = async ({
+  email,
+  password,
+  user_metadata,
+}: AddUserProps) => {
+  const { data, error } = await supabaseAdmin.auth.admin.createUser({
+    email,
+    password,
+    user_metadata,
+  });
+
+  return { data, error };
+};
+
+export const deleteUserReq = async (id: string) => {
+  const { data, error } = await supabaseAdmin.auth.admin.deleteUser(id);
+  return { data, error };
 };
