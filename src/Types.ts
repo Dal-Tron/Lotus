@@ -13,4 +13,5 @@ export interface NewUser {
   email: string;
   fullName: string;
   username: string;
+  avatar?: File | null;
 }

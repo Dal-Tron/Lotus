@@ -20,14 +20,12 @@ const AdminLayout = ({ children }: { children: ClildrenFunction }) => {
     if (session) {
       if (user && user.role !== ROLES.ADMIN) {
         toast.error(`${MSG_ERRS.NOT_PERMITTED}`);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         navigate(`/${URLS.HOME}`);
       } else {
         const {
           data: { subscription },
         } = supabase.auth.onAuthStateChange((_e, _session) => {
           if (!_session) {
-            // eslint-disable-next-line react-hooks/exhaustive-deps
             navigate(`/${URLS.HOME}`);
           }
         });
@@ -35,9 +33,9 @@ const AdminLayout = ({ children }: { children: ClildrenFunction }) => {
       }
     } else {
       toast.error(`${MSG_ERRS.NOT_PERMITTED}`);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       navigate(`/${URLS.HOME}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, user]);
 
   return (

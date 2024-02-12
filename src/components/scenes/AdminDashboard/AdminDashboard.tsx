@@ -5,15 +5,16 @@ import cx from "classnames";
 import RoundedBtn from "src/components/common/RoundedBtn";
 import UserEditModal from "src/components/elements/UserEditModal";
 import UserAddModal from "src/components/elements/UserAddModal";
-import supabase from "src/services/db";
 import { User, NewUser } from "src/Types";
 import { TEXTS } from "src/utils/consts";
 import { FaUserPlus } from "react-icons/fa6";
+import DefaultAvatar from "src/assets/images/60111.png";
+import { downloadImageReq, fetchUsersReq } from "src/services/api";
+import { columnType } from "./Types";
+import { supabaseAdmin } from "src/services/db";
 
 // =======================================================================================================
-interface columnType {
-  name: string;
-}
+
 const columns: columnType[] = [
   {
     name: "Email",
@@ -29,6 +30,8 @@ const columns: columnType[] = [
   },
 ];
 
+// =======================================================================================================
+
 const AdminDashboard = ({
   isSidebarExpanded,
 }: {
@@ -43,14 +46,17 @@ const AdminDashboard = ({
     email: "",
     username: "",
     fullName: "",
+    avatarUrl: "",
+    avatar: null,
   });
+
   const fetchUsers = async () => {
-    const { data, error } = await supabase.from("profiles").select();
+    const { data, error } = await fetchUsersReq();
     if (error) {
       toast.error(error.message);
     } else {
       const _users: User[] = [];
-      for (let user of data) {
+      for (let user of data!) {
         if (user.avatar_url && !user.avatar_url.includes("https://")) {
           user.avatar_url = await downloadImage(user.avatar_url);
         }
@@ -64,11 +70,23 @@ const AdminDashboard = ({
     setLoading(true);
     fetchUsers();
     setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const addNewUser = async () => {
-    alert("Add user");
-    // const { data, error } = await supabase.from("profiles").insert({});
+    console.log(newUser);
+    const { data, error } = await supabaseAdmin.auth.admin.createUser({
+      email: newUser.email,
+      password: "adminuser",
+      user_metadata: { full_name: newUser.fullName },
+    });
+    console.log(data);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      fetchUsers();
+      setShowAddModal(false);
+    }
   };
 
   const onEdit = ({ idx }: { idx: number }) => {
@@ -95,13 +113,11 @@ const AdminDashboard = ({
 
   const downloadImage = async (path: string) => {
     try {
-      const { data, error } = await supabase.storage
-        .from("avatars")
-        .download(path);
+      const { data, error } = await downloadImageReq(path);
       if (error) {
         throw error;
       }
-      const url = URL.createObjectURL(data);
+      const url = URL.createObjectURL(data!);
       return url;
     } catch (error: any) {
       console.log("Error downloading image: ", error.message);
@@ -119,7 +135,7 @@ const AdminDashboard = ({
             onClick={() => {
               setShowAddModal(true);
             }}
-            className="flex items-center gap-3 py-2 mb-3"
+            className="flex items-center gap-3 mb-3 py-2"
           >
             <FaUserPlus /> Add
           </RoundedBtn>
@@ -156,31 +172,33 @@ const AdminDashboard = ({
                               className="border-b border-b-cus-gray-dark"
                               key={user.id}
                             >
-                              <td className="whitespace-nowrap px-3 py-2 font-medium">
+                              <td className="px-3 py-2 whitespace-nowrap font-medium">
                                 {idx + 1}
                               </td>
-                              <td className="whitespace-nowrap px-3 py-2 font-medium">
+                              <td className="px-3 py-2 whitespace-nowrap font-medium">
                                 {user.avatar_url ? (
-                                  <div className="flex justify-center items-center w-10 h-10 rounded-full overflow-hidden border border-cus-gray-dark">
+                                  <div className="flex justify-center items-center w-10 h-10 border border-cus-gray-dark rounded-full overflow-hidden">
                                     <img src={user.avatar_url} alt="avatar" />
                                   </div>
                                 ) : (
-                                  <div className="w-10 h-10 rounded-full border border-cus-gray-dark bg-cus-gray-dark"></div>
+                                  <div className="w-10 h-10 border border-cus-gray-dark rounded-full bg-cus-gray-dark overflow-hidden">
+                                    <img src={DefaultAvatar} alt="avatar" />
+                                  </div>
                                 )}
                               </td>
-                              <td className="whitespace-nowrap px-3 py-2 font-medium">
+                              <td className="px-3 py-2 whitespace-nowrap font-medium">
                                 {user.email}
                               </td>
-                              <td className="whitespace-nowrap px-3 py-2">
+                              <td className="px-3 py-2 whitespace-nowrap">
                                 {user.username || user.user_id}
                               </td>
-                              <td className="whitespace-nowrap px-3 py-2">
+                              <td className="px-3 py-2 whitespace-nowrap">
                                 {user.full_name}
                               </td>
-                              <td className="whitespace-nowrap px-3 py-2">
+                              <td className="px-3 py-2 whitespace-nowrap">
                                 {user.role}
                               </td>
-                              <td className="whitespace-nowrap px-3 py-2">
+                              <td className="px-3 py-2 whitespace-nowrap">
                                 <button onClick={() => onEdit({ idx })}>
                                   <FaEdit />
                                 </button>
@@ -192,7 +210,7 @@ const AdminDashboard = ({
                         <tr className="border-b">
                           <td
                             colSpan={7}
-                            className="text-center text-cus-pink px-6 py-4"
+                            className="px-6 py-4 text-center text-cus-pink"
                           >
                             {TEXTS.NO_DATA}
                           </td>
@@ -218,11 +236,13 @@ const AdminDashboard = ({
                           className="border border-cus-gray-dark p-2 overflow-hidden"
                         >
                           {user.avatar_url ? (
-                            <div className="flex justify-center items-center w-20 h-20 rounded-full overflow-hidden border border-cus-gray-dark mx-auto mb-2">
+                            <div className="flex justify-center items-center mx-auto mb-2 w-20 h-20 border border-cus-gray-dark rounded-full overflow-hidden">
                               <img src={user.avatar_url} alt="avatar" />
                             </div>
                           ) : (
-                            <div className="w-20 h-20 rounded-full border border-cus-gray-dark bg-cus-gray-dark mx-auto mb-2"></div>
+                            <div className="mx-auto mb-2 w-20 h-20 border border-cus-gray-dark rounded-full bg-cus-gray-dark overflow-hidden">
+                              <img src={DefaultAvatar} alt="avatar" />
+                            </div>
                           )}
                           <p>
                             Email: <span>{user.email}</span>

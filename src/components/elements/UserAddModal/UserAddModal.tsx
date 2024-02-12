@@ -1,10 +1,11 @@
-import { Dispatch, SetStateAction } from "react";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { AiOutlineUser } from "react-icons/ai";
 import { MdOutlineEmail } from "react-icons/md";
 import { FaTimes } from "react-icons/fa";
 import { NewUser } from "src/Types";
 import Input from "src/components/common/Input";
 import RoundedBtn from "src/components/common/RoundedBtn";
+import DefaultAvatar from "src/assets/images/60111.png";
 
 // =======================================================================================================
 
@@ -23,25 +24,44 @@ const UserAddModal = ({
   newUser,
   addNewUser,
 }: UserAddModalProps) => {
+  const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setNewUser({
+      ...newUser,
+      avatarUrl: URL.createObjectURL(e.target.files![0]),
+      avatar: e.target.files![0] || null,
+    });
+  };
+
   return (
     <>
-      <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
-        <div className="relative w-10/12 md:w-1/2 my-6 mx-auto max-w-3xl">
-          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-cus-gray-dark outline-none focus:outline-none">
-            <div className="flex items-start justify-between p-3 border-b border-cus-gray-medium rounded-t">
+      <div className="fixed flex justify-center items-center overflow-x-hidden overflow-y-auto inset-0 z-50 outline-none focus:outline-none">
+        <div className="relative my-6 mx-auto w-10/12 md:w-1/2 max-w-3xl">
+          <div className="relative flex flex-col w-full border-0 rounded-lg shadow-lg bg-cus-gray-dark outline-none focus:outline-none">
+            <div className="flex justify-between items-start border-b border-cus-gray-medium rounded-t p-3">
               <h3 className="text-3xl font-semibold">Add a user</h3>
               <button
-                className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                className="float-right ml-auto border-0 p-1 bg-transparent text-black text-3xl leading-none font-semibold outline-none focus:outline-none"
                 onClick={() => setShowModal(false)}
               >
-                <span className="bg-transparent text-cus-gray-light h-6 w-6 text-2xl block outline-none focus:outline-none">
+                <span className="block h-6 w-6 bg-transparent text-cus-gray-light text-2xl outline-none focus:outline-none">
                   <FaTimes />
                 </span>
               </button>
             </div>
-            <div className="relative p-3 flex flex-col gap-2">
-              <div className="w-40 h-40 mx-auto rounded overflow-hidden relative border border-cus-gray-medium flex justify-center items-center">
-                <img width="100%" src={newUser?.avatarUrl} alt="avatar" />
+            <div className="relative flex flex-col gap-2 p-3">
+              <div className="relative flex justify-center items-center mx-auto w-40 h-40 rounded overflow-hidden border border-cus-gray-medium">
+                <input
+                  type="file"
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    onFileChange(e)
+                  }
+                  className="absolute h-full w-full text-transparent file:hidden cursor-pointer"
+                />
+                <img
+                  width="100%"
+                  src={newUser?.avatarUrl || DefaultAvatar}
+                  alt="avatar"
+                />
               </div>
               <Input
                 type="email"
@@ -57,7 +77,7 @@ const UserAddModal = ({
                 label="Email"
                 icon={<MdOutlineEmail />}
               />
-              <Input
+              {/* <Input
                 type="text"
                 name="username"
                 required={true}
@@ -70,7 +90,7 @@ const UserAddModal = ({
                 }}
                 label="Username"
                 icon={<AiOutlineUser />}
-              />
+              /> */}
               <Input
                 type="text"
                 name="fullName"
@@ -86,16 +106,16 @@ const UserAddModal = ({
                 icon={<AiOutlineUser />}
               />
             </div>
-            <div className="flex items-center justify-end p-3 border-t border-cus-gray-medium rounded-b">
+            <div className="flex items-center justify-end border-t border-cus-gray-medium rounded-b p-3">
               <button
-                className="text-cus-pink background-transparent px-6 py-2 outline-none focus:outline-none mr-1 mb-1 transition-all duration-300 hover:opacity-80"
+                className="mr-1 mb-1 px-6 py-2 text-cus-pink background-transparent outline-none focus:outline-none transition-all duration-300 hover:opacity-80"
                 type="button"
                 onClick={() => setShowModal(false)}
               >
                 Close
               </button>
               <RoundedBtn
-                className="bg-cus-pink text-cus-gray-light py-2 rounded outline-none focus:outline-none mr-1 duration-300 hover:opacity-80"
+                className="mr-1 rounded py-2 bg-cus-pink text-cus-gray-light outline-none focus:outline-none duration-300 hover:opacity-80"
                 variant="fill"
                 onClick={addNewUser}
               >
@@ -105,7 +125,7 @@ const UserAddModal = ({
           </div>
         </div>
       </div>
-      <div className="opacity-80 fixed inset-0 z-40 bg-cus-blackest"></div>
+      <div className="fixed opacity-80 inset-0 bg-cus-blackest z-40"></div>
     </>
   );
 };

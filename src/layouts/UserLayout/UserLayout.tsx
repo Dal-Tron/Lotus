@@ -20,7 +20,6 @@ const UserLayout = ({ children }: PropsWithChildren) => {
     if (session) {
       if (user && user.username !== extractedUserId) {
         toast.error(MSG_ERRS.NOT_FOUND);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         navigate(`/${URLS.HOME}`);
       } else {
         const {
@@ -34,9 +33,9 @@ const UserLayout = ({ children }: PropsWithChildren) => {
       }
     } else {
       toast.error(MSG_ERRS.NOT_LOGGED_IN);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       navigate(`/${URLS.HOME}`);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, user]);
 
   return (
