@@ -80,9 +80,9 @@ const Header = () => {
             <RoundedBtn
               className="self-center py-1"
               variant="fill"
-              onClick={() => navigate(`/${URLS.LOGIN}`)}
+              onClick={() => navigate(`/${URLS.SIGN_IN}`)}
             >
-              {TEXT_BTNS.LOGIN}
+              {TEXT_BTNS.SIGN_IN}
             </RoundedBtn>
           </div>
         ) : (
