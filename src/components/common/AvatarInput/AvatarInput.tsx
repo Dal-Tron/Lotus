@@ -1,14 +1,19 @@
+import { ChangeEvent } from "react";
 import DefaultAvatar from "src/assets/images/60111.png";
-import { AvatarInputProps } from "./Types";
 
-// =======================================================================================================
+interface Props {
+  avatarUrl: string;
+  disabled: boolean;
+  uploadAvatar: (e: ChangeEvent<HTMLInputElement>) => any;
+  uploading: boolean;
+}
 
 const AvatarInput = ({
   disabled,
   uploading,
   uploadAvatar,
-  avatar_url,
-}: AvatarInputProps) => {
+  avatarUrl,
+}: Props) => {
   return (
     <>
       <input
@@ -16,13 +21,13 @@ const AvatarInput = ({
         type="file"
         id="single"
         accept="image/*"
-        onChange={(e) => uploadAvatar(e)}
+        onChange={uploadAvatar}
         disabled={disabled}
       />
       {uploading ? (
         "Uploading..."
-      ) : avatar_url ? (
-        <img width="100%" src={avatar_url} alt="avatar" />
+      ) : avatarUrl ? (
+        <img width="100%" src={avatarUrl} alt="avatar" />
       ) : (
         <img width="100%" src={DefaultAvatar} alt="avatar" />
       )}
