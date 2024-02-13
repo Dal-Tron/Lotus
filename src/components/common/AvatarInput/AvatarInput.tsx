@@ -1,7 +1,12 @@
+import { ChangeEvent } from "react";
 import DefaultAvatar from "src/assets/images/60111.png";
-import { AvatarInputProps } from "./Types";
 
-// =======================================================================================================
+interface AvatarInputProps {
+  avatar_url: string;
+  disabled: boolean;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => any;
+  uploading: boolean;
+}
 
 const AvatarInput = ({
   disabled,

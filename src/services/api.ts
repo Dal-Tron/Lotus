@@ -5,8 +5,6 @@ import {
 } from "src/components/scenes/Dashboard/Types";
 import supabase, { supabaseAdmin } from "./db";
 
-// =======================================================================================================
-
 export const fetchUsersReq = async () => {
   const { data, error } = await supabase.from("profiles").select();
   return { data, error };

@@ -40,7 +40,7 @@ const Dashboard = () => {
       toast.error(uploadError.message);
       return;
     }
-    const { data, error: updateError } = await supabase
+    const { error: updateError } = await supabase
       .from("files")
       .update({ file_name: file!.name })
       .eq("unique_name", filePath);

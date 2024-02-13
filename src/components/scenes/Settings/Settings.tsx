@@ -1,25 +1,23 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { AiOutlineUser } from "react-icons/ai";
+import { AiOutlineBarcode, AiOutlineUser } from "react-icons/ai";
 import { MdOutlineEmail } from "react-icons/md";
-import { AiOutlineBarcode } from "react-icons/ai";
+import { toast } from "react-toastify";
+import AvatarInput from "src/components/common/AvatarInput";
 import Input from "src/components/common/Input";
 import RoundedBtn from "src/components/common/RoundedBtn";
-import AvatarInput from "src/components/common/AvatarInput";
-import { CUS_COLORS } from "src/utils/consts";
 import { AuthContext } from "src/contexts/AuthContext";
 import {
   downloadImageReq,
   updateProfileReq,
   uploadAvatarReq,
 } from "src/services/api";
-
-// =======================================================================================================
+import { CUS_COLORS } from "src/utils/consts";
+import { ProfileProps } from "../Dashboard/Types";
 
 const Dashboard = () => {
   const { user, setUser } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const [avatar_url, setAvatarUrl] = useState<string>("");
+  const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [uploading, setUploading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [fullname, setFullname] = useState<string>("");
@@ -33,8 +31,8 @@ const Dashboard = () => {
   }, [user]);
 
   useEffect(() => {
-    if (avatar_url) downloadImage(avatar_url);
-  }, [avatar_url]);
+    if (avatarUrl) downloadImage(avatarUrl);
+  }, [avatarUrl]);
 
   const downloadImage = async (path: string) => {
     try {
@@ -51,7 +49,7 @@ const Dashboard = () => {
 
   const updateProfile = async (avatarUrl: string) => {
     setLoading(true);
-    const updates = {
+    const updates: ProfileProps = {
       id: user?.id,
       email: user?.email,
       username,
@@ -101,7 +99,7 @@ const Dashboard = () => {
             disabled={loading}
             uploading={uploading}
             onChange={(e: ChangeEvent<HTMLInputElement>) => uploadAvatar(e)}
-            avatar_url={avatar_url}
+            avatar_url={avatarUrl}
           />
         </div>
         <Input
@@ -153,7 +151,7 @@ const Dashboard = () => {
           <RoundedBtn
             variant="fill"
             onClick={() => {
-              updateProfile(avatar_url);
+              updateProfile(avatarUrl);
             }}
           >
             {loading ? "Updating..." : "Update"}

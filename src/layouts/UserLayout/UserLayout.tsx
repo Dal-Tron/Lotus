@@ -1,12 +1,12 @@
-import { useEffect, PropsWithChildren, useContext } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { PropsWithChildren, useContext, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "src/components/common/Footer";
 import Header from "src/components/common/Header";
+import { AuthContext } from "src/contexts/AuthContext";
 import supabase from "src/services/db";
 import { MSG_ERRS, URLS } from "src/utils/consts";
 import { extractUsernameFromPath } from "src/utils/helpers";
-import { AuthContext } from "src/contexts/AuthContext";
 
 // =======================================================================================================
 
@@ -35,7 +35,6 @@ const UserLayout = ({ children }: PropsWithChildren) => {
       toast.error(MSG_ERRS.NOT_LOGGED_IN);
       navigate(`/${URLS.HOME}`);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, user]);
 
   return (

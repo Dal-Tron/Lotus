@@ -1,6 +1,6 @@
 export interface ProfileProps {
-  id: string;
-  email: string;
+  id?: string;
+  email?: string;
   username: string;
   full_name: string;
   avatar_url: string;

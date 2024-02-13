@@ -1,26 +1,25 @@
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { FaEdit, FaTrash } from "react-icons/fa";
 import cx from "classnames";
-import RoundedBtn from "src/components/common/RoundedBtn";
-import UserEditModal from "src/components/elements/UserEditModal";
-import UserAddModal from "src/components/elements/UserAddModal";
-import { User, NewUser } from "src/Types";
-import { CUS_COLORS, TEXTS } from "src/utils/consts";
+import { useEffect, useState } from "react";
+import { FaEdit, FaTrash } from "react-icons/fa";
 import { FaUserPlus } from "react-icons/fa6";
+import { toast } from "react-toastify";
 import DefaultAvatar from "src/assets/images/60111.png";
+import RoundedBtn from "src/components/common/RoundedBtn";
+import UserAddModal from "src/components/elements/UserAddModal";
+import UserDeleteModal from "src/components/elements/UserDeleteModal";
+import UserEditModal from "src/components/elements/UserEditModal";
 import {
   addNewUserReq,
   deleteUserReq,
   downloadImageReq,
   fetchUsersReq,
 } from "src/services/api";
-import { columnType } from "./Types";
-import UserDeleteModal from "src/components/elements/UserDeleteModal";
+import { NewUser, User } from "src/Types";
+import { CUS_COLORS, TEXTS } from "src/utils/consts";
 
-// =======================================================================================================
-
-const columns: columnType[] = [
+const columns: {
+  name: string;
+}[] = [
   {
     name: "Email",
   },
@@ -34,8 +33,6 @@ const columns: columnType[] = [
     name: "role",
   },
 ];
-
-// =======================================================================================================
 
 const AdminDashboard = ({
   isSidebarExpanded,
@@ -76,11 +73,10 @@ const AdminDashboard = ({
     setLoading(true);
     fetchUsers();
     setLoading(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const addNewUser = async () => {
-    const { data, error } = await addNewUserReq({
+    const { error } = await addNewUserReq({
       email: newUser.email,
       password: "adminuser",
       user_metadata: { full_name: newUser.fullName },
