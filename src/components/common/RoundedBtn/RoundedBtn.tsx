@@ -1,8 +1,12 @@
-import { MouseEvent, PropsWithChildren } from "react";
 import cx from "classnames";
-import { RoundedBtnProps } from "./Types";
+import { MouseEvent, PropsWithChildren } from "react";
 
-// =======================================================================================================
+interface Props {
+  variant: "fill" | "transparent";
+  className?: string;
+  onClick?: VoidFunction;
+  disabled?: boolean;
+}
 
 const RoundedBtn = ({
   variant,
@@ -10,7 +14,7 @@ const RoundedBtn = ({
   className,
   onClick,
   disabled,
-}: PropsWithChildren<RoundedBtnProps>) => {
+}: PropsWithChildren<Props>) => {
   const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     if (onClick) onClick();
