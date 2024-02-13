@@ -1,18 +1,18 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { AiOutlineUser } from "react-icons/ai";
+import { AiOutlineBarcode, AiOutlineUser } from "react-icons/ai";
 import { MdOutlineEmail } from "react-icons/md";
-import { AiOutlineBarcode } from "react-icons/ai";
+import { toast } from "react-toastify";
+import AvatarInput from "src/components/common/AvatarInput";
 import Input from "src/components/common/Input";
 import RoundedBtn from "src/components/common/RoundedBtn";
-import AvatarInput from "src/components/common/AvatarInput";
-import { CUS_COLORS } from "src/utils/consts";
 import { AuthContext } from "src/contexts/AuthContext";
 import {
   downloadImageReq,
   updateProfileReq,
   uploadAvatarReq,
 } from "src/services/api";
+import { CUS_COLORS } from "src/utils/consts";
+import { ProfileProps } from "../Dashboard/Types";
 
 const Dashboard = () => {
   const { user, setUser } = useContext(AuthContext);
@@ -49,12 +49,12 @@ const Dashboard = () => {
 
   const updateProfile = async (avatarUrl: string) => {
     setLoading(true);
-    const updates = {
+    const updates: ProfileProps = {
       id: user?.id,
       email: user?.email,
       username,
       full_name: fullname,
-      avatarUrl,
+      avatar_url: avatarUrl,
       updated_at: new Date(),
     };
     const { error, data } = await updateProfileReq(updates);
@@ -98,8 +98,8 @@ const Dashboard = () => {
           <AvatarInput
             disabled={loading}
             uploading={uploading}
-            uploadAvatar={(e: ChangeEvent<HTMLInputElement>) => uploadAvatar(e)}
-            avatarUrl={avatarUrl}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => uploadAvatar(e)}
+            avatar_url={avatarUrl}
           />
         </div>
         <Input

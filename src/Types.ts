@@ -15,3 +15,12 @@ export interface NewUser {
   username: string;
   avatar?: File | null;
 }
+
+export interface FileType {
+  user_id: string;
+  file_name: string;
+  unique_name: string;
+  id: number;
+  created_at: string;
+  updated_at: string;
+}

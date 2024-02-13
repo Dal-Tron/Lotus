@@ -1,12 +1,12 @@
-import { useEffect, useState, useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Footer from "src/components/common/Footer";
 import Header from "src/components/common/Header";
 import Sidebar from "src/components/common/Sidebar";
-import { MSG_ERRS, ROLES, URLS } from "src/utils/consts";
-import supabase from "src/services/db";
 import { AuthContext } from "src/contexts/AuthContext";
+import supabase from "src/services/db";
+import { MSG_ERRS, ROLES, URLS } from "src/utils/consts";
 
 // =======================================================================================================
 
@@ -35,7 +35,6 @@ const AdminLayout = ({ children }: { children: ClildrenFunction }) => {
       toast.error(`${MSG_ERRS.NOT_PERMITTED}`);
       navigate(`/${URLS.HOME}`);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, user]);
 
   return (

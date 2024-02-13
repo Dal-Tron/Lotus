@@ -1,9 +1,9 @@
 export interface ProfileProps {
-  id: string;
-  email: string;
+  id?: string;
+  email?: string;
   username: string;
   full_name: string;
-  avatarUrl: string;
+  avatar_url: string;
   updated_at: Date;
 }
 

@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { FaUserPlus } from "react-icons/fa6";
 import { toast } from "react-toastify";
-import { NewUser, User } from "src/Types";
 import DefaultAvatar from "src/assets/images/60111.png";
 import RoundedBtn from "src/components/common/RoundedBtn";
 import UserAddModal from "src/components/elements/UserAddModal";
@@ -15,6 +14,7 @@ import {
   downloadImageReq,
   fetchUsersReq,
 } from "src/services/api";
+import { NewUser, User } from "src/Types";
 import { CUS_COLORS, TEXTS } from "src/utils/consts";
 
 const columns: {
@@ -76,12 +76,11 @@ const AdminDashboard = ({
   }, []);
 
   const addNewUser = async () => {
-    const { data, error } = await addNewUserReq({
+    const { error } = await addNewUserReq({
       email: newUser.email,
       password: "adminuser",
       user_metadata: { full_name: newUser.fullName },
     });
-    console.log(data);
     if (error) {
       toast.error(error.message);
     } else {
