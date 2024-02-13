@@ -46,6 +46,10 @@ function App() {
     return session && user?.role === ROLES.ADMIN;
   };
 
+  const isUser = () => {
+    return session && user?.role === ROLES.NORMAL;
+  };
+
   return (
     <AuthContext.Provider value={{ session, user, setUser }}>
       <Router>
@@ -54,11 +58,18 @@ function App() {
             <Route path={`/${URLS.HOME}`} element={<HomePage />} />
             <Route
               path={`/users/:id/${URLS.DASHBOARD}`}
-              element={<DashboardPage />}
+              element={
+                <ProtectedRoute
+                  element={<DashboardPage />}
+                  checkAuth={isUser}
+                />
+              }
             />
             <Route
               path={`/users/:id/${URLS.SETTINGS}`}
-              element={<SettingsPage />}
+              element={
+                <ProtectedRoute element={<SettingsPage />} checkAuth={isUser} />
+              }
             />
             <Route
               path={`/${URLS.ADMIN}`}
