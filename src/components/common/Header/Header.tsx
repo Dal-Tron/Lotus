@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { FaSignOutAlt } from "react-icons/fa";
+import { FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AuthContext } from "src/contexts/AuthContext";
@@ -9,6 +9,10 @@ import { APP_NAME, ROLES, TEXT_URLS, URLS } from "src/utils/consts";
 const Header = () => {
   const { session, user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const handleSignIn = () => {
+    navigate(`/${URLS.SIGN_IN}`);
+  };
 
   const handleSignOut = async () => {
     const { error } = await AuthService.signOut();
@@ -37,6 +41,11 @@ const Header = () => {
         {session && (
           <button onClick={handleSignOut}>
             <FaSignOutAlt />
+          </button>
+        )}
+        {!session && (
+          <button onClick={handleSignIn}>
+            <FaSignInAlt />
           </button>
         )}
       </div>
