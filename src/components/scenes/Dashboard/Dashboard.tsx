@@ -53,18 +53,18 @@ const Dashboard = () => {
   };
   return (
     <div className="p-5">
-      <h1 className="mb-5 text-3xl text-center">
+      <h1 className="mb-10 text-3xl text-center">
         Tada{" "}
         <span className="text-cus-green">{user?.full_name || user?.email}</span>
         ! You are signed in.
       </h1>
       {uploading ? (
-        "Uploading..."
+        <p className="mb-10 text-center">Uploading...</p>
       ) : (
         <input
           onChange={(e) => uploadFile(e)}
           type="file"
-          className="block m-auto mb-10 w-1/2 border border-cus-gray-light file:hidden"
+          className="block m-auto mb-10 w-1/2 border border-cus-gray-light rounded"
         />
       )}
 
