@@ -30,20 +30,26 @@ const Header = () => {
         <Link to={`/${URLS.HOME}`}>
           <h1 className="text-2xl font-bold text-cus-pink">{APP_NAME}</h1>
         </Link>
-        {session && user?.role === ROLES.ADMIN && (
-          <Link to={`/${URLS.ADMIN}`}>{TEXT_URLS.ADMIN}</Link>
-        )}
-        {session && (
-          <Link to={`/users/${user?.username}/${URLS.DASHBOARD}`}>
-            {TEXT_URLS.DASHBOARD}
-          </Link>
-        )}
-        {session && (
+        <div className="flex gap-4">
+          {session && user?.role === ROLES.ADMIN && (
+            <Link to={`/${URLS.ADMIN}`}>{TEXT_URLS.ADMIN}</Link>
+          )}
+          {session && (
+            <Link to={`/users/${user?.username}/${URLS.DASHBOARD}`}>
+              {TEXT_URLS.DASHBOARD}
+            </Link>
+          )}
+          {session && (
+            <Link to={`/users/${user?.username}/${URLS.SETTINGS}`}>
+              {TEXT_URLS.SETTINGS}
+            </Link>
+          )}
+        </div>
+        {session ? (
           <button onClick={handleSignOut}>
             <FaSignOutAlt />
           </button>
-        )}
-        {!session && (
+        ) : (
           <button onClick={handleSignIn}>
             <FaSignInAlt />
           </button>

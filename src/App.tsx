@@ -47,7 +47,7 @@ function App() {
   };
 
   const isUser = () => {
-    return session && user?.role === ROLES.NORMAL;
+    return session;
   };
 
   return (
