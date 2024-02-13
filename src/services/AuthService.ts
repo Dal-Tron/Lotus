@@ -18,7 +18,10 @@ const onAuthStateChange = (setSession: (session: SessionType) => void) => {
   return () => subscription.unsubscribe();
 };
 
+const signOut = async () => await supabase.auth.signOut();
+
 export const AuthService = {
   initSession,
   onAuthStateChange,
+  signOut
 };

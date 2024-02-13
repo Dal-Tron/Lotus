@@ -3,7 +3,7 @@ export interface ProfileProps {
   email: string;
   username: string;
   full_name: string;
-  avatar_url: string;
+  avatarUrl: string;
   updated_at: Date;
 }
 

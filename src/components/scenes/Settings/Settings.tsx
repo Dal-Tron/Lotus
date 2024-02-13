@@ -14,12 +14,10 @@ import {
   uploadAvatarReq,
 } from "src/services/api";
 
-// =======================================================================================================
-
 const Dashboard = () => {
   const { user, setUser } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const [avatar_url, setAvatarUrl] = useState<string>("");
+  const [avatarUrl, setAvatarUrl] = useState<string>("");
   const [uploading, setUploading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [fullname, setFullname] = useState<string>("");
@@ -33,8 +31,8 @@ const Dashboard = () => {
   }, [user]);
 
   useEffect(() => {
-    if (avatar_url) downloadImage(avatar_url);
-  }, [avatar_url]);
+    if (avatarUrl) downloadImage(avatarUrl);
+  }, [avatarUrl]);
 
   const downloadImage = async (path: string) => {
     try {
@@ -56,7 +54,7 @@ const Dashboard = () => {
       email: user?.email,
       username,
       full_name: fullname,
-      avatar_url: avatarUrl,
+      avatarUrl,
       updated_at: new Date(),
     };
     const { error, data } = await updateProfileReq(updates);
@@ -101,7 +99,7 @@ const Dashboard = () => {
             disabled={loading}
             uploading={uploading}
             uploadAvatar={(e: ChangeEvent<HTMLInputElement>) => uploadAvatar(e)}
-            avatar_url={avatar_url}
+            avatarUrl={avatarUrl}
           />
         </div>
         <Input
@@ -153,7 +151,7 @@ const Dashboard = () => {
           <RoundedBtn
             variant="fill"
             onClick={() => {
-              updateProfile(avatar_url);
+              updateProfile(avatarUrl);
             }}
           >
             {loading ? "Updating..." : "Update"}

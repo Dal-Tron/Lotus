@@ -1,23 +1,23 @@
-import React, { useState, useEffect, Suspense } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import {
+  Navigate,
+  Route,
   BrowserRouter as Router,
   Routes,
-  Route,
-  Navigate,
 } from "react-router-dom";
-import { AuthContext } from "src/contexts/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { ProtectedRoute } from "src/components/common/ProtectedRoute";
+import { AuthContext } from "src/contexts/AuthContext";
+import { AuthService, UserService } from "src/services";
 import { ROLES, URLS } from "src/utils/consts";
 import { User } from "./Types";
-import { ProtectedRoute } from "src/components/common/ProtectedRoute";
-import { UserService, AuthService } from "src/services";
 
-const HomePage = React.lazy(() => import("./pages/Home"));
-const DashboardPage = React.lazy(() => import("./pages/Dashboard"));
-const SettingsPage = React.lazy(() => import("./pages/Settings"));
-const AdminDashboardPage = React.lazy(() => import("./pages/AdminDashboard"));
-const SignInPage = React.lazy(() => import("./pages/SignIn"));
+const HomePage = lazy(() => import("./pages/Home"));
+const DashboardPage = lazy(() => import("./pages/Dashboard"));
+const SettingsPage = lazy(() => import("./pages/Settings"));
+const AdminDashboardPage = lazy(() => import("./pages/AdminDashboard"));
+const SignInPage = lazy(() => import("./pages/SignIn"));
 
 function App() {
   const [session, setSession] = useState<any>(null);
@@ -33,13 +33,14 @@ function App() {
       const {
         user: { id },
       } = session;
+
       UserService.getProfile(id).then((profile) => {
         if (profile) {
           setUser(profile);
         }
       });
     }
-  }, [session]);
+  }, []);
 
   const isAdmin = () => {
     return session && user?.role === ROLES.ADMIN;
