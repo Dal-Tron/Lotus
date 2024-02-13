@@ -100,7 +100,7 @@ const Dashboard = () => {
           <AvatarInput
             disabled={loading}
             uploading={uploading}
-            uploadAvatar={(e: ChangeEvent<HTMLInputElement>) => uploadAvatar(e)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => uploadAvatar(e)}
             avatar_url={avatar_url}
           />
         </div>

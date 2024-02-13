@@ -6,7 +6,7 @@ import { AvatarInputProps } from "./Types";
 const AvatarInput = ({
   disabled,
   uploading,
-  uploadAvatar,
+  onChange,
   avatar_url,
 }: AvatarInputProps) => {
   return (
@@ -16,7 +16,7 @@ const AvatarInput = ({
         type="file"
         id="single"
         accept="image/*"
-        onChange={(e) => uploadAvatar(e)}
+        onChange={(e) => onChange(e)}
         disabled={disabled}
       />
       {uploading ? (

@@ -16,7 +16,6 @@ import {
   fetchUsersReq,
 } from "src/services/api";
 import { columnType } from "./Types";
-import { supabaseAdmin } from "src/services/db";
 import UserDeleteModal from "src/components/elements/UserDeleteModal";
 
 // =======================================================================================================
@@ -86,7 +85,6 @@ const AdminDashboard = ({
       password: "adminuser",
       user_metadata: { full_name: newUser.fullName },
     });
-    console.log(data);
     if (error) {
       toast.error(error.message);
     } else {
