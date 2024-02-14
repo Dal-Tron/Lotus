@@ -40,7 +40,7 @@ function App() {
         }
       });
     }
-  }, []);
+  }, [session]);
 
   const isAdmin = () => {
     return session && user?.role === ROLES.ADMIN;
