@@ -19,15 +19,9 @@ CREATE TABLE profiles (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
-CREATE OR REPLACE FUNCTION trigger_set_timestamp()
-  RETURNS TRIGGER AS $$
-  BEGIN
-    NEW.updated_at = NOW();
-    RETURN NEW;
-  END;
-  $$ LANGUAGE PLPGSQL;
+CREATE EXTENSION IF NOT EXISTS moddatetime SCHEMA extensions;
 
-CREATE TRIGGER set_timestamp BEFORE UPDATE ON profiles FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp();
+CREATE TRIGGER handle_update_at BEFORE UPDATE ON files FOR EACH ROW EXECUTE PROCEDURE moddatetime (updated_at);
 
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
