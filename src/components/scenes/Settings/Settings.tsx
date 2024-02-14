@@ -54,7 +54,7 @@ const Dashboard = () => {
       email: user?.email,
       username,
       full_name: fullname,
-      avatar_url: avatarUrl,
+      avatarUrl,
       updated_at: new Date(),
     };
     const { error, data } = await updateProfileReq(updates);
@@ -98,7 +98,7 @@ const Dashboard = () => {
           <AvatarInput
             disabled={loading}
             uploading={uploading}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => uploadAvatar(e)}
+            uploadAvatar={(e: ChangeEvent<HTMLInputElement>) => uploadAvatar(e)}
             avatarUrl={avatarUrl}
           />
         </div>

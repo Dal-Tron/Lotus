@@ -1,19 +1,19 @@
 import { ChangeEvent } from "react";
 import DefaultAvatar from "src/assets/images/60111.png";
 
-interface AvatarInputProps {
+interface Props {
   avatarUrl: string;
   disabled: boolean;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => any;
+  uploadAvatar: (e: ChangeEvent<HTMLInputElement>) => any;
   uploading: boolean;
 }
 
 const AvatarInput = ({
   disabled,
   uploading,
-  onChange,
+  uploadAvatar,
   avatarUrl,
-}: AvatarInputProps) => {
+}: Props) => {
   return (
     <>
       <input
@@ -21,7 +21,7 @@ const AvatarInput = ({
         type="file"
         id="single"
         accept="image/*"
-        onChange={(e) => onChange(e)}
+        onChange={uploadAvatar}
         disabled={disabled}
       />
       {uploading ? (
