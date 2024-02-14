@@ -3,8 +3,7 @@ import { toast } from "react-toastify";
 import { AuthContext } from "src/contexts/AuthContext";
 import supabase from "src/services/db";
 import { FileType } from "src/Types";
-
-// =======================================================================================================
+import { cutString, extractFileInfo } from "src/utils/helpers";
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext);
@@ -29,21 +28,29 @@ const Dashboard = () => {
     const file = (e.target as HTMLInputElement).files
       ? (e.target as HTMLInputElement).files![0]
       : null;
-    const fileExt = file!.name.split(".").pop();
-    const fileName = `${Math.random()}.${fileExt}`;
-    const filePath = `${fileName}`;
+    const { randName, fileType, fileSize, fileName } = extractFileInfo(file);
 
     const { error: uploadError } = await supabase.storage
       .from("files")
-      .upload(filePath, file!);
+      .upload(randName, file!);
     if (uploadError) {
       toast.error(uploadError.message);
       return;
     }
+
+    const {
+      data: { publicUrl },
+    } = await supabase.storage.from("files").getPublicUrl(randName);
+
     const { error: updateError } = await supabase
       .from("files")
-      .update({ file_name: file!.name })
-      .eq("unique_name", filePath);
+      .update({
+        file_name: fileName,
+        file_type: fileType,
+        file_size: fileSize,
+        file_url: publicUrl,
+      })
+      .eq("external_id", randName);
     if (updateError) {
       toast.error(updateError.message);
       return;
@@ -73,8 +80,12 @@ const Dashboard = () => {
           <tr>
             <th>No</th>
             <th>Name</th>
-            <th>Unique name</th>
+            <th>External ID</th>
+            <th>Type</th>
+            <th>Size</th>
+            <th>URL</th>
             <th>Created At</th>
+            <th>Updated At</th>
           </tr>
         </thead>
         <tbody>
@@ -83,16 +94,30 @@ const Dashboard = () => {
               return (
                 <tr className="border-b" key={file.id}>
                   <td className="text-center">{idx + 1}</td>
-                  <td className="text-center">{file.file_name}</td>
-                  <td className="text-center">{file.unique_name}</td>
+                  <td className="text-center" title={file.file_name}>
+                    {cutString(file?.file_name, 12)}
+                  </td>
+                  <td className="text-center">{file.external_id}</td>
+                  <td className="text-center">{file.file_type}</td>
+                  <td className="text-center">{file.file_size}</td>
+                  <td className="text-center" title={file.file_url}>
+                    <a
+                      href={file.file_url}
+                      className="hover:text-cus-pink"
+                      target="_blank"
+                    >
+                      {cutString(file?.file_url, 24)}
+                    </a>
+                  </td>
                   <td className="text-center">{file.created_at}</td>
+                  <td className="text-center">{file.updated_at}</td>
                 </tr>
               );
             })
           ) : (
             <tr>
               <td
-                colSpan={4}
+                colSpan={8}
                 className="border-b p-5 text-cus-pink text-center"
               >
                 No files

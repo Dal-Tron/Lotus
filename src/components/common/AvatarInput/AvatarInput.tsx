@@ -2,7 +2,7 @@ import { ChangeEvent } from "react";
 import DefaultAvatar from "src/assets/images/60111.png";
 
 interface AvatarInputProps {
-  avatar_url: string;
+  avatarUrl: string;
   disabled: boolean;
   onChange: (e: ChangeEvent<HTMLInputElement>) => any;
   uploading: boolean;
@@ -12,7 +12,7 @@ const AvatarInput = ({
   disabled,
   uploading,
   onChange,
-  avatar_url,
+  avatarUrl,
 }: AvatarInputProps) => {
   return (
     <>
@@ -26,8 +26,8 @@ const AvatarInput = ({
       />
       {uploading ? (
         "Uploading..."
-      ) : avatar_url ? (
-        <img width="100%" src={avatar_url} alt="avatar" />
+      ) : avatarUrl ? (
+        <img width="100%" src={avatarUrl} alt="avatar" />
       ) : (
         <img width="100%" src={DefaultAvatar} alt="avatar" />
       )}

@@ -99,7 +99,7 @@ const Dashboard = () => {
             disabled={loading}
             uploading={uploading}
             onChange={(e: ChangeEvent<HTMLInputElement>) => uploadAvatar(e)}
-            avatar_url={avatarUrl}
+            avatarUrl={avatarUrl}
           />
         </div>
         <Input
