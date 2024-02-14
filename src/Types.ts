@@ -17,10 +17,13 @@ export interface NewUser {
 }
 
 export interface FileType {
+  id: number;
   user_id: string;
   file_name: string;
-  unique_name: string;
-  id: number;
+  external_id: string;
+  file_type: string;
+  file_size: string;
+  file_url: string;
   created_at: string;
   updated_at: string;
 }

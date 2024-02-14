@@ -15,8 +15,19 @@ CREATE TABLE profiles (
   full_name VARCHAR(256),
   role VARCHAR(256) DEFAULT 'normal',
   avatar_url VARCHAR(256),
-  updated_at TIMESTAMP WITH TIME ZONE
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
 );
+
+CREATE OR REPLACE FUNCTION trigger_set_timestamp()
+  RETURNS TRIGGER AS $$
+  BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+  END;
+  $$ LANGUAGE PLPGSQL;
+
+CREATE TRIGGER set_timestamp BEFORE UPDATE ON profiles FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp();
 
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 

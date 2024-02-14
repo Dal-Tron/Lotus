@@ -2,12 +2,25 @@ DROP TABLE IF EXISTS files;
 
 CREATE TABLE files (
   id SERIAL PRIMARY KEY NOT NULL,
+  external_id VARCHAR(256) UNIQUE NOT NULL,
   user_id UUID REFERENCES auth.users NOT NULL,
   file_name VARCHAR(256),
-  unique_name VARCHAR(256) UNIQUE NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP WITH TIME ZONE
+  file_type VARCHAR(256),
+  file_size VARCHAR(256),
+  file_url VARCHAR(256),
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
 );
+
+CREATE OR REPLACE FUNCTION trigger_set_timestamp()
+  RETURNS TRIGGER AS $$
+  BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+  END;
+  $$ LANGUAGE PLPGSQL;
+
+CREATE TRIGGER set_timestamp BEFORE UPDATE ON files FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp();
 
 ------------------------------------------------------------------------------------------------------------------
 
@@ -22,7 +35,7 @@ CREATE POLICY "Users can update their own files." ON files FOR UPDATE USING (aut
 CREATE OR REPLACE FUNCTION public.handle_new_file()
   RETURNS TRIGGER AS $$
     BEGIN
-      INSERT INTO public.files (user_id, unique_name)
+      INSERT INTO public.files (user_id, external_id)
       VALUES (new.owner, new.name);
       RETURN new;
     END;
@@ -34,7 +47,7 @@ CREATE TRIGGER on_file_created AFTER INSERT ON storage.objects FOR EACH ROW EXEC
 -- bucket
 DELETE FROM storage.objects WHERE bucket_id = 'files';
 DELETE FROM storage.buckets WHERE name = 'files';
-INSERT INTO storage.buckets (id, name) VALUES ('files', 'files');
+INSERT INTO storage.buckets (id, name, public) VALUES ('files', 'files', true);
 
 DROP POLICY IF EXISTS "Anyone can upload a file." ON storage.objects;
 CREATE POLICY "Anyone can upload a file." ON storage.objects for INSERT WITH CHECK (bucket_id = 'files');

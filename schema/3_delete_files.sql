@@ -1,198 +1,160 @@
-/* This SQL sets up a basic process for marking files to be deleted by a cron task and will delete them on a regular schedule.
-   It has:
-   A cron task and function to delete a set of files with whatever time period makes sense to manage staying ahead of the deletions.
-   A trigger on auth.users delete to call a function to mark the deleted files and remove the foreign key to auth.users.
-   A function that shows how you can efficiently mark for delete specific user files and not deal with the actual storage delete.
+CREATE SCHEMA IF NOT EXISTS delete_files_schema;
 
-   It requires your instance URL and your service_role_key
-   Also shown is an extra schema and table for storing your url and service_role key
- */
-
-create schema if not exists delete_files_schema;
-
-drop table if exists delete_files_schema.system_values;
-create table if not exists delete_files_schema.system_values (
-    name text primary key,
-    value text
+DROP TABLE IF EXISTS delete_files_schema.system_values;
+CREATE TABLE IF NOT EXISTS delete_files_schema.system_values (
+    name TEXT PRIMARY KEY,
+    value TEXT
 );
-insert into delete_files_schema.system_values (name, value) values
+
+INSERT INTO delete_files_schema.system_values (name, value) VALUES
     ('files_per_cron', 40),
-    ('service_role_key',''), /* DO NOT SET YOUR SERVICE ROLE KEY HERE.  ONLY UPDATE THE TABLE IN THE UI WITH YOUR KEY */
+    ('service_role_key',''),
     ('instance_url',''),
     ('http_enabled',false),
     ('pg_net_enabled',false);
 
-/* You can use both http and pg_net extension or comment out one or the other. */
-/* pg_net is much faster for single deletes in a bucket.  http allows bulk deletes so fewer api calls if there are alot of files in a bucket. */
+CREATE EXTENSION IF NOT EXISTS http WITH SCHEMA extensions;
+UPDATE delete_files_schema.system_values SET VALUE = TRUE WHERE name = 'http_enabled';
 
-create extension if not exists http
-    with schema extensions;
-update delete_files_schema.system_values set value = true where name = 'http_enabled';
+CREATE EXTENSION IF NOT EXISTS pg_net WITH SCHEMA extensions;
+UPDATE delete_files_schema.system_values SET VALUE = TRUE WHERE name = 'pg_net_enabled';
 
-create extension if not exists pg_net
-    with schema extensions;
-update delete_files_schema.system_values set value = true where name = 'pg_net_enabled';
+CREATE EXTENSION IF NOT EXISTS pg_cron WITH SCHEMA extensions;
 
-create extension if not exists pg_cron
-    with schema extensions;
+CREATE OR REPLACE FUNCTION public.clean_files()
+    RETURNS void AS $$
+        DECLARE
+            service_role_key TEXT;
+            instance_url TEXT;
+            files_per_cron INT := 10;
+            http_enabled BOOLEAN;
+            pg_net_enabled BOOLEAN;
+            delete_status TEXT;
+            bucket TEXT;
+            paths TEXT[];
+            file_body TEXT;
+            path TEXT;
+        BEGIN
+            SELECT VALUE INTO service_role_key FROM delete_files_schema.system_values WHERE name = 'service_role_key';
+            SELECT VALUE INTO instance_url FROM delete_files_schema.system_values WHERE name = 'instance_url';
+            SELECT VALUE INTO files_per_cron FROM delete_files_schema.system_values WHERE name = 'files_per_cron';
+            SELECT VALUE INTO http_enabled FROM delete_files_schema.system_values WHERE name = 'http_enabled';
+            SELECT VALUE INTO pg_net_enabled FROM delete_files_schema.system_values WHERE name = 'pg_net_enabled';
 
+            RAISE LOG 'CFILE clean_files';
 
-/* This function is called from cron at a rate and with a limit count that insures you keep up with deleted files */
-/* The function could also be modified to only delete files more than 1 day or week old using the updated_at time in the where */
-create or replace function public.clean_files ()
-    returns void as $$
-declare
-    /* it is highly recommended to move the service_role key and url to Vault
-       or to a separate table not accessible to the API to allow easy setup for different instances.
-       In this example you store your code in delete_files_schema schema in the system_values table.
-     */
+            FOR bucket, paths IN
+                SELECT bucket_id, array_agg(name) FROM (
+                SELECT bucket_id, name FROM storage.objects
+                WHERE owner IS NULL AND created_at = to_timestamp(0)
+                ORDER BY bucket_id
+                LIMIT files_per_cron) AS names
+                GROUP BY bucket_id
+                LOOP
+                    path = paths[1];
+                    file_body = '{"prefixes":' || array_to_json(paths) || '}';
+                    RAISE LOG 'key= %, bucket = %, file_body = %, path = %, length = %', service_role_key, bucket, file_body, path, array_length(paths,1);
 
-    service_role_key text;
-    instance_url text;
-    files_per_cron int := 10; /* also loaded from system_values */
-    http_enabled boolean;
-    pg_net_enabled boolean;
-    delete_status text;
-    bucket text;
-    paths text[];
-    file_body text;
-    path text;
-begin
-    select value into service_role_key from delete_files_schema.system_values where name = 'service_role_key';
-    select value into instance_url from delete_files_schema.system_values where name = 'instance_url';
-    select value into files_per_cron from delete_files_schema.system_values where name = 'files_per_cron';
-    select value into http_enabled from delete_files_schema.system_values where name = 'http_enabled';
-    select value into pg_net_enabled from delete_files_schema.system_values where name = 'pg_net_enabled';
-
-    raise log 'CFILE clean_files';
-
-    for bucket, paths in
-        select bucket_id, array_agg(name) from (
-               select bucket_id, name from storage.objects
-               where owner is null and created_at = to_timestamp(0)
-               order by bucket_id
-               limit files_per_cron) as names
-        group by bucket_id
-        loop
-            path = paths[1];
-            file_body = '{"prefixes":' || array_to_json(paths) || '}';
-            raise log 'key= %, bucket = %, file_body = %, path = %, length = %', service_role_key, bucket, file_body, path, array_length(paths,1);
-
-            /*  http extension only case */
-            if (http_enabled AND NOT pg_net_enabled) then
-            select status from
-                http((
-                      'DELETE',
-                      instance_url || '/storage/v1/object/' || bucket,
-                      ARRAY[http_header('authorization','Bearer ' || service_role_key)],
-                      'application/json',
-                      file_body
-                    )::http_request) into delete_status;  --not sure delete status is useful from storage-API in this case
-            end if;
-
-            /*   pg_net extension only case (without delete body) */
-            if (pg_net_enabled AND NOT http_enabled) then
-            foreach path in array paths
-                loop
-                    perform net.http_delete(
-                           url:=instance_url || '/storage/v1/object/' || bucket || '/' || path,
-                           headers:= ('{"authorization": "Bearer ' || service_role_key || '"}')::jsonb
-                       );
-                    raise log 'pg_net loop path = %', path;
-                end loop;
-            end if;
-
-            /* http and pg_net together */
-            /* note >2 can be tweaked for using pg_net in a loop for more files.  The tradeoff is number API calls versus time for synch response from http */
-            if (http_enabled AND pg_net_enabled) then
-                if (array_length(paths,1) > 2) then
-                    select status FROM
+                    /*  http extension only case */
+                    IF (http_enabled AND NOT pg_net_enabled) THEN
+                        SELECT status FROM
                         http((
-                              'DELETE',
-                              instance_url || '/storage/v1/object/' || bucket,
-                              ARRAY[http_header('authorization','Bearer ' || service_role_key)],
-                              'application/json',
-                              file_body
-                            )::http_request) into delete_status;  --not sure delete status is useful from storage-API in this case
-                    raise log 'both extensions-- http  paths = %', paths;
-                else
-                    perform net.http_delete(
-                            url:=instance_url || '/storage/v1/object/' || bucket || '/' || path,
-                            headers:= ('{"authorization": "Bearer ' || service_role_key || '"}')::jsonb
-                        );
-                    raise log 'both extensions-- pg_net path = %', path;
-                end if;
-            end if;
+                            'DELETE',
+                            instance_url || '/storage/v1/object/' || bucket,
+                            ARRAY[http_header('authorization','Bearer ' || service_role_key)],
+                            'application/json',
+                            file_body
+                            )::http_request) INTO delete_status;  --not sure delete status is useful from storage-API in this case
+                    END IF;
 
-            /* if pg_net adds a body to delete all you need is this (not tested)*/
-            /*
-            perform net.pg_net_http_delete_body(
-                    url := instance_url || '/storage/v1/object/' || bucket,
-                    headers:= ('{"authorization": "Bearer ' || service_role_key || '", "content-type":"application/json"}')::jsonb,
-                    body := file_body::jsonb
-            );
-            */
-        end loop;
-    raise log 'finished';
-end
-$$  language plpgsql security definer
-     set search_path = extensions, storage, pg_temp;
+                    /*   pg_net extension only case (without delete body) */
+                    IF (pg_net_enabled AND NOT http_enabled) THEN
+                        FOREACH path IN array paths
+                            LOOP
+                                perform net.http_delete(
+                                    url:=instance_url || '/storage/v1/object/' || bucket || '/' || path,
+                                    headers:= ('{"authorization": "Bearer ' || service_role_key || '"}')::jsonb
+                                );
+                                RAISE LOG 'pg_net loop path = %', path;
+                            END LOOP;
+                    END IF;
 
+                    /* http and pg_net together */
+                    /* note >2 can be tweaked for using pg_net in a loop for more files.  The tradeoff is number API calls versus time for synch response from http */
+                    IF (http_enabled AND pg_net_enabled) THEN
+                        IF (array_length(paths,1) > 2) THEN
+                            SELECT status FROM
+                                http((
+                                    'DELETE',
+                                    instance_url || '/storage/v1/object/' || bucket,
+                                    ARRAY[http_header('authorization','Bearer ' || service_role_key)],
+                                    'application/json',
+                                    file_body
+                                )::http_request) INTO delete_status;  --not sure delete status is useful from storage-API in this case
+                            RAISE LOG 'both extensions-- http  paths = %', paths;
+                        ELSE
+                            perform net.http_delete(
+                                url:=instance_url || '/storage/v1/object/' || bucket || '/' || path,
+                                headers:= ('{"authorization": "Bearer ' || service_role_key || '"}')::jsonb
+                            );
+                            RAISE LOG 'both extensions-- pg_net path = %', path;
+                        END IF;
+                    END IF;
+
+                    /* if pg_net adds a body to delete all you need is this (not tested)*/
+                    /*
+                    perform net.pg_net_http_delete_body(
+                        url := instance_url || '/storage/v1/object/' || bucket,
+                        headers:= ('{"authorization": "Bearer ' || service_role_key || '", "content-type":"application/json"}')::jsonb,
+                        body := file_body::jsonb
+                    );
+                    */
+                END LOOP;
+                RAISE LOG 'finished';
+        END
+    $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = extensions, storage, pg_temp;
 
 /* run this code to setup the cron task */
-select
-    cron.schedule(
-      'invoke-file_clean',
-      '*/10 * * * *', -- every 10 minutes
-      $$
-        select clean_files();
-      $$
-        );
-
+SELECT cron.schedule(
+    'invoke-file_clean',
+    '*/10 * * * *', -- every 10 minutes
+    $$
+        SELECT clean_files();
+    $$
+);
 
 /* This function should be called from an trigger on auth.users delete.  */
 /* It marks all the user's files to be deleted by setting created_at to a fake time and marks owner as null */
 /* If you want to preserve some files from being deleted then you need to only mark the owner to null */
 /* Optionally metadata is set to null to prevent reading the file as it will be flagged as corrupted.*/
 
-create or replace function public.mark_all_users_files_for_delete()
-    returns trigger as $$
-begin
-    /*  To keep some files in certain bucket
-     update storage.objects set
-        owner = null
-        where owner = old.id and bucket_id = 'anon-file-bucket'; */
+CREATE OR REPLACE FUNCTION public.mark_all_users_files_for_delete()
+    RETURNS TRIGGER AS $$
+        BEGIN
+            UPDATE storage.objects SET
+                owner = NULL,
+                created_at = to_timestamp(0),
+                metadata = NULL
+            WHERE owner = old.id;
+            DELETE FROM public.profiles WHERE id = old.id;
+            DELETE FROM public.files WHERE user_id = old.id;
+            RETURN old;
+        END;
+    $$ LANGUAGE PLPGSQL SECURITY DEFINER
+    SET search_path = storage, pg_temp;
 
-    /* Mark all other files for this user as deletable */
-    update storage.objects set
-        owner = null,
-        created_at = to_timestamp(0),
-        metadata = null
-    where owner = old.id;
-    delete from public.profiles where id = old.id;
-    delete from public.files where user_id = old.id;
-    return old;
-end;
-$$ language plpgsql security definer
-     set search_path = storage, pg_temp;
-
-create or replace trigger before_delete_user
-    before delete on auth.users
-    for each row execute function public.mark_all_users_files_for_delete();
-
+CREATE OR REPLACE TRIGGER before_delete_user BEFORE DELETE ON auth.users
+    FOR EACH ROW EXECUTE FUNCTION public.mark_all_users_files_for_delete();
 
 /* This function can be called by an authenticated user to delete only from approved buckets */
-create or replace function public.mark_file_for_delete(bucket text, filepath text)
-    returns void as $$
-declare bucket_list text[] := '{"test","testp"}';
-begin
-    update storage.objects set
-       owner = null,
-       created_at = to_timestamp(0),
-       metadata = null
-    where bucket_id = any(bucket_list) and bucket_id = bucket
-      and owner = auth.uid() and auth.uid() is not null and name = filepath;
-
-end;
-$$ language plpgsql security definer
-     set search_path = storage, pg_temp;
+CREATE OR REPLACE FUNCTION public.mark_file_for_delete(bucket TEXT, filepath TEXT)
+    RETURNS void AS $$
+        DECLARE bucket_list TEXT[] := '{"test","testp"}';
+        BEGIN
+            UPDATE storage.objects SET
+                owner = NULL,
+                created_at = to_timestamp(0),
+                metadata = NULL
+            WHERE bucket_id = any(bucket_list) AND bucket_id = bucket AND owner = auth.uid() AND auth.uid() IS NOT NULL AND name = filepath;
+        END;
+    $$ LANGUAGE PLPGSQL SECURITY DEFINER SET search_path = storage, pg_temp;
