@@ -1,16 +1,16 @@
 CREATE OR REPLACE FUNCTION f_random_text(length INTEGER)
   RETURNS TEXT AS
-  $body$
-    WITH chars AS (SELECT unnest(string_to_array('A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9', ' ')) AS _char),
-          charlist AS (SELECT _char FROM chars ORDER BY random() LIMIT $1)
-    SELECT string_agg(_char, '') FROM charlist;
-  $body$
+    $body$
+      WITH chars AS (SELECT unnest(string_to_array('a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7 8 9', ' ')) AS _char),
+            charlist AS (SELECT _char FROM chars ORDER BY random() LIMIT $1)
+      SELECT string_agg(_char, '') FROM charlist;
+    $body$
   LANGUAGE SQL;
 
 DROP TABLE IF EXISTS profiles;
 CREATE TABLE profiles (
   id UUID REFERENCES auth.users NOT NULL PRIMARY KEY,
-  username VARCHAR(256) DEFAULT f_random_text(12),
+  username VARCHAR(256) DEFAULT 'user-' || f_random_text(12),
   email VARCHAR(256) UNIQUE NOT NULL,
   full_name VARCHAR(256),
   role VARCHAR(256) DEFAULT 'normal',
