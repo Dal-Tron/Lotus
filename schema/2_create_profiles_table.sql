@@ -21,7 +21,7 @@ CREATE TABLE profiles (
 
 CREATE EXTENSION IF NOT EXISTS moddatetime SCHEMA extensions;
 
-CREATE TRIGGER handle_update_at BEFORE UPDATE ON files FOR EACH ROW EXECUTE PROCEDURE moddatetime (updated_at);
+CREATE OR REPLACE TRIGGER handle_update_at BEFORE UPDATE ON files FOR EACH ROW EXECUTE PROCEDURE moddatetime (updated_at);
 
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
@@ -52,3 +52,58 @@ DROP POLICY IF EXISTS "Anyone can update their own avatar." ON storage.objects;
 CREATE POLICY "Avatar images are publicly accessible." ON storage.objects FOR SELECT USING (bucket_id = 'avatars');
 CREATE POLICY "Anyone can upload an avatar." ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'avatars');
 CREATE POLICY "Anyone can update their own avatar." ON storage.objects FOR UPDATE USING (auth.uid() = owner) WITH CHECK (bucket_id = 'avatars');
+
+CREATE OR REPLACE FUNCTION delete_storage_object(bucket TEXT, object TEXT, out status INT, out content TEXT)
+  RETURNS RECORD
+  LANGUAGE PLPGSQL
+  SECURITY DEFINER AS $$
+    DECLARE
+      project_url TEXT;
+      service_role_key TEXT;
+      url TEXT;
+    BEGIN
+      SELECT VALUE INTO project_url FROM delete_files_schema.system_values WHERE name = 'instance_url';
+      SELECT VALUE INTO service_role_key FROM delete_files_schema.system_values WHERE name = 'service_role_key';
+
+      SELECT INTO status, content result.status::INT, result.content::TEXT FROM extensions.http((
+        'DELETE',
+        project_url||'/storage/v1/object/'||bucket||'/'||object,
+        ARRAY[extensions.http_header('authorization','Bearer '||service_role_key)],
+        NULL,
+        NULL)::extensions.http_request) as result;
+    END;
+  $$;
+
+CREATE OR REPLACE FUNCTION delete_avatar(avatar_url TEXT, out status INT, out content TEXT)
+  RETURNS RECORD
+  LANGUAGE PLPGSQL
+  SECURITY DEFINER AS $$
+    BEGIN
+      SELECT INTO status, content result.status, result.content FROM public.delete_storage_object('avatars', avatar_url) AS result;
+    END;
+  $$;
+
+CREATE OR REPLACE FUNCTION delete_old_avatar()
+  RETURNS TRIGGER
+  LANGUAGE PLPGSQL
+  SECURITY DEFINER AS $$
+    DECLARE
+      status INT;
+      content TEXT;
+      avatar_name TEXT;
+    BEGIN
+      IF COALESCE(old.avatar_url, '') <> '' AND (tg_op = 'DELETE' OR (old.avatar_url <> coalesce(new.avatar_url, ''))) then
+        avatar_name := old.avatar_url;
+        SELECT INTO status, content result.status, result.content FROM public.delete_avatar(avatar_name) AS result;
+        IF status <> 200 THEN
+          RAISE WARNING 'Could not delete avatar: % %', status, content;
+        END IF;
+      END IF;
+      IF tg_op = 'DELETE' THEN
+        RETURN old;
+      END IF;
+      RETURN new;
+    END;
+  $$;
+
+CREATE OR REPLACE TRIGGER before_profile_changes BEFORE UPDATE OF avatar_url OR DELETE ON public.profiles FOR EACH ROW EXECUTE FUNCTION public.delete_old_avatar();

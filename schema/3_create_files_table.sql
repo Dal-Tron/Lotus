@@ -8,6 +8,7 @@ CREATE TABLE files (
   file_type VARCHAR(256),
   file_size VARCHAR(256),
   file_url VARCHAR(256),
+  is_avatar BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -29,8 +30,10 @@ CREATE POLICY "Users can update their own files." ON files FOR UPDATE USING (aut
 CREATE OR REPLACE FUNCTION public.handle_new_file()
   RETURNS TRIGGER AS $$
     BEGIN
-      INSERT INTO public.files (user_id, external_id)
-      VALUES (new.owner, new.name);
+      IF (new.bucket_id = 'files') THEN
+        INSERT INTO public.files (user_id, external_id) VALUES (new.owner, new.name);
+        RETURN new;
+      END IF;
       RETURN new;
     END;
   $$ LANGUAGE PLPGSQL SECURITY DEFINER;

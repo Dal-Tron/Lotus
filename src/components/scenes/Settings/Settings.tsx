@@ -7,11 +7,15 @@ import Input from "src/components/common/Input";
 import RoundedBtn from "src/components/common/RoundedBtn";
 import { AuthContext } from "src/contexts/AuthContext";
 import {
+  checkIsAvatarReq,
   downloadImageReq,
+  insertAvatarToFilesTableReq,
+  updateAvatarInFilesTableReq,
   updateProfileReq,
-  uploadAvatarReq,
+  uploadFileReq,
 } from "src/services/api";
 import { CUS_COLORS } from "src/utils/consts";
+import { extractFileInfo } from "src/utils/helpers";
 import { ProfileProps } from "../Dashboard/Types";
 
 const Dashboard = () => {
@@ -54,8 +58,7 @@ const Dashboard = () => {
       email: user?.email,
       username,
       full_name: fullname,
-      avatarUrl,
-      updated_at: new Date(),
+      avatar_url: avatarUrl,
     };
     const { error, data } = await updateProfileReq(updates);
     if (error) {
@@ -74,23 +77,57 @@ const Dashboard = () => {
       const file = (e.target as HTMLInputElement).files
         ? (e.target as HTMLInputElement).files![0]
         : null;
-      const fileExt = file!.name.split(".").pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `${fileName}`;
+      const {
+        randName: filePath,
+        fileType,
+        fileSize,
+        fileName,
+      } = extractFileInfo(file);
 
-      const { uploadError } = await uploadAvatarReq({ filePath, file });
+      const { error: uploadError } = await uploadFileReq({
+        filePath,
+        file,
+        bucket: "avatars",
+      });
 
       if (uploadError) {
         throw uploadError;
       }
-      updateProfile(filePath);
+
+      const { data, error: checkIfAvatarError } = await checkIsAvatarReq({
+        userId: user?.id,
+      });
+      if (checkIfAvatarError) throw checkIfAvatarError;
+      if (!data!.length) {
+        const { error: insertAvatarToFilesTableError } =
+          await insertAvatarToFilesTableReq({
+            userId: user?.id,
+            fileName,
+            externalId: filePath,
+            fileType,
+            fileSize,
+          });
+        if (insertAvatarToFilesTableError) throw insertAvatarToFilesTableError;
+      } else {
+        const { error: updateAvatarInFilesTableError } =
+          await updateAvatarInFilesTableReq({
+            userId: user?.id,
+            fileName,
+            externalId: filePath,
+            fileType,
+            fileSize,
+          });
+        if (updateAvatarInFilesTableError) throw updateAvatarInFilesTableError;
+      }
+
+      await updateProfile(filePath);
     } catch (error: any) {
       console.log("Error:>>", error.message);
     } finally {
       setUploading(false);
     }
   };
-
+  console.log(avatarUrl);
   return (
     <div className="p-5">
       <div className="mx-auto md:w-1/2 pt-10 w-11/12">

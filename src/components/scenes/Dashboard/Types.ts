@@ -3,13 +3,15 @@ export interface ProfileProps {
   email?: string;
   username: string;
   full_name: string;
-  avatarUrl: string;
-  updated_at: Date;
+  avatar_url: string;
 }
 
-export interface AvatarProps {
-  filePath: string;
-  file: File | null;
+export interface FileProps {
+  fileName: string;
+  fileType: string;
+  fileSize: string;
+  publicUrl?: string;
+  filePath?: string;
 }
 
 export interface AddUserProps {

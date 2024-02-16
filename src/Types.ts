@@ -27,3 +27,26 @@ export interface FileType {
   created_at: string;
   updated_at: string;
 }
+
+export interface InsertFileProps {
+  userId: string;
+  fileName: string;
+  externalId: string;
+  fileType: string;
+  fileSize: string;
+  fileUrl?: string;
+}
+
+export interface UpdateFileProps {
+  userId: string;
+  fileName: string;
+  externalId: string;
+  fileType: string;
+  fileSize: string;
+}
+
+export interface UploadFileProps {
+  filePath: string;
+  file: File | null;
+  bucket: string;
+}
