@@ -100,8 +100,7 @@ const AdminDashboard = ({
   };
 
   const deleteUser = async () => {
-    const { data, error } = await deleteUserReq(selectedUser?.id!);
-    console.log(data);
+    const { error } = await deleteUserReq(selectedUser?.id!);
     if (error) {
       toast.error(error.message);
     } else {
@@ -112,19 +111,6 @@ const AdminDashboard = ({
 
   const saveChanges = async () => {
     alert("edit user");
-    // const { data } = await supabase
-    //   .from("profiles")
-    //   .update({ email: selectedUser?.email, username: selectedUser?.username })
-    //   .eq("id", selectedUser?.id)
-    //   .select();
-    // const updatedUsers = users.map((user: any) => {
-    //   if (user.id === selectedUser?.id) {
-    //     return data;
-    //   }
-    //   return user;
-    // });
-    // setUsers(updatedUsers);
-    // setShowEditModal(false);
   };
 
   const downloadImage = async (path: string) => {

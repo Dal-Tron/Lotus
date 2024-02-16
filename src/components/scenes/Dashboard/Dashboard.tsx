@@ -1,7 +1,12 @@
 import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { AuthContext } from "src/contexts/AuthContext";
-import supabase from "src/services/db";
+import {
+  fetchFilesReq,
+  getFilePublicUrlReq,
+  updateFilesTableReq,
+  uploadFileReq,
+} from "src/services/api";
 import { FileType } from "src/Types";
 import { cutString, extractFileInfo } from "src/utils/helpers";
 
@@ -15,7 +20,7 @@ const Dashboard = () => {
   }, []);
 
   const fetchFiles = async () => {
-    const { data, error } = await supabase.from("files").select();
+    const { data, error } = await fetchFilesReq({ userId: user?.id });
     if (error) {
       toast.error(error.message);
     } else {
@@ -28,29 +33,33 @@ const Dashboard = () => {
     const file = (e.target as HTMLInputElement).files
       ? (e.target as HTMLInputElement).files![0]
       : null;
-    const { randName, fileType, fileSize, fileName } = extractFileInfo(file);
+    const {
+      randName: filePath,
+      fileType,
+      fileSize,
+      fileName,
+    } = extractFileInfo(file);
 
-    const { error: uploadError } = await supabase.storage
-      .from("files")
-      .upload(randName, file!);
+    const { error: uploadError } = await uploadFileReq({
+      filePath,
+      file,
+      bucket: "files",
+    });
     if (uploadError) {
       toast.error(uploadError.message);
       return;
     }
 
-    const {
-      data: { publicUrl },
-    } = await supabase.storage.from("files").getPublicUrl(randName);
+    const { publicUrl } = await getFilePublicUrlReq(filePath);
 
-    const { error: updateError } = await supabase
-      .from("files")
-      .update({
-        file_name: fileName,
-        file_type: fileType,
-        file_size: fileSize,
-        file_url: publicUrl,
-      })
-      .eq("external_id", randName);
+    const { error: updateError } = await updateFilesTableReq({
+      fileName,
+      fileSize,
+      fileType,
+      filePath,
+      publicUrl,
+    });
+
     if (updateError) {
       toast.error(updateError.message);
       return;
