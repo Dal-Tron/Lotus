@@ -21,7 +21,7 @@ CREATE TABLE profiles (
 
 CREATE EXTENSION IF NOT EXISTS moddatetime SCHEMA extensions;
 
-CREATE OR REPLACE TRIGGER handle_update_at BEFORE UPDATE ON files FOR EACH ROW EXECUTE PROCEDURE moddatetime (updated_at);
+CREATE OR REPLACE TRIGGER handle_update_at BEFORE UPDATE ON profiles FOR EACH ROW EXECUTE PROCEDURE moddatetime (updated_at);
 
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
