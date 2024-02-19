@@ -50,7 +50,10 @@ const Dashboard = () => {
       return;
     }
 
-    const { publicUrl } = await getFilePublicUrlReq(filePath);
+    const { publicUrl } = await getFilePublicUrlReq({
+      filePath,
+      bucket: "files",
+    });
 
     const { error: updateError } = await updateFilesTableReq({
       fileName,
