@@ -43,7 +43,7 @@ CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXEC
 
 DELETE FROM storage.objects WHERE bucket_id = 'avatars';
 DELETE FROM storage.buckets WHERE name = 'avatars';
-INSERT INTO storage.buckets (id, name) VALUES ('avatars', 'avatars');
+INSERT INTO storage.buckets (id, name, public) VALUES ('avatars', 'avatars', true);
 
 DROP POLICY IF EXISTS "Avatar images are publicly accessible." ON storage.objects;
 DROP POLICY IF EXISTS "Anyone can upload an avatar." ON storage.objects;

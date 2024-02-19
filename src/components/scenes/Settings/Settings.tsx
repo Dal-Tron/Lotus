@@ -8,7 +8,7 @@ import RoundedBtn from "src/components/common/RoundedBtn";
 import { AuthContext } from "src/contexts/AuthContext";
 import {
   checkIsAvatarReq,
-  downloadImageReq,
+  getFilePublicUrlReq,
   insertAvatarToFilesTableReq,
   updateAvatarInFilesTableReq,
   updateProfileReq,
@@ -21,35 +21,25 @@ import { ProfileProps } from "../Dashboard/Types";
 const Dashboard = () => {
   const { user, setUser } = useContext(AuthContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const [avatarUrl, setAvatarUrl] = useState<string>("");
+  const [avatarPublicUrl, setAvatarPublicUrl] = useState<string>("");
   const [uploading, setUploading] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [fullname, setFullname] = useState<string>("");
 
   useEffect(() => {
+    const fetchAvatarPublicUrl = async (filePath: string) => {
+      const { publicUrl } = await getFilePublicUrlReq({
+        filePath,
+        bucket: "avatars",
+      });
+      setAvatarPublicUrl(publicUrl);
+    };
     if (user) {
-      setAvatarUrl(user.avatar_url);
+      fetchAvatarPublicUrl(user.avatar_url);
       setUsername(user.username);
       setFullname(user.full_name || "");
     }
   }, [user]);
-
-  useEffect(() => {
-    if (avatarUrl) downloadImage(avatarUrl);
-  }, [avatarUrl]);
-
-  const downloadImage = async (path: string) => {
-    try {
-      const { data, error } = await downloadImageReq(path);
-      if (error) {
-        throw error;
-      }
-      const url = URL.createObjectURL(data!);
-      setAvatarUrl(url);
-    } catch (error: any) {
-      console.log("Error downloading image: ", error.message);
-    }
-  };
 
   const updateProfile = async (avatarUrl: string) => {
     setLoading(true);
@@ -65,7 +55,6 @@ const Dashboard = () => {
       toast.error(error.message);
     } else {
       setUser(data![0]);
-      setAvatarUrl(avatarUrl);
       toast.success("Successfully updated");
     }
     setLoading(false);
@@ -94,6 +83,13 @@ const Dashboard = () => {
         throw uploadError;
       }
 
+      const { publicUrl } = await getFilePublicUrlReq({
+        filePath,
+        bucket: "avatars",
+      });
+
+      setAvatarPublicUrl(publicUrl);
+
       const { data, error: checkIfAvatarError } = await checkIsAvatarReq({
         userId: user?.id,
       });
@@ -106,6 +102,7 @@ const Dashboard = () => {
             externalId: filePath,
             fileType,
             fileSize,
+            fileUrl: publicUrl,
           });
         if (insertAvatarToFilesTableError) throw insertAvatarToFilesTableError;
       } else {
@@ -116,10 +113,10 @@ const Dashboard = () => {
             externalId: filePath,
             fileType,
             fileSize,
+            fileUrl: publicUrl,
           });
         if (updateAvatarInFilesTableError) throw updateAvatarInFilesTableError;
       }
-
       await updateProfile(filePath);
     } catch (error: any) {
       console.log("Error:>>", error.message);
@@ -127,7 +124,7 @@ const Dashboard = () => {
       setUploading(false);
     }
   };
-  console.log(avatarUrl);
+
   return (
     <div className="p-5">
       <div className="mx-auto md:w-1/2 pt-10 w-11/12">
@@ -136,7 +133,7 @@ const Dashboard = () => {
             disabled={loading}
             uploading={uploading}
             uploadAvatar={(e: ChangeEvent<HTMLInputElement>) => uploadAvatar(e)}
-            avatarUrl={avatarUrl}
+            avatarUrl={avatarPublicUrl}
           />
         </div>
         <Input
@@ -168,7 +165,6 @@ const Dashboard = () => {
           label="Full name"
           onChange={(e) => setFullname(e.target.value)}
           icon={<AiOutlineUser style={{ fill: CUS_COLORS.GRAY_MEDIUM }} />}
-          // errMsg="Invalid email"
           err={false}
           value={fullname}
           className="grow mb-3 border-cus-gray-medium"
@@ -188,7 +184,7 @@ const Dashboard = () => {
           <RoundedBtn
             variant="fill"
             onClick={() => {
-              updateProfile(avatarUrl);
+              updateProfile(user ? user.avatar_url : null);
             }}
           >
             {loading ? "Updating..." : "Update"}

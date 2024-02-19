@@ -46,6 +46,7 @@ export const insertAvatarToFilesTableReq = async ({
   externalId,
   fileType,
   fileSize,
+  fileUrl,
 }: InsertFileProps) => {
   const { data, error } = await supabase
     .from("files")
@@ -56,6 +57,7 @@ export const insertAvatarToFilesTableReq = async ({
       file_size: fileSize,
       external_id: externalId,
       is_avatar: true,
+      file_url: fileUrl,
     })
     .select();
   return { data, error };
@@ -67,6 +69,7 @@ export const updateAvatarInFilesTableReq = async ({
   fileType,
   fileSize,
   externalId,
+  fileUrl,
 }: UpdateFileProps) => {
   const { data, error } = await supabase
     .from("files")
@@ -75,6 +78,7 @@ export const updateAvatarInFilesTableReq = async ({
       file_type: fileType,
       file_size: fileSize,
       external_id: externalId,
+      file_url: fileUrl,
     })
     .eq("user_id", userId)
     .eq("is_avatar", true);
@@ -109,10 +113,16 @@ export const updateFilesTableReq = async ({
   return { error };
 };
 
-export const getFilePublicUrlReq = async (filePath: string) => {
+export const getFilePublicUrlReq = async ({
+  filePath,
+  bucket,
+}: {
+  filePath: string;
+  bucket: string;
+}) => {
   const {
     data: { publicUrl },
-  } = await supabase.storage.from("files").getPublicUrl(filePath);
+  } = await supabase.storage.from(bucket).getPublicUrl(filePath);
   return { publicUrl };
 };
 

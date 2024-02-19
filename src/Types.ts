@@ -43,6 +43,7 @@ export interface UpdateFileProps {
   externalId: string;
   fileType: string;
   fileSize: string;
+  fileUrl?: string;
 }
 
 export interface UploadFileProps {
