@@ -28,11 +28,13 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchAvatarPublicUrl = async (filePath: string) => {
-      const { publicUrl } = await getFilePublicUrlReq({
-        filePath,
-        bucket: "avatars",
-      });
-      setAvatarPublicUrl(publicUrl);
+      if (filePath) {
+        const { publicUrl } = await getFilePublicUrlReq({
+          filePath,
+          bucket: "avatars",
+        });
+        setAvatarPublicUrl(publicUrl);
+      }
     };
     if (user) {
       fetchAvatarPublicUrl(user.avatar_url);
