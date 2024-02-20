@@ -25,7 +25,9 @@ function App() {
 
   useEffect(() => {
     AuthService.initSession(setSession);
-    return AuthService.onAuthStateChange(setSession);
+    return () => {
+      AuthService.onAuthStateChange(setSession);
+    };
   }, []);
 
   useEffect(() => {
