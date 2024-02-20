@@ -14,18 +14,23 @@ const Dashboard = () => {
   const { user } = useContext(AuthContext);
   const [files, setFiles] = useState<FileType[] | null>(null);
   const [uploading, setUploading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    fetchFiles();
-  }, []);
+    if (user) {
+      fetchFiles();
+    }
+  }, [user]);
 
   const fetchFiles = async () => {
+    setLoading(true);
     const { data, error } = await fetchFilesReq({ userId: user?.id });
     if (error) {
       toast.error(error.message);
     } else {
       setFiles(data!);
     }
+    setLoading(false);
   };
 
   const uploadFile = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -101,7 +106,13 @@ const Dashboard = () => {
           </tr>
         </thead>
         <tbody>
-          {files && files.length ? (
+          {loading ? (
+            <tr>
+              <td colSpan={8} className="border-b p-5 text-center">
+                Loading...
+              </td>
+            </tr>
+          ) : files && files.length ? (
             files.map((file, idx) => {
               return (
                 <tr className="border-b" key={file.id}>

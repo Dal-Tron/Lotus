@@ -20,14 +20,16 @@ import { ProfileProps } from "../Dashboard/Types";
 
 const Dashboard = () => {
   const { user, setUser } = useContext(AuthContext);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [avatarPublicUrl, setAvatarPublicUrl] = useState<string>("");
+  const [updating, setUpdating] = useState<boolean>(false);
+  const [avatarPublicUrl, setAvatarPublicUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState<string>("");
   const [fullname, setFullname] = useState<string>("");
 
   useEffect(() => {
     const fetchAvatarPublicUrl = async (filePath: string) => {
+      setLoading(true)
       if (filePath) {
         const { publicUrl } = await getFilePublicUrlReq({
           filePath,
@@ -35,6 +37,7 @@ const Dashboard = () => {
         });
         setAvatarPublicUrl(publicUrl);
       }
+      setLoading(false)
     };
     if (user) {
       fetchAvatarPublicUrl(user.avatar_url);
@@ -44,7 +47,7 @@ const Dashboard = () => {
   }, [user]);
 
   const updateProfile = async (avatarUrl: string) => {
-    setLoading(true);
+    setUpdating(true);
     const updates: ProfileProps = {
       id: user?.id,
       email: user?.email,
@@ -59,7 +62,7 @@ const Dashboard = () => {
       setUser(data![0]);
       toast.success("Successfully updated");
     }
-    setLoading(false);
+    setUpdating(false);
   };
 
   const uploadAvatar = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -132,10 +135,11 @@ const Dashboard = () => {
       <div className="mx-auto md:w-1/2 pt-10 w-11/12">
         <div className="relative flex justify-center items-center mx-auto w-40 h-40 border rounded overflow-hidden">
           <AvatarInput
-            disabled={loading}
+            updating={updating}
             uploading={uploading}
             uploadAvatar={(e: ChangeEvent<HTMLInputElement>) => uploadAvatar(e)}
             avatarUrl={avatarPublicUrl}
+            loading={loading}
           />
         </div>
         <Input
@@ -189,7 +193,7 @@ const Dashboard = () => {
               updateProfile(user ? user.avatar_url : null);
             }}
           >
-            {loading ? "Updating..." : "Update"}
+            {updating ? "Updating..." : "Update"}
           </RoundedBtn>
         </div>
       </div>
