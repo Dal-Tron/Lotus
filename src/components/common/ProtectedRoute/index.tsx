@@ -12,7 +12,7 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 }) => {
   const location = useLocation();
   const isAuthenticated = localStorage.getItem(`sb-${process.env.REACT_APP_SUPABASE_PROJECT_ID}-auth-token`) || checkAuth();
-console.log(isAuthenticated, process.env.REACT_APP_SUPABASE_PROJECT_ID)
+
   return isAuthenticated ? (
     element
   ) : (
