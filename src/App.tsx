@@ -25,9 +25,7 @@ function App() {
 
   useEffect(() => {
     AuthService.initSession(setSession);
-    return () => {
-      AuthService.onAuthStateChange(setSession);
-    };
+    return AuthService.onAuthStateChange(setSession);
   }, []);
 
   useEffect(() => {
@@ -42,7 +40,7 @@ function App() {
         }
       });
     }
-  }, [session]);
+  }, [session?.access_token]);
 
   const isAdmin = () => {
     return session && user?.role === ROLES.ADMIN;
