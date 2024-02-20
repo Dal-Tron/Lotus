@@ -11,8 +11,8 @@ import UserEditModal from "src/components/elements/UserEditModal";
 import {
   addNewUserReq,
   deleteUserReq,
-  downloadImageReq,
   fetchUsersReq,
+  getFilePublicUrlReq,
 } from "src/services/api";
 import { NewUser, User } from "src/Types";
 import { CUS_COLORS, TEXTS } from "src/utils/consts";
@@ -39,7 +39,7 @@ const AdminDashboard = ({
 }: {
   isSidebarExpanded: boolean;
 }) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [users, setUsers] = useState<User[] | []>([]);
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
@@ -54,6 +54,7 @@ const AdminDashboard = ({
   });
 
   const fetchUsers = async () => {
+    setLoading(true);
     const { data, error } = await fetchUsersReq();
     if (error) {
       toast.error(error.message);
@@ -61,18 +62,21 @@ const AdminDashboard = ({
       const _users: User[] = [];
       for (let user of data!) {
         if (user.avatar_url && !user.avatar_url.includes("https://")) {
-          user.avatar_url = await downloadImage(user.avatar_url);
+          const { publicUrl } = await getFilePublicUrlReq({
+            filePath: user.avatar_url,
+            bucket: "avatars",
+          });
+          user.avatar_url = publicUrl
         }
         _users.push(user);
       }
-      setUsers(_users);
+      setUsers(data!);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
-    setLoading(true);
     fetchUsers();
-    setLoading(false);
   }, []);
 
   const addNewUser = async () => {
@@ -113,24 +117,8 @@ const AdminDashboard = ({
     alert("edit user");
   };
 
-  const downloadImage = async (path: string) => {
-    try {
-      const { data, error } = await downloadImageReq(path);
-      if (error) {
-        throw error;
-      }
-      const url = URL.createObjectURL(data!);
-      return url;
-    } catch (error: any) {
-      console.log("Error downloading image: ", error.message);
-    }
-  };
-
   return (
     <div className="h-full p-3 overflow-auto">
-      {loading ? (
-        "Loading..."
-      ) : (
         <div className="px-3">
           <RoundedBtn
             variant="fill"
@@ -167,7 +155,14 @@ const AdminDashboard = ({
                   </thead>
                   <tbody>
                     <>
-                      {users.length ? (
+                      {loading ? <tr className="border-b">
+                          <td
+                            colSpan={7}
+                            className="px-6 py-4 text-center"
+                          >
+                            Loading...
+                          </td>
+                        </tr> : users.length ? (
                         users.map((user: any, idx: number) => {
                           return (
                             <tr
@@ -279,7 +274,6 @@ const AdminDashboard = ({
             </div>
           </div>
         </div>
-      )}
       {showAddModal ? (
         <UserAddModal
           setShowModal={setShowAddModal}

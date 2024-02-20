@@ -1,36 +1,36 @@
 import { ChangeEvent } from "react";
 import DefaultAvatar from "src/assets/images/60111.png";
+import cx from 'classnames'
 
 interface Props {
-  avatarUrl: string;
-  disabled: boolean;
+  avatarUrl: string | null;
+  updating: boolean;
   uploadAvatar: (e: ChangeEvent<HTMLInputElement>) => any;
   uploading: boolean;
+  loading:boolean
 }
 
 const AvatarInput = ({
-  disabled,
+  updating,
   uploading,
   uploadAvatar,
   avatarUrl,
+  loading
 }: Props) => {
   return (
     <>
       <input
-        className="absolute h-full w-full text-transparent file:hidden cursor-pointer"
+        className={cx("absolute h-full w-full text-transparent file:hidden", uploading || updating ? "" : "cursor-pointer")}
         type="file"
         id="single"
         accept="image/*"
         onChange={uploadAvatar}
-        disabled={disabled}
+        disabled={uploading || updating}
       />
       {uploading ? (
         "Uploading..."
-      ) : avatarUrl ? (
-        <img width="100%" src={avatarUrl} alt="avatar" />
-      ) : (
-        <img width="100%" src={DefaultAvatar} alt="avatar" />
-      )}
+        ) : loading?null: <img width="100%" src={avatarUrl||DefaultAvatar} alt="avatar" />
+      }
     </>
   );
 };
